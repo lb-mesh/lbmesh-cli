@@ -1,0 +1,23 @@
+{
+  "name": "lbmesh-cli",
+  "version": "1.0.0",
+  "description": "CLI Interface for LoopBackMesh Framework",
+  "bin": {
+    "lbmesh": "./bin/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "lbmesh"
+  ],
+  "author": "Jamil Hassan Spain",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "commander": "^2.17.1",
+    "superagent": "^3.8.3"
+  }
+}
