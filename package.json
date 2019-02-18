@@ -1,23 +1,46 @@
 {
   "name": "lbmesh-cli",
-  "version": "1.0.0",
-  "description": "CLI Interface for LoopBackMesh Framework",
+  "version": "1.0.9",
+  "description": "CLI Interface for LB Mesh Framework",
   "bin": {
-    "lbmesh": "./bin/index.js"
+    "lbmesh": "./bin/lbmesh.js"
+  },
+  "eslintConfig": {
+    "env": {
+      "es6": true
+    }
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "lbmesh"
+    "lbmesh",
+    "loopback",
+    "cli-app",
+    "microservice",
+    "docker",
+    "kubernetes",
+    "cloud-native",
+    "mesh"
   ],
   "author": "Jamil Hassan Spain",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lb-mesh/lbmesh-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lb-mesh/lbmesh-cli/issues"
+  },
+  "homepage": "https://github.com/lb-mesh/lbmesh-cli#readme",
   "license": "MIT",
   "dependencies": {
-    "chalk": "^2.4.1",
+    "chalk": "^2.4.2",
     "co": "^4.6.0",
     "co-prompt": "^1.0.0",
     "commander": "^2.17.1",
+    "debug": "^4.1.1",
+    "prompt": "^1.0.0",
+    "shell-exec": "^1.0.2",
     "superagent": "^3.8.3"
   }
 }
