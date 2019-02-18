@@ -39,6 +39,7 @@
     "co-prompt": "^1.0.0",
     "commander": "^2.17.1",
     "debug": "^4.1.1",
+    "inquirer": "^6.2.2",
     "prompt": "^1.0.0",
     "shell-exec": "^1.0.2",
     "superagent": "^3.8.3"
