@@ -1,8 +1,9 @@
+#!/usr/bin/env node
 /*
  Copyright (c) IBM Corp. 2013,2017. All Rights Reserved.
  This project is licensed under the MIT License, full text below.
 
-Author: Jamil Spain, jamilhassanspain@gmail.com
+Author: Jamil Spain  <jamilhassanspain@gmail.com> http://www.jamilspain.com
 
  --------
 
@@ -28,16 +29,10 @@ Author: Jamil Spain, jamilhassanspain@gmail.com
 */
 'use strict'
 
-const OS = require('os');
+const banner = require("../lib/banner");
+const jsonfile = require('jsonfile');
 
-module.exports.profile = () => {
-    return {
-        "cwd": process.cwd(),
-        "hostname": OS.hostname(),
-        "release" : OS.release(),
-        "platform": OS.platform(),
-        "homedir": OS.homedir(),
-        "arch": OS.arch(),
-        "type": OS.type(),
-    };
-};
+/**
+ * Display Additional Banner
+ */
+banner.interactive();

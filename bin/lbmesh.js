@@ -3,7 +3,7 @@
  Copyright (c) IBM Corp. 2013,2017. All Rights Reserved.
  This project is licensed under the MIT License, full text below.
 
-Author: Jamil Spain, jamilhassanspain@gmail.com
+Author: Jamil Spain  <jamilhassanspain@gmail.com> http://www.jamilspain.com
 
  --------
 
@@ -28,28 +28,33 @@ Author: Jamil Spain, jamilhassanspain@gmail.com
  THE SOFTWARE.
 */
 'use strict'
+const machine = require('lbmesh-os').profile();
+const pkg = require( machine.node.globalPath + '/lbmesh-cli/package.json');
+require('please-upgrade-node')(pkg)
 
+
+const ask = require('inquirer');
 const banner = require("../lib/banner");
 const chalk  = require('chalk');
-const Create = require('../classes/create');
 const debug  = require('debug')('app:cli:lbmesh');
-const ask = require('inquirer');
-const LOG    = console.log;
-const machine = require('../classes/os').profile();
+const jsonfile = require('jsonfile');
+//const machine = require('lbmesh-os').profile();
 const program = require('commander');
 const prompt = require('prompt');
-const shellExec = require('shell-exec')
+const shelljs   = require('shelljs');
+
+const Create = require('../classes/create');
+const LOG    = console.log;
 
 banner.display();
 
 program
-  .version('0.4.0', '-v, --version')
-  .usage('create|pattern|code|run|build [options] ');
+  .version('0.6.0', '-v, --version')
+  .usage('create|pattern|code|run|build|gui|interactive [options] ');
 
 program
   .command('create [name]')
   .description('Scaffold a new lbmesh default project')
-  // .option('-p, --prefix <string>', 'add folder project prefix')
   .action( (name)=> {
 
     let generate = new Create(machine);
@@ -122,6 +127,19 @@ program
 
   });
 
+program
+  .command('gui')
+  .description('Browser Based LB Mesh Management')
+  .action((name)=>{
+
+  });
+
+program
+  .command('interactive')
+  .description('Interactive CLI Interface to guide through Project')
+  .action((name)=>{
+      shelljs.exec("lbmesh-helper");
+  });
 
 program
   .command("help [cmd]")
@@ -136,7 +154,8 @@ program
 
 program.on('--help', function(){
   // console.log();
-  // console.log('Examples:');
+  LOG();
+  //console.log('Examples:');
   // console.log('');
   // console.log('  $ pass encrypt mypassword -k oneWordPass');
   // console.log("  $ pass encrypt 'mypassword' -k 'Phrase to encrypt words' ");
@@ -149,6 +168,7 @@ program.on('--help', function(){
   // console.log('  please use single quotes around each');
   // console.log('');
   // console.log('');
+  LOG();
 });
   
 program
@@ -157,6 +177,7 @@ program
 /**
  * No Arguments Passed, Show Extended Help Menu
  */
+
 if(!program.args.length) {
   program.help();
 };

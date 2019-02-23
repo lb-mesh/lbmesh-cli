@@ -1,0 +1,4 @@
+{
+  "extends": "loopback",
+  "env": { "es6": true }
+}
