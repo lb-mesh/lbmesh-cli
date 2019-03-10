@@ -87,19 +87,19 @@ class Create {
 
                 // sh.cp('-r', this.machine.templatefolder + '/backend/server', folder + '/backend/' + svc + '/');
 
-                ejs.renderFile(this.machine.templatefolder + '/backend/package.ejs', {
+                ejs.renderFile(this.machine.templatefolder + '/backend/package-' + svc + '.ejs', {
                     "appname": this.answers.appname,
                     "appservice": svc
                 },{}, function(err,str){
                     fs.writeFileSync(folder + '/backend/' + svc + '/package.json', str);
                 });
 
-                ejs.renderFile(this.machine.templatefolder + '/backend/package-lock.ejs', {
-                    "appname": this.answers.appname,
-                    "appservice": svc                
-                },{}, function(err,str){
-                    fs.writeFileSync(folder + '/backend/' + svc + '/package-lock.json', str);
-                });
+                // ejs.renderFile(this.machine.templatefolder + '/backend/package-lock.ejs', {
+                //     "appname": this.answers.appname,
+                //     "appservice": svc                
+                // },{}, function(err,str){
+                //     fs.writeFileSync(folder + '/backend/' + svc + '/package-lock.json', str);
+                // });
 
                 ejs.renderFile(this.machine.templatefolder + '/backend/config.ejs', {
                     "port": this.currentProject.apps[svc].port              
