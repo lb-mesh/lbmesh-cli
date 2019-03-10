@@ -32,47 +32,60 @@ const machine = require('lbmesh-os').profile();
 const pkg = require( machine.node.globalPath + '/lbmesh-cli/package.json');
 require('please-upgrade-node')(pkg)
 
-
 const ask = require('inquirer');
 const banner = require("../lib/banner");
 const chalk  = require('chalk');
 const debug  = require('debug')('app:cli:lbmesh');
+const fs     = require('fs');
 const jsonfile = require('jsonfile');
-//const machine = require('lbmesh-os').profile();
 const program = require('commander');
 const prompt = require('prompt');
 const shelljs   = require('shelljs');
 
 const Create = require('../classes/create');
+const Projects = require('../classes/projects');
 const LOG    = console.log;
 
 banner.display();
 
 program
-  .version('0.6.0', '-v, --version')
+  .version('0.8.0', '-v, --version')
   .usage('create|pattern|code|run|build|gui|interactive [options] ');
 
 program
-  .command('create [name]')
-  .description('Scaffold a new lbmesh default project')
-  .action( (name)=> {
-
-    let generate = new Create(machine);
-
-    switch(name){
-      case 'messenger':
-
-        break;
-      case 'scheduler':
-
-        break;
-      case 'databank':
-
-        break;
-      default: 
-
+  .command('create')
+  .description('Scaffold a new LB Mesh Default Project')
+  .action( ()=> {
+    
+    banner.create();
+    LOG();
+  
       ask
         .prompt([
+          {
+            "type": "input",
+            "default": "Demo",
+            "name": "appname",
+            "message": 'What is the name of your Application?'
+          },
+          {
+            "type": "list",
+            "default": "fronted-backend",
+            "message": "Select your Project Type?",
+            "name": "projtype",
+            "choices": [
+              {"name": "Full Stack ( Frontend + Backend )", "value": "fronted-backend"},
+              new ask.Separator(),
+              {"name":"Frontend WWW", "value":"frontend-www"},
+              {"name":"Frontend API", "value":"frontend-api"},
+              {"name":"Frontend Admin", "value":"frontend-admin"},
+              new ask.Separator(),
+              {"name":"Backend Scheduler", "value":"backend-scheduler"},
+              {"name":"Backend Databank", "value":"backend-databank"},
+              {"name":"Backend Messenger", "value":"backend-messenger"},                  
+            ],
+            //"message": 'Create Project in Default Workspace $HOME/Workspace-lbmesh/ (Y) or Current Directory (n)?'
+          },
           {
             "type": "input",
             "default": "project",
@@ -80,14 +93,11 @@ program
             "message": 'What is your project folder name?'
           }
         ]).then(answers => {
-            LOG('ANSERS FROM PROMPT', answers);
+            LOG();
+            let generate = new Create();
             generate.projectFolder(answers);
 
         });
-
-        break;
-    }
-
 
   })
   .on('--help', function() {
@@ -99,61 +109,149 @@ program
   });
 
 program
-  .command('pattern [name]')
-  .description('Create Scaffold off pre-built pattern')
-  .option('-p, --prefix <string>', 'add folder project prefix')
-  .action((name)=>{
+  .command('projects [name] [options]')
+  .description('Get Project Details')
+  .option('-o, --open', 'Open Project in Browser')
+  .action((name, options)=>{
+    banner.projects();
+    
+    // LOG( options );
+    let list = new Projects();
+      if( name == undefined ){
+        LOG();
+        LOG(list.viewProjectList());
+        LOG();
+      } else {
+        if(list.isProject(name)){
+          let listDetails = list.viewProjectDetails(name);
+          LOG();
+            LOG('  PROJECT DETAILS')
+            LOG(listDetails.table_header);
+            LOG();
+            if( listDetails.type == 'frontend-backend') {
+              LOG('  PROJECT PORTS')
+              LOG(listDetails.table_ports);
+            }
+          LOG();            
+        } else {
+          LOG();
+          LOG(list.viewProjectList());
+          LOG();          
+        }
+      }
 
+
+      
   });
+// program
+//   .command('pattern [name]')
+//   .description('Create Scaffold off pre-built pattern')
+//   .option('-p, --prefix <string>', 'add folder project prefix')
+//   .action((name)=>{
+
+//   });
+
+// program
+//   .command('code [name]')
+//   .description('open project folder in Visual Studio Code')
+//   .action((name)=>{
+
+//   });
 
 program
-  .command('code [name]')
-  .description('open project folder in Visual Studio Code')
-  .action((name)=>{
+  .command('run [action] [component]')
+  .description('Start|Stop|Restart|Log environment via pm2 runtime')
+  .action((action, component)=>{
+    banner.runtime();
+    if( fs.existsSync('./lbmesh-config.json') && fs.existsSync('./docker-compose.yaml') ){
+        let myAction = (action == undefined)? 'empty' : action.toLowerCase();
+        let myComponent = (component == undefined)? 'all' : component.toLowerCase() ;
 
+        switch(myAction){
+          case 'empty':
+              LOG(' no action provided');
+          break;
+          case 'start':
+              shelljs.exec("pm2 start pm2-ecosystem.config.yaml");
+          break;
+          case 'stop':
+            shelljs.exec("pm2 stop pm2-ecosystem.config.yaml");
+          break;
+          case 'restart':
+            shelljs.exec("pm2 stop pm2-ecosystem.config.yaml");
+          break;
+          case 'status':
+            shelljs.exec("pm2 status pm2-ecosystem.config.yaml");
+          break;
+          default:
+            LOG(" COMMAND NOT RECOGNIZED ");
+          break;
+
+        }
+ 
+
+    } else {
+      LOG();
+      console.error("Not in a current LB Mesh Project Directory.")
+      banner.runhelp();
+      LOG();
+    }
+    
   });
+
 
 program
-  .command('run [name]')
-  .description('open project folder in Visual Studio Code')
+  .command('open')
+  .description('Open Browser Windows for Project')
   .action((name)=>{
-
+      if( fs.existsSync('./lbmesh-config.json') && fs.existsSync('./docker-compose.yaml') ){
+        let list = new Projects();
+          shelljs.exec("opn http:")
+      } else {
+        LOG();
+        console.error("Not in a current LB Mesh Project Directory.")
+        banner.runhelp();
+        LOG();
+      }
   });
+
 
 program
   .command('build [name]')
   .description('Generate Docker Images for LB Mesh Project')
   .action((name)=>{
-
+      banner.build();
+      if( fs.existsSync('./lbmesh-config.json') && fs.existsSync('./docker-compose.yaml') ){
+        shelljs.exec("docker-compose build");
+      } else {
+        LOG();
+        console.error("Not in a current LB Mesh Project Directory.")
+        LOG();
+      }
   });
 
-program
-  .command('gui')
-  .description('Browser Based LB Mesh Management')
-  .action((name)=>{
 
-  });
-
-program
-  .command('interactive')
-  .description('Interactive CLI Interface to guide through Project')
-  .action((name)=>{
-      shelljs.exec("lbmesh-helper");
-  });
+// program
+//   .command('interactive')
+//   .description('Interactive CLI Interface to guide through Project')
+//   .action((name)=>{
+//       shelljs.exec("lbmesh-helper");
+//   });
 
 program
   .command("help [cmd]")
-  .action((cmd)=>{
+  .action((cmd)=> {
 
+    switch(cmd.toLowerCase()){
+      case 'run':
+        LOG();
+        LOG('THIS IS HELPF OR RUN');
+      break;
+    }
 
   });
 
-
-
-
-
 program.on('--help', function(){
-  // console.log();
   LOG();
   //console.log('Examples:');
   // console.log('');

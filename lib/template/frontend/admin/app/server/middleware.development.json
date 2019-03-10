@@ -1,0 +1,15 @@
+{
+  "final:after": {
+    "strong-error-handler": {
+      "params": {
+        "defaultType": "json",
+        "safeFields": [
+          "errorCode"
+        ],
+        "includeStack": true,
+        "debug": true,
+        "log": true
+      }
+    }
+  }
+}

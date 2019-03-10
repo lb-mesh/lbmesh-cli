@@ -1,0 +1,10 @@
+.gitignore
+.editor*
+.es*
+.yo*
+src
+manifest*
+Dockerfile*
+Gruntfile*
+node_modules
+lbmesh*

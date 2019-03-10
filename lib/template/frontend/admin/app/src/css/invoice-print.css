@@ -1,0 +1,50 @@
+/* 
+Template Name: Source Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.5
+Version: 1.2.0
+Author: Sean Ngu
+Website: http://www.seantheme.com/source-admin-v1.2/admin/
+*/
+   
+@media print {
+    .header,
+    .sidebar,
+    .footer,
+    .page-header,
+    .breadcrumb,
+    .pace {
+        display: none;
+    }
+    .page-container,
+    .content,
+    .invoice {
+        margin: 0;
+        padding: 0;
+    }
+    .invoice {
+        padding-top: 20px;
+    }
+    .invoice-title {    
+        padding-bottom: 15px;
+        border-bottom: 2px solid #ebeced;
+        margin-bottom: 40px;
+    }
+    .invoice .table {
+        border-top: 1px solid #ebeced;
+    }
+    .invoice-header {
+        margin-bottom: 40px;
+    }
+    .invoice-header .col-md-3 {
+        float: left;
+    }
+    .invoice-header .col-md-6 {
+        float: right;
+    }
+    .invoice-header .dl-horizontal dt {
+        float: left;
+        width: 140px;
+    }
+    .invoice-header .dl-horizontal dd {
+        margin-left: 160px;
+    }
+}
