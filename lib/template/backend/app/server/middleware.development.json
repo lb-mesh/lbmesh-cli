@@ -2,6 +2,7 @@
   "final:after": {
     "strong-error-handler": {
       "params": {
+        "includeStack":true,
         "debug": true,
         "log": true
       }

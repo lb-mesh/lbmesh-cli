@@ -46,6 +46,14 @@
     "loopback#urlNotFound": {}
   },
   "final:after": {
-    "strong-error-handler": {}
+    "strong-error-handler": {
+      "params": {
+        "negotiateContentType": true,
+        "defaultType": "html",
+        "includeStack": false,
+        "debug": false,
+        "log": false
+      }
+    }
   }
 }
