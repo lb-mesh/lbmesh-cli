@@ -241,15 +241,18 @@ class Create {
             break;
             default:
                 fs.mkdirSync(projFolder + '/backend');
-                fs.mkdirSync(projFolder + '/frontend');             
+                fs.mkdirSync(projFolder + '/frontend');    
+                fs.mkdirSync(projFolder + '/database');
+                        
+                sh.cp('-r', this.machine.templatefolder + '/db/mongo', folder + '/database/lbmesh-mongo-schema/');
             break;
         }
- 
-        fs.mkdirSync(projFolder + '/database');
+        
         fs.mkdirSync(projFolder + '/general');
 
         fs.writeFileSync(projFolder + '/lbmesh-config.json',JSON.stringify(this.currentProject,null,2));
-        ejs.renderFile(this.machine.templatefolder + '/docker-compose.ejs', {
+        
+        ejs.renderFile(this.machine.templatefolder + '/docker/docker-' + projType + '.ejs', {
             "appname": this.answers.appname.toLowerCase(),
             "apptype": this.answers.projtype,
             "port_www": this.currentProject.apps.www.port,
