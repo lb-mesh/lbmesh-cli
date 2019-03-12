@@ -224,7 +224,8 @@ class Create {
         let projFolder = this.machine.targetfolder;
         let projType = this.answers.projtype;
         LOG(chalk.blue("  - Creating Project Folder Files... "));
-
+        debug('generateProjectSettings()')
+        debug(this.machine);
         /**
          * Build App Folders
          */
@@ -244,7 +245,7 @@ class Create {
                 fs.mkdirSync(projFolder + '/frontend');    
                 fs.mkdirSync(projFolder + '/database');
                         
-                sh.cp('-r', this.machine.templatefolder + '/db/mongo', folder + '/database/lbmesh-mongo-schema/');
+                sh.cp('-r', this.machine.templatefolder + '/db/mongo', projFolder + '/database/lbmesh-mongo-schema/');
             break;
         }
         
