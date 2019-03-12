@@ -1,0 +1,16 @@
+{
+  "name": "lbmesh-db-mongo",
+  "version": "1.0.0",
+  "description": "Default Schema Scaffold for Mongo DB ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jamil Spain <jamilhassanspain@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "aguid": "^2.0.0",
+    "async": "^2.6.2",
+    "mongodb": "^3.1.13"
+  }
+}

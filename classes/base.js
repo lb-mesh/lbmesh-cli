@@ -49,6 +49,10 @@ class Base {
     readProjectConfig(projFolder){
         return files.readProjectFile(projFolder);
     }
+
+    writeGlobalConfig(){
+        files.writeGlobalFile(this.machine);
+    };
 }
 
 module.exports = Base;

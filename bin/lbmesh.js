@@ -74,7 +74,7 @@ program
             "message": "Select your Project Type?",
             "name": "projtype",
             "choices": [
-              {"name": "Full Stack ( Frontend + Backend )", "value": "fronted-backend"},
+              {"name": "Full Stack ( Frontend + Backend )", "value": "frontend-backend"},
               new ask.Separator(),
               {"name":"Frontend WWW", "value":"frontend-www"},
               {"name":"Frontend API", "value":"frontend-api"},
@@ -115,28 +115,46 @@ program
   .action((name, options)=>{
     banner.projects();
     
-    // LOG( options );
+    //LOG( options );
     let list = new Projects();
       if( name == undefined ){
         LOG();
         LOG(list.viewProjectList());
         LOG();
       } else {
-        if(list.isProject(name)){
-          let listDetails = list.viewProjectDetails(name);
-          LOG();
-            LOG('  PROJECT DETAILS')
-            LOG(listDetails.table_header);
-            LOG();
-            if( listDetails.type == 'frontend-backend') {
-              LOG('  PROJECT PORTS')
-              LOG(listDetails.table_ports);
+        switch(name){
+          case 'reset':
+            ask.prompt([ 
+              {
+                "type": "confirm",
+                "default": "Y",
+                "name": "resetlist",
+                "message": 'Are you sure you want to reset the project list?'
+              }             
+             ]).then(answers => {
+                 if( answers.resetlist ){
+                   list.resetProjectList();
+                 }
+             });
+          break;
+          default:
+            if(list.isProject(name)){
+              let listDetails = list.viewProjectDetails(name);
+              LOG();
+                LOG('  PROJECT DETAILS')
+                LOG(listDetails.table_header);
+                LOG();
+                if( listDetails.type == 'frontend-backend') {
+                  LOG('  PROJECT PORTS')
+                  LOG(listDetails.table_ports);
+                }
+              LOG();            
+            } else {
+              LOG();
+              LOG(list.viewProjectList());
+              LOG();          
             }
-          LOG();            
-        } else {
-          LOG();
-          LOG(list.viewProjectList());
-          LOG();          
+          break;
         }
       }
 

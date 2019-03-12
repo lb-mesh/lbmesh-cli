@@ -118,7 +118,21 @@ class Create {
             break;
             case 'admin':
                 sh.cp('-r', this.machine.templatefolder + '/frontend/admin/app', folder + '/frontend/' + svc + '/');
+
                 
+                ejs.renderFile(this.machine.templatefolder + '/frontend/admin/config.ejs', {
+                    "port_admin": this.currentProject.apps[svc].port              
+                },{}, function(err,str){
+                    fs.writeFileSync(folder + '/frontend/' + svc + '/server/config.json', str);
+                });
+
+                ejs.renderFile(this.machine.templatefolder + '/frontend/admin/package.ejs', {
+                    "appname": this.answers.appname,
+                    "appservice": svc
+                },{}, function(err,str){
+                    fs.writeFileSync(folder + '/frontend/' + svc + '/package.json', str);
+                });
+
                 LOG();
                 LOG(chalk.blue("  - Running NPM INSTALL for... "));    
                 LOG(chalk.blue("     - FRONTEND: " + svc.toUpperCase() ));    
@@ -130,7 +144,7 @@ class Create {
                 sh.cp('-r', this.machine.templatefolder + '/frontend/www/app', folder + '/frontend/' + svc + '/');
  
                 ejs.renderFile(this.machine.templatefolder + '/frontend/www/config.ejs', {
-                    "port": this.currentProject.apps[svc].port              
+                    "port_www": this.currentProject.apps[svc].port              
                 },{}, function(err,str){
                     fs.writeFileSync(folder + '/frontend/' + svc + '/server/config.json', str);
                 });   
@@ -150,7 +164,20 @@ class Create {
             break;
             case 'api':
                 sh.cp('-r', this.machine.templatefolder + '/frontend/api/app', folder + '/frontend/' + svc + '/');
-                
+
+                ejs.renderFile(this.machine.templatefolder + '/frontend/api/config.ejs', {
+                    "port_api": this.currentProject.apps[svc].port              
+                },{}, function(err,str){
+                    fs.writeFileSync(folder + '/frontend/' + svc + '/server/config.json', str);
+                });
+
+                ejs.renderFile(this.machine.templatefolder + '/frontend/api/package.ejs', {
+                    "appname": this.answers.appname,
+                    "appservice": svc
+                },{}, function(err,str){
+                    fs.writeFileSync(folder + '/frontend/' + svc + '/package.json', str);
+                });
+
                 LOG();
                 LOG(chalk.blue("  - Running NPM INSTALL for... "));    
                 LOG(chalk.blue("     - FRONTEND: " + svc.toUpperCase() ));    
@@ -235,9 +262,10 @@ class Create {
             fs.writeFileSync(projFolder + '/docker-compose.yaml', str);
         });
         
-        ejs.renderFile(this.machine.templatefolder + '/pm2-ecosystem.config.ejs', {
+ 
+        ejs.renderFile(this.machine.templatefolder + '/pm2/pm2-' + projType + '.ejs', {
             "appname": this.answers.appname.toLowerCase() ,
-            "apptype": this.answers.projtype,
+            "apptype": projType, //this.answers.projtype,
             "port_www": this.currentProject.apps.www.port,
             "port_api": this.currentProject.apps.api.port,
             "port_admin": this.currentProject.apps.admin.port,

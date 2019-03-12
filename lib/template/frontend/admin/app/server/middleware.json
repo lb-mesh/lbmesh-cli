@@ -22,7 +22,7 @@
         "helmet#hsts": {
           "params": {
             "maxAge": 0,
-            "includeSubdomains": true
+            "includeSubDomains": true
           }
         },
         "helmet#hidePoweredBy": {},
@@ -35,13 +35,7 @@
     "session": {},
     "auth": {},
     "parse": {},
-    "routes": {
-      "loopback#rest": {
-        "paths": [
-          "${restApiRoot}"
-        ]
-      }
-    },
+    "routes": {},
     "files": {
       "loopback#static": {
         "params": "$!../client"

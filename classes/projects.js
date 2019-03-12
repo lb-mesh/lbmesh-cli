@@ -109,6 +109,12 @@ class Projects extends Base{
         return this.machine.projectAppsList.includes(projname);
     }
 
+    resetProjectList(){
+        this.machine.projectAppsList.length = 0;
+        this.machine.projectApps.length = 0;
+        this.writeGlobalConfig();
+    }
+
     activeAppPort(type, apps){
         let myPort = 0;
             switch(type){
