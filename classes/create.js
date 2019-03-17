@@ -268,8 +268,8 @@ class Create {
         
  
         ejs.renderFile(this.machine.templatefolder + '/pm2/pm2-' + projType + '.ejs', {
-            "appname": this.answers.appname.toLowerCase() ,
-            "apptype": projType, //this.answers.projtype,
+            "appname": this.answers.appname.toLowerCase(),
+            "apptype": this.answers.projtype,
             "port_www": this.currentProject.apps.www.port,
             "port_api": this.currentProject.apps.api.port,
             "port_admin": this.currentProject.apps.admin.port,

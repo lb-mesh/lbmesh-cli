@@ -1,0 +1,10 @@
+{"name":"administrator","base":"User","idInjection":true,"options":{"validateUpsert":true},"properties":{},"validations":[],"relations":{
+    "accessTokens": {
+      "type": "hasMany",
+      "model": "AdministratorAccessToken",
+      "foreignKey": "userId",
+      "options": {
+        "disableInclude": true
+      }
+    }
+},"acls":[],"methods":{}}
