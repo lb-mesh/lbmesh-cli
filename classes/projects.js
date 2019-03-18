@@ -37,6 +37,7 @@ class Projects extends Base{
         super();
     }
 
+    
     viewProjectList(){
        let myList = [];
            myList.push(['Project Name', 'Project Type']);

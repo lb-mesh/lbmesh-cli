@@ -35,6 +35,7 @@ require('please-upgrade-node')(pkg)
 const ask = require('inquirer');
 const banner = require("../lib/banner");
 const chalk  = require('chalk');
+const resolveCWD = require('resolve-cwd');
 const debug  = require('debug')('app:cli:lbmesh');
 const fs     = require('fs');
 const jsonfile = require('jsonfile');
@@ -111,11 +112,11 @@ program
 program
   .command('projects [name] [options]')
   .description('Get Project Details')
-  .option('-o, --open', 'Open Project in Browser')
+  //.option('-o, --open', 'Open Project in Browser')
   .action((name, options)=>{
     banner.projects();
     
-    //LOG( options );
+    
     let list = new Projects();
       if( name == undefined ){
         LOG();
@@ -222,9 +223,39 @@ program
   .command('open')
   .description('Open Browser Windows for Project')
   .action((name)=>{
-      if( fs.existsSync('./lbmesh-config.json') && fs.existsSync('./docker-compose.yaml') ){
+      if( fs.existsSync('./lbmesh-config.json') && fs.existsSync('./docker-compose.yaml') ) {
+            banner.browser();
         let list = new Projects();
-          shelljs.exec("opn http:")
+        let projDetails = list.readProjectConfig(process.cwd());
+
+          // Loop thru all the apps ports
+          LOG();
+          if( projDetails.apps.www.port > 0 ){
+            LOG('   OPENING FRONTEND-WWW http://localhost:' + projDetails.apps.www.port + ' for Project ' + projDetails.name)
+            shelljs.exec("opn http://localhost:" + projDetails.apps.www.port);
+          }
+
+          if( projDetails.apps.admin.port > 0 ){
+            LOG('   OPENING FRONTEND-ADMIN http://localhost:' + projDetails.apps.admin.port + ' for Project ' + projDetails.name)
+            shelljs.exec("opn http://localhost:" + projDetails.apps.admin.port);
+          }
+
+          if( projDetails.apps.api.port > 0 ){
+            LOG('   OPENING FRONTEND-API http://localhost:' + projDetails.apps.api.port + ' for Project ' + projDetails.name)
+            shelljs.exec("opn http://localhost:" + projDetails.apps.api.port + "/explorer");
+          }
+
+          if( projDetails.apps.messenger.port > 0 ){
+            LOG('   OPENING BACKEND-MESSENGER http://localhost:' + projDetails.apps.messenger.port + ' for Project ' + projDetails.name)
+            shelljs.exec("opn http://localhost:" + projDetails.apps.messenger.port + "/explorer");
+          }
+
+          if( projDetails.apps.databank.port > 0 ){
+            LOG('   OPENING BACKEND-DATABANK http://localhost:' + projDetails.apps.databank.port + ' for Project ' + projDetails.name)
+            shelljs.exec("opn http://localhost:" + projDetails.apps.databank.port + "/explorer");
+          }
+          LOG();
+
       } else {
         LOG();
         console.error("Not in a current LB Mesh Project Directory.")

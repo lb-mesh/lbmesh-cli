@@ -58,6 +58,7 @@
     "please-upgrade-node": "^3.1.1",
     "prompt": "^1.0.0",
     "read-file": "^0.2.0",
+    "resolve-cwd": "^2.0.0",
     "shelljs": "^0.8.3",
     "superagent": "^3.8.3",
     "underscore": "^1.9.1",

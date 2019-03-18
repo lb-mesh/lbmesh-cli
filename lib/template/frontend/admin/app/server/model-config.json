@@ -20,5 +20,13 @@
     "AdministratorAccessToken": {
         "dataSource":"datastore",
         "public":false       
+    },
+    "messenger": {
+      "dataSource":"localmessenger",
+      "public":false
+    },
+    "databank":{
+      "dataSource":"localdatabank",
+      "public":false
     }
-}
+  }
