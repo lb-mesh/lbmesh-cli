@@ -79,14 +79,6 @@ class Create {
                 fs.mkdirSync(folder + '/backend/' + svc);
                 sh.cp('-r', this.machine.templatefolder + '/backend/app/*', folder + '/backend/' + svc + '/');
                 
-                // sh.cp('-r', this.machine.templatefolder + '/backend/.d*', folder + '/backend/' + svc + '/')
-                // sh.cp('-r', this.machine.templatefolder + '/backend/.e*', folder + '/backend/' + svc + '/')
-                // sh.cp('-r', this.machine.templatefolder + '/backend/.g*', folder + '/backend/' + svc + '/')
-                // sh.cp('-r', this.machine.templatefolder + '/backend/.y*', folder + '/backend/' + svc + '/')
-                // sh.cp('-r', this.machine.templatefolder + '/backend/Dockerfile*', folder + '/backend/' + svc + '/')
-
-                // sh.cp('-r', this.machine.templatefolder + '/backend/server', folder + '/backend/' + svc + '/');
-
                 ejs.renderFile(this.machine.templatefolder + '/backend/package-' + svc + '.ejs', {
                     "appname": this.answers.appname,
                     "appservice": svc
@@ -94,19 +86,18 @@ class Create {
                     fs.writeFileSync(folder + '/backend/' + svc + '/package.json', str);
                 });
 
-                // ejs.renderFile(this.machine.templatefolder + '/backend/package-lock.ejs', {
-                //     "appname": this.answers.appname,
-                //     "appservice": svc                
-                // },{}, function(err,str){
-                //     fs.writeFileSync(folder + '/backend/' + svc + '/package-lock.json', str);
-                // });
-
                 ejs.renderFile(this.machine.templatefolder + '/backend/config.ejs', {
                     "port": this.currentProject.apps[svc].port              
                 },{}, function(err,str){
                     fs.writeFileSync(folder + '/backend/' + svc + '/server/config.json', str);
                 });
                 
+                /**
+                 * Copy in App Specific Files
+                 */
+                sh.cp('-r', this.machine.templatefolder + '/backend/'+ svc + '/*', folder + '/backend/' + svc + '/server/');
+                
+
                 LOG(chalk.blue("     - " + svc.toUpperCase() + " Project Completed."));
 
                 LOG();
@@ -277,6 +268,7 @@ class Create {
             "port_messenger": this.currentProject.apps.messenger.port,
             "port_databank": this.currentProject.apps.databank.port         
         },{}, function(err,str){
+            if(err){ debug("=== error pm2 file generation"); debug(err); }
             fs.writeFileSync(projFolder + '/pm2-ecosystem.config.yaml', str);
         });
 
