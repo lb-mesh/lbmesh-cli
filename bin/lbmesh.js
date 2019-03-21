@@ -51,7 +51,7 @@ banner.display();
 
 program
   .version('0.8.0', '-v, --version')
-  .usage('create|pattern|code|run|build|gui|interactive [options] ');
+  .usage('create|projects|run|build [options] ');
 
 program
   .command('create')
@@ -199,27 +199,47 @@ program
             shelljs.exec("pm2 restart pm2-ecosystem.config.yaml");
           break;
           case 'delete':
-          shelljs.exec("pm2 delete pm2-ecosystem.config.yaml");
+            shelljs.exec("pm2 delete pm2-ecosystem.config.yaml");
+          break;
+          case 'logs':
+            switch(myComponent){
+              case 'all':
+
+              break;
+              default:
+                shelljs.exec("pm2 logs " + myComponent);
+              break;
+            }
           break;
           case 'status':
-            shelljs.exec("pm2 status pm2-ecosystem.config.yaml", {shell: true, stdio: 'inherit'});
+            shelljs.exec("pm2 status pm2-ecosystem.config.yaml", [ 'arg1', 'arg2', 'arg3' ], { stdio: 'inherit'});
           break;
           case 'docker':
-            LOG(myComponent);
+            
               switch(myComponent){
                 case 'up':
-
+                  shelljs.exec("docker-compose up", {stdio: 'inherit'});
                 break;
                 case 'down':
-
+                shelljs.exec("docker-compose down", {stdio: 'inherit'});
                 break;
                 default:
-                  shelljs.exec("docker ps", {input: 'inherit'});
+                  LOG()
+                  LOG('   Current Running Docker Processes')
+                  LOG();
+                  shelljs.exec("docker ps", {stdio: 'inherit'});
+                  LOG()
+                  LOG('   Current Docker Images')
+                  LOG();
+                  shelljs.exec("docker images", {stdio: 'inherit'});
+                  LOG();
                 break;
               }
           break;
           default:
+            LOG();
             LOG(" COMMAND NOT RECOGNIZED ");
+            LOG();
           break;
 
         }
