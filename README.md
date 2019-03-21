@@ -1,10 +1,11 @@
 # LB Mesh CLI
 
-Simple CLI Utility to Encrypt and Decrypt Plain Text Password with AES Encryption.  
+LB Mesh is a Cloud Native Microservice Framework built around loopback.io.  This version is for LB3 exclusively.  
 
-This allows you to setup an encrypted string on one end that can potentially be decryption on the other end once each have the same key.
+This will scaffold an opinionated stack of Loopback Projects that are architected to run off PM2 or as Docker Containers.  
 
-Great Utility for your producing environment variables for your microservices. 
+Don't have a use for the full stack? You can easily leverage any component individually. 
+
 
 ## Installation
 
