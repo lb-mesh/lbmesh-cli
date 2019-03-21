@@ -232,6 +232,10 @@ class Create {
             case 'frontend-admin':
             case 'frontend-www':
                 fs.mkdirSync(projFolder + '/frontend'); 
+                fs.mkdirSync(projFolder + '/database');
+                
+                sh.cp('-r', this.machine.templatefolder + '/README.md', projFolder + '/');
+                sh.cp('-r', this.machine.templatefolder + '/db/mongo', projFolder + '/database/lbmesh-mongo-schema/');               
             break;
             case 'backend-messenger':
             case 'backend-scheduler':
@@ -242,7 +246,8 @@ class Create {
                 fs.mkdirSync(projFolder + '/backend');
                 fs.mkdirSync(projFolder + '/frontend');    
                 fs.mkdirSync(projFolder + '/database');
-                        
+                
+                sh.cp('-r', this.machine.templatefolder + '/README.md', projFolder + '/');
                 sh.cp('-r', this.machine.templatefolder + '/db/mongo', projFolder + '/database/lbmesh-mongo-schema/');
             break;
         }
