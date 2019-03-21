@@ -43,6 +43,7 @@ class Create {
             "name": "",
             "path": "",
             "type": "",
+            "dbname":"",
             "apps": {
                 "www": {
                     "port":0

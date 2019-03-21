@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- Copyright (c) IBM Corp. 2013,2017. All Rights Reserved.
+ Copyright (c) Innovative Thinkrs LLC 2019. All Rights Reserved.
  This project is licensed under the MIT License, full text below.
 
 Author: Jamil Spain  <jamilhassanspain@gmail.com> http://www.jamilspain.com
@@ -35,6 +35,8 @@ require('please-upgrade-node')(pkg)
 const ask = require('inquirer');
 const banner = require("../lib/banner");
 const chalk  = require('chalk');
+const availableCommands = ['create','projects','build','run','open','help'];
+
 const resolveCWD = require('resolve-cwd');
 const debug  = require('debug')('app:cli:lbmesh');
 const fs     = require('fs');
@@ -50,8 +52,8 @@ const LOG    = console.log;
 banner.display();
 
 program
-  .version('0.8.0', '-v, --version')
-  .usage('create|projects|run|build [options] ');
+  .version('1.0.0', '-v, --version')
+  .usage('create|projects|run|open|build [options] ');
 
 program
   .command('create')
@@ -336,6 +338,12 @@ program
 
   });
 
+// program
+//   .command('*')
+//   .action( ()=> {
+//     program.help();
+//   });
+   
 program.on('--help', function(){
   LOG();
   //console.log('Examples:');
@@ -361,6 +369,12 @@ program
  * No Arguments Passed, Show Extended Help Menu
  */
 
-if(!program.args.length) {
+ 
+
+if(!program.args.length  ) {
   program.help();
 };
+
+if( !availableCommands.includes(program.args[0]) ){
+  program.help();
+}
