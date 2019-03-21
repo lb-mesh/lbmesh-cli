@@ -112,7 +112,6 @@ program
 program
   .command('projects [name] [options]')
   .description('Get Project Details')
-  //.option('-o, --open', 'Open Project in Browser')
   .action((name, options)=>{
     banner.projects();
     
@@ -197,10 +196,27 @@ program
             shelljs.exec("pm2 stop pm2-ecosystem.config.yaml");
           break;
           case 'restart':
-            shelljs.exec("pm2 stop pm2-ecosystem.config.yaml");
+            shelljs.exec("pm2 restart pm2-ecosystem.config.yaml");
+          break;
+          case 'delete':
+          shelljs.exec("pm2 delete pm2-ecosystem.config.yaml");
           break;
           case 'status':
-            shelljs.exec("pm2 status pm2-ecosystem.config.yaml");
+            shelljs.exec("pm2 status pm2-ecosystem.config.yaml", {shell: true, stdio: 'inherit'});
+          break;
+          case 'docker':
+            LOG(myComponent);
+              switch(myComponent){
+                case 'up':
+
+                break;
+                case 'down':
+
+                break;
+                default:
+                  shelljs.exec("docker ps", {input: 'inherit'});
+                break;
+              }
           break;
           default:
             LOG(" COMMAND NOT RECOGNIZED ");
