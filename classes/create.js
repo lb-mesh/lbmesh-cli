@@ -98,6 +98,12 @@ class Create {
                  */
                 sh.cp('-r', this.machine.templatefolder + '/backend/'+ svc + '/*', folder + '/backend/' + svc + '/server/');
                 
+                ejs.renderFile(this.machine.templatefolder + '/backend/component-config.development.ejs', {
+                    "appname": this.answers.appname,
+                    "appservice": svc            
+                },{}, function(err,str){
+                    fs.writeFileSync(folder + '/backend/' + svc + '/server/component-config.development.json', str);
+                });                
 
                 LOG(chalk.blue("     - " + svc.toUpperCase() + " Project Completed."));
 

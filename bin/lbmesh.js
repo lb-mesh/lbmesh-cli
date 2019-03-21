@@ -104,11 +104,11 @@ program
 
   })
   .on('--help', function() {
-    console.log('  Examples:');
-    console.log();
-    console.log('    $ deploy exec sequential');
-    console.log('    $ deploy exec async');
-    console.log();
+    // console.log('  Examples:');
+    // console.log();
+    // console.log('    $ deploy exec sequential');
+    // console.log('    $ deploy exec async');
+    // console.log();
   });
 
 program
@@ -280,22 +280,28 @@ program
 
           if( projDetails.apps.api.port > 0 ){
             LOG('   OPENING FRONTEND-API http://localhost:' + projDetails.apps.api.port + ' for Project ' + projDetails.name)
-            shelljs.exec("opn http://localhost:" + projDetails.apps.api.port + "/explorer");
+            shelljs.exec("opn http://localhost:" + projDetails.apps.api.port + "/wwwapi/explorer");
+          }
+
+          if( projDetails.apps.scheduler.port > 0 ){
+            LOG('   OPENING BACKEND-SCHEDULER http://localhost:' + projDetails.apps.scheduler.port + ' for Project ' + projDetails.name)
+            shelljs.exec("opn http://localhost:" + projDetails.apps.scheduler.port + "/scheduler/explorer");
           }
 
           if( projDetails.apps.messenger.port > 0 ){
             LOG('   OPENING BACKEND-MESSENGER http://localhost:' + projDetails.apps.messenger.port + ' for Project ' + projDetails.name)
-            shelljs.exec("opn http://localhost:" + projDetails.apps.messenger.port + "/explorer");
+            shelljs.exec("opn http://localhost:" + projDetails.apps.messenger.port + "/messenger/explorer");
           }
 
           if( projDetails.apps.databank.port > 0 ){
             LOG('   OPENING BACKEND-DATABANK http://localhost:' + projDetails.apps.databank.port + ' for Project ' + projDetails.name)
-            shelljs.exec("opn http://localhost:" + projDetails.apps.databank.port + "/explorer");
+            shelljs.exec("opn http://localhost:" + projDetails.apps.databank.port + "/databank/explorer");
           }
           LOG();
 
       } else {
         LOG();
+        banner.browser();
         console.error("Not in a current LB Mesh Project Directory.")
         banner.runhelp();
         LOG();
@@ -327,12 +333,82 @@ program
 
 program
   .command("help [cmd]")
+  .description("Get Detailed Usage Help for Command")
   .action((cmd)=> {
+    let myCommand = (cmd == undefined)? 'empty' : cmd.toLowerCase();
+    banner.help(myCommand);
 
-    switch(cmd.toLowerCase()){
+    switch(myCommand){
       case 'run':
         LOG();
-        LOG('THIS IS HELPF OR RUN');
+        LOG('   This COMMAND is available only within the root of a LB Mesh Project Folder.');
+        LOG('   It wraps around PM2 and DOCKER runtime environments.  Please view list of available options in table below. ');
+        LOG();
+        banner.runhelp('run');
+
+      break;
+      case 'create':
+        LOG();
+        LOG('   This COMMAND is available anywhere on the filesystem.  It will start the wizard to create a project inside the workspace.');
+        LOG('   You will have the option to build a complete stack ( Frontend & Backend ) or build an individual project');
+        LOG();        
+        LOG();
+        LOG('   $ lbmesh create')
+        LOG();
+      break;
+      case 'open':
+        LOG();
+        LOG('   This COMMAND is available only within the root of a LB Mesh Project Folder.');
+        LOG('   It will read the project config file and get a list of the ports where apps are assigned.');
+        LOG('   Run the following command to access open the project componets in the default browser');
+        LOG();
+        LOG('   $ lbmesh open')
+        LOG();
+        LOG();  
+
+      break;
+      case 'projects':
+        LOG();
+        LOG('   This COMMAND is available anywhere on the filesystem.  There are two states you can use this command.  ');
+        LOG('   It will read the project config file and get a list of the ports where apps are assigned.');
+        LOG();
+        LOG('   $ lbmesh projects')
+        LOG();
+        LOG();
+        LOG('   Once you have a list of projects, you can get details about that project by using the project name appended to the same command')
+        LOG();
+        LOG('   $ lbmesh projects #projectname#')
+        LOG();
+        LOG('   Change Directory to that folder to get more access to the following commands:');
+        LOG();
+        LOG('   $ lbmesh run')
+        LOG('   $ lbmesh open')
+        LOG('   $ lbmesh build')
+        LOG();
+
+      break;
+      case 'build':
+        LOG();
+        LOG('   This COMMAND is available only within the root of a LB Mesh Project Folder.');
+        LOG('   It will read the docker-compose.yaml file and get the path for each component and do a \'docker build\'.');
+        LOG();
+        LOG();
+        LOG('   $ lbmesh build')
+        LOG();
+        LOG('   This will not assign tag numbers to the build, but give them all the :latest tag.');
+        LOG('   If you wish to assign your own container image tags, cd to the root of each component and run the following command:')
+        LOG();
+        LOG('   $ docker build -t imagename:tag .')
+        LOG();
+        LOG('   Looking to add this functionality as a future feature to do the following: ')
+        LOG();
+        LOG();
+        LOG('   $ lbmesh build')
+        LOG();
+        LOG();
+      break;
+      default:
+        program.help();
       break;
     }
 
@@ -368,13 +444,10 @@ program
 /**
  * No Arguments Passed, Show Extended Help Menu
  */
-
- 
-
 if(!program.args.length  ) {
   program.help();
 };
 
-if( !availableCommands.includes(program.args[0]) ){
-  program.help();
-}
+// if( !availableCommands.includes(program.args[0]) ){
+//   program.help();
+// }
