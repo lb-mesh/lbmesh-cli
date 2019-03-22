@@ -169,6 +169,13 @@ class Create {
                     fs.writeFileSync(folder + '/frontend/' + svc + '/server/config.json', str);
                 });
 
+                ejs.renderFile(this.machine.templatefolder + '/frontend/api/component-config.development.ejs', {
+                    "appname": this.answers.appname,
+                    "appservice": svc            
+                },{}, function(err,str){
+                    fs.writeFileSync(folder + '/frontend/' + svc + '/server/component-config.development.json', str);
+                });  
+
                 ejs.renderFile(this.machine.templatefolder + '/frontend/api/package.ejs', {
                     "appname": this.answers.appname,
                     "appservice": svc
