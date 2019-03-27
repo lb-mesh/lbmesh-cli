@@ -1,0 +1,58 @@
+version: '3'
+services:
+
+  mysql:
+    image: mysql:5.7
+    container_name: lbm-db-mysql
+    restart: always
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: lbmesh-db-mysql
+
+  cloudant:
+    image: ibmcom/cloudant-developer:latest
+    container_name: lbm-db-cloudant
+    hostname: developer.local
+    restart: always
+    ports:
+      - "8880:80"
+    volumes:
+      - ./cloudant/data:/srv
+    privileged: true
+    network_mode: bridge
+
+  mongodb:
+    image: mongo:3.6.1
+    restart: always
+    container_name: lbm-db-mongodb
+    volumes:
+      - ./mongo/data:/data/db
+      - ./mongo/config:/data/configdb
+    ports:
+        - 27017:27017
+    command: mongod
+
+  redis:
+    image: redis
+    restart: always
+    container_name: lbm-db-redis
+    volumes:
+      - ./redis/data:/data
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres
+    restart: always
+    container_name: lbm-db-postgres
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: lbmesh-db-postgres
+    ports:
+      - "5432:5432"  
+  

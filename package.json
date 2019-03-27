@@ -17,7 +17,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "node lib/postinstall.js"
+    "postinstall": "node lib/postinstall.js",
+    "postuninstall": "node lib/postuninstall.js"
   },
   "keywords": [
     "lbmesh",
