@@ -1,0 +1,15 @@
+version: '3'
+services:
+
+  cloudant:
+    image: ibmcom/cloudant-developer:latest
+    container_name: lbm-db-cloudant
+    hostname: developer.local
+    restart: always
+    ports:
+      - "8880:80"
+    volumes:
+      - ./cloudant/data:/srv
+    privileged: true
+    network_mode: bridge
+  

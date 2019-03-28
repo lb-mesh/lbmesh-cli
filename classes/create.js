@@ -32,6 +32,7 @@ const debug = require('debug')('app:class:create');
 const ejs   = require('ejs');
 const files = require('../lib/files');
 const fs    = require('fs');
+const path  = require('path');
 const sh    = require('shelljs');
 const _     = require('underscore');
 
@@ -69,7 +70,7 @@ class Create {
     }
 
     folderExists(folder){
-        return fs.existsSync(this.machine.homedir + this.machine.workspace  + folder);
+        return fs.existsSync( path.join(this.machine.homedir,this.machine.workspace,folder) );
     }
 
     scaffoldApp(svc, folder) {
@@ -77,32 +78,32 @@ class Create {
             case 'messenger':
             case 'scheduler':
             case 'databank':
-                fs.mkdirSync(folder + '/backend/' + svc);
-                sh.cp('-r', this.machine.templatefolder + '/backend/app/*', folder + '/backend/' + svc + '/');
+                fs.mkdirSync( path.join(folder, 'backend', svc) );
+                sh.cp('-r', path.join(this.machine.templatefolder,'backend','app','*') , path.join( folder,'backend',svc) );
                 
-                ejs.renderFile(this.machine.templatefolder + '/backend/package-' + svc + '.ejs', {
+                ejs.renderFile( path.join(this.machine.templatefolder,'backend','package-' + svc + '.ejs') , {
                     "appname": this.answers.appname,
                     "appservice": svc
                 },{}, function(err,str){
-                    fs.writeFileSync(folder + '/backend/' + svc + '/package.json', str);
+                    fs.writeFileSync( path.join( folder,'backend',svc,'package.json') , str);
                 });
 
-                ejs.renderFile(this.machine.templatefolder + '/backend/config.ejs', {
+                ejs.renderFile( path.join(this.machine.templatefolder,'backend','config.ejs') , {
                     "port": this.currentProject.apps[svc].port              
                 },{}, function(err,str){
-                    fs.writeFileSync(folder + '/backend/' + svc + '/server/config.json', str);
+                    fs.writeFileSync( path.join(folder, 'backend', svc,'server','config.json') , str);
                 });
                 
                 /**
                  * Copy in App Specific Files
                  */
-                sh.cp('-r', this.machine.templatefolder + '/backend/'+ svc + '/*', folder + '/backend/' + svc + '/server/');
+                sh.cp('-r', path.join(this.machine.templatefolder,'backend', svc,'*') , path.join(folder,'backend',svc,'server') );
                 
-                ejs.renderFile(this.machine.templatefolder + '/backend/component-config.development.ejs', {
+                ejs.renderFile( path.join(this.machine.templatefolder,'backend','component-config.development.ejs') , {
                     "appname": this.answers.appname,
                     "appservice": svc            
                 },{}, function(err,str){
-                    fs.writeFileSync(folder + '/backend/' + svc + '/server/component-config.development.json', str);
+                    fs.writeFileSync( path.join(folder, 'backend', svc ,'server', 'component-config.development.json'), str);
                 });                
 
                 LOG(chalk.blue("     - " + svc.toUpperCase() + " Project Completed."));
@@ -110,7 +111,7 @@ class Create {
                 LOG();
                 LOG(chalk.blue("  - Running NPM INSTALL for... "));    
                 LOG(chalk.blue("     - BACKEND: " + svc.toUpperCase() ));    
-                    sh.cd(folder + '/backend/'+ svc +'/');
+                    sh.cd( path.join(folder, 'backend', svc) );
                     sh.exec('npm install');
 
             break;
@@ -516,7 +517,7 @@ class Create {
          * Try to Generate Folder
          */
         if( !this.folderExists(this.answers.foldername) ){
-            this.machine.targetfolder =  this.machine.workspace + this.answers.foldername;
+            this.machine.targetfolder =  path.join(this.machine.workspace, this.answers.foldername);
             this.currentProject.path = this.machine.targetfolder;
 
             fs.mkdirSync(this.machine.targetfolder);

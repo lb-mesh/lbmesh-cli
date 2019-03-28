@@ -1,0 +1,14 @@
+version: '3'
+services:
+
+  postgres:
+    image: postgres
+    restart: always
+    container_name: lbm-db-postgres
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: lbmesh-db-postgres
+    ports:
+      - "5432:5432"  
+  

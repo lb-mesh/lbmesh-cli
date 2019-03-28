@@ -41,6 +41,7 @@ const resolveCWD = require('resolve-cwd');
 const debug  = require('debug')('app:cli:lbmesh');
 const fs     = require('fs');
 const jsonfile = require('jsonfile');
+const path     = require('path');
 const program = require('commander');
 const prompt = require('prompt');
 const shelljs   = require('shelljs');
@@ -57,6 +58,7 @@ program
 
 program
   .command('create')
+  .alias('generate')
   .description('Scaffold a new LB Mesh Default Project')
   .action( ()=> {
     
@@ -113,7 +115,9 @@ program
 
 program
   .command('projects [name] [options]')
-  .description('Get Project Details')
+  .alias('project')
+  .alias('generate')
+  .description('Get LB Mesh Project Details')
   .action((name, options)=>{
     banner.projects();
     
@@ -125,6 +129,9 @@ program
         LOG();
       } else {
         switch(name){
+          case 'import':
+             LOG('-- IMPORT PROJECT INTO SCAFFOLD --');
+          break;
           case 'reset':
             ask.prompt([ 
               {
@@ -171,19 +178,80 @@ program
 
 //   });
 
-// program
-//   .command('code [name]')
-//   .description('open project folder in Visual Studio Code')
-//   .action((name)=>{
+program
+  .command('db [action] [service]')
+  .alias('database')
+  .alias('datastore')
+  .alias('datasource')
+  .description('Manage DB Container Instances (start|stop|restart|status|logs|config) ')
+  .action((action, service)=>{
+       
+      banner.databases();
+      let myAction = (action == undefined)? 'empty' : action.toLowerCase();
+      let myComponent = (service == undefined)? 'all' : service.toLowerCase();
+      let myServices = ['mongodb','postgres','redis','mysql','cloudant'];
+      
+      let datastoreFilePath = path.join(machine.homedir,'.lbmesh.io','lbmesh-db-stack.yaml');
+    if( fs.existsSync(datastoreFilePath) ){
+      switch(myAction){
+        case 'config':
 
-//   });
+        break;
+        case 'start':
+          if( myServices.includes(myComponent) ){
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io','lbmesh-db-'+ myComponent +'.yaml') + " up -d"); 
+          } else {
+            shelljs.exec("docker-compose -f " + datastoreFilePath + " up -d"); 
+          }
+        break;
+        case 'stop':
+          if( myServices.includes(myComponent) ){
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io','lbmesh-db-'+ myComponent +'.yaml') + " down"); 
+          } else {
+            shelljs.exec("docker-compose -f " + datastoreFilePath + " down");  
+          }
+          
+        break;
+        case 'restart':
+          if( myServices.includes(myComponent) ){
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io','lbmesh-db-'+ myComponent +'.yaml') + " restart"); 
+          } else {
+            shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
+          }
+          
+        break;
+        case 'status':
+          shelljs.exec("docker ps --filter name=lbm-db-*");
+          LOG();
+        break;
+        case 'logs':
+          if( myServices.includes(myComponent) ){
+            shelljs.exec("docker logs lbm-db-" + myComponent);
+            //  -f " + datastoreFilePath + " down"); 
+          } else {
+            LOG()
+            LOG(' Please supply a service name to view container logs.  Options are: mongodb | redis | mysql | postgres | cloudant')
+            LOG()
+          }
+        break;
+        default:
+
+        break;
+      }
+    } else {
+      LOG();
+      LOG('  - Cannot Find LB Mesh DB Stack YAML');
+      LOG();
+    }
+
+  });
 
 program
   .command('run [action] [component]')
   .description('Start|Stop|Restart|Log environment via pm2 runtime')
   .action((action, component)=>{
     banner.runtime();
-    if( fs.existsSync('./lbmesh-config.json') && fs.existsSync('./docker-compose.yaml') ){
+    if( fs.existsSync(path.resolve('lbmesh-config.json')) && s.existsSync(path.resolve('docker-compose.yaml')) ){
         let myAction = (action == undefined)? 'empty' : action.toLowerCase();
         let myComponent = (component == undefined)? 'all' : component.toLowerCase() ;
 
@@ -261,7 +329,7 @@ program
   .command('open')
   .description('Open Browser Windows for Project')
   .action((name)=>{
-      if( fs.existsSync('./lbmesh-config.json') && fs.existsSync('./docker-compose.yaml') ) {
+      if( fs.existsSync(path.resolve('lbmesh-config.json')) && s.existsSync(path.resolve('docker-compose.yaml')) ) {
             banner.browser();
         let list = new Projects();
         let projDetails = list.readProjectConfig(process.cwd());
@@ -314,7 +382,7 @@ program
   .description('Generate Docker Images for LB Mesh Project')
   .action((name)=>{
       banner.build();
-      if( fs.existsSync('./lbmesh-config.json') && fs.existsSync('./docker-compose.yaml') ){
+      if( fs.existsSync(path.resolve('lbmesh-config.json')) && s.existsSync(path.resolve('docker-compose.yaml')) ){
         shelljs.exec("docker-compose build");
       } else {
         LOG();
@@ -422,19 +490,6 @@ program
    
 program.on('--help', function(){
   LOG();
-  //console.log('Examples:');
-  // console.log('');
-  // console.log('  $ pass encrypt mypassword -k oneWordPass');
-  // console.log("  $ pass encrypt 'mypassword' -k 'Phrase to encrypt words' ");
-  // console.log('');
-  // console.log('  $ pass decrypt encryptedstring -k oneWordPass');
-  // console.log("  $ pass decrypt 'encryptedstring' -k 'Phrase to encrypt words' ");
-  // console.log('');
-  // console.log('Notice: ')
-  // console.log('  For special characters in passwords/keys,');
-  // console.log('  please use single quotes around each');
-  // console.log('');
-  // console.log('');
   LOG();
 });
   

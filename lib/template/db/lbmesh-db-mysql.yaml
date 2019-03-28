@@ -1,0 +1,14 @@
+version: '3'
+services:
+
+  mysql:
+    image: mysql:5.7
+    container_name: lbm-db-mysql
+    restart: always
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: lbmesh-db-mysql
