@@ -8,7 +8,7 @@ services:
     volumes:
       - ./mysql/data:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - "3380:3306"
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: lbmesh-db-mysql

@@ -116,78 +116,78 @@ class Create {
 
             break;
             case 'admin':
-                sh.cp('-r', this.machine.templatefolder + '/frontend/admin/app', folder + '/frontend/' + svc + '/');
+                sh.cp('-r', path.join(this.machine.templatefolder,'frontend','admin','app') , paht.join(folder,'frontend',svc) );
 
                 
-                ejs.renderFile(this.machine.templatefolder + '/frontend/admin/config.ejs', {
+                ejs.renderFile( path.join(this.machine.templatefolder,'frontend','admin','config.ejs'), {
                     "port_admin": this.currentProject.apps[svc].port              
                 },{}, function(err,str){
-                    fs.writeFileSync(folder + '/frontend/' + svc + '/server/config.json', str);
+                    fs.writeFileSync( path.join(folder,'frontend',svc,'server','config.json'), str);
                 });
 
-                ejs.renderFile(this.machine.templatefolder + '/frontend/admin/package.ejs', {
+                ejs.renderFile( path.join(this.machine.templatefolder,'frontend','admin','package.ejs'), {
                     "appname": this.answers.appname,
                     "appservice": svc
                 },{}, function(err,str){
-                    fs.writeFileSync(folder + '/frontend/' + svc + '/package.json', str);
+                    fs.writeFileSync( path.join(folder ,'frontend', svc ,'package.json'), str);
                 });
 
                 LOG();
                 LOG(chalk.blue("  - Running NPM INSTALL for... "));    
                 LOG(chalk.blue("     - FRONTEND: " + svc.toUpperCase() ));    
-                    sh.cd(folder + '/frontend/'+ svc +'/');
+                    sh.cd( path.join(folder,'frontend',svc) );
                     sh.exec('npm install');
 
             break;
             case 'www':
-                sh.cp('-r', this.machine.templatefolder + '/frontend/www/app', folder + '/frontend/' + svc + '/');
+                sh.cp('-r', path.join(this.machine.templatefolder,'frontend','www','app') , path.join(folder,'frontend', svc) );
  
-                ejs.renderFile(this.machine.templatefolder + '/frontend/www/config.ejs', {
+                ejs.renderFile( path.join(this.machine.templatefolder,'frontend','www','config.ejs') , {
                     "port_www": this.currentProject.apps[svc].port              
                 },{}, function(err,str){
-                    fs.writeFileSync(folder + '/frontend/' + svc + '/server/config.json', str);
+                    fs.writeFileSync( path.join(folder,'frontend',svc,'server','config.json') , str);
                 });   
                 
-                ejs.renderFile(this.machine.templatefolder + '/frontend/www/package.ejs', {
+                ejs.renderFile( path.join(this.machine.templatefolder,'frontend','www','package.ejs'), {
                     "appname": this.answers.appname,
                     "appservice": svc
                 },{}, function(err,str){
-                    fs.writeFileSync(folder + '/frontend/' + svc + '/package.json', str);
+                    fs.writeFileSync( path.join(folder,'frontend',svc,'package.json') , str);
                 });
 
                 LOG();
                 LOG(chalk.blue("  - Running NPM INSTALL for... "));    
                 LOG(chalk.blue("     - FRONTEND: " + svc.toUpperCase() ));    
-                    sh.cd(folder + '/frontend/'+ svc +'/');
+                    sh.cd( path.join(folder,'frontend', svc ) );
                     sh.exec('npm install');
             break;
             case 'api':
-                sh.cp('-r', this.machine.templatefolder + '/frontend/api/app', folder + '/frontend/' + svc + '/');
+                sh.cp('-r', path.join(this.machine.templatefolder, 'frontend','api','app'), path.join(folder,'frontend',svc) );
 
-                ejs.renderFile(this.machine.templatefolder + '/frontend/api/config.ejs', {
+                ejs.renderFile( path.join(this.machine.templatefolder,'frontend','api','config.ejs'), {
                     "port_api": this.currentProject.apps[svc].port              
                 },{}, function(err,str){
-                    fs.writeFileSync(folder + '/frontend/' + svc + '/server/config.json', str);
+                    fs.writeFileSync( path.join(folder,'frontend',svc, 'server','config.json') , str);
                 });
 
-                ejs.renderFile(this.machine.templatefolder + '/frontend/api/component-config.development.ejs', {
+                ejs.renderFile( path.join(this.machine.templatefolder,'frontend','api','component-config.development.ejs') , {
                     "appname": this.answers.appname,
                     "appservice": svc            
                 },{}, function(err,str){
-                    fs.writeFileSync(folder + '/frontend/' + svc + '/server/component-config.development.json', str);
+                    fs.writeFileSync( path.join(folder,'frontend',svc,'server','component-config.development.json'), str);
                 });  
 
-                ejs.renderFile(this.machine.templatefolder + '/frontend/api/package.ejs', {
+                ejs.renderFile( path.join(this.machine.templatefolder,'frontend','api','package.ejs') , {
                     "appname": this.answers.appname,
                     "appservice": svc
                 },{}, function(err,str){
-                    fs.writeFileSync(folder + '/frontend/' + svc + '/package.json', str);
+                    fs.writeFileSync( path.join(folder,'frontend', svc,'package.json') , str);
                 });
 
                 LOG();
                 LOG(chalk.blue("  - Running NPM INSTALL for... "));    
                 LOG(chalk.blue("     - FRONTEND: " + svc.toUpperCase() ));    
-                    sh.cd(folder + '/frontend/'+ svc +'/');
+                    sh.cd( path.join(folder,'frontend',svc) );
                     sh.exec('npm install');
             break;
         }
@@ -239,32 +239,32 @@ class Create {
             case 'frontend-api':
             case 'frontend-admin':
             case 'frontend-www':
-                fs.mkdirSync(projFolder + '/frontend'); 
-                fs.mkdirSync(projFolder + '/database');
+                fs.mkdirSync(path.join(projFolder,'frontend') ); 
+                fs.mkdirSync( path.join(projFolder,'database') );
                 
-                sh.cp('-r', this.machine.templatefolder + '/README.md', projFolder + '/');
-                sh.cp('-r', this.machine.templatefolder + '/db/mongo', projFolder + '/database/lbmesh-mongo-schema/');               
+                sh.cp('-r', path.join(this.machine.templatefolder,'README.md') , path.join(projFolder) );
+                sh.cp('-r', path.join(this.machine.templatefolder,'db','mongo') , path.join(projFolder,'database','lbmesh-mongo-schema') );            
             break;
             case 'backend-messenger':
             case 'backend-scheduler':
             case 'backend-databank':
-                fs.mkdirSync(projFolder + '/backend'); 
+                fs.mkdirSync( path.join(projFolder,'backend') ); 
             break;
             default:
-                fs.mkdirSync(projFolder + '/backend');
-                fs.mkdirSync(projFolder + '/frontend');    
-                fs.mkdirSync(projFolder + '/database');
+                fs.mkdirSync( path.join(projFolder,'backend') );
+                fs.mkdirSync( path.join(projFolder, 'frontend') );    
+                fs.mkdirSync( path.join(projFolder, 'database') );
                 
-                sh.cp('-r', this.machine.templatefolder + '/README.md', projFolder + '/');
-                sh.cp('-r', this.machine.templatefolder + '/db/mongo', projFolder + '/database/lbmesh-mongo-schema/');
+                sh.cp('-r', path.join(this.machine.templatefolder,'README.md') , path.join(projFolder) );
+                sh.cp('-r', path.join(this.machine.templatefolder,'db','mongo') , path.join(projFolder,'database','lbmesh-mongo-schema') );
             break;
         }
         
-        fs.mkdirSync(projFolder + '/general');
+        fs.mkdirSync( path.join(projFolder, 'general') );
 
-        fs.writeFileSync(projFolder + '/lbmesh-config.json',JSON.stringify(this.currentProject,null,2));
+        fs.writeFileSync( path.join(projFolder, 'lbmesh-config.json') ,JSON.stringify(this.currentProject,null,2));
         
-        ejs.renderFile(this.machine.templatefolder + '/docker/docker-' + projType + '.ejs', {
+        ejs.renderFile( path.join(this.machine.templatefolder,'docker','docker-' + projType + '.ejs') , {
             "appname": this.answers.appname.toLowerCase(),
             "apptype": this.answers.projtype,
             "port_www": this.currentProject.apps.www.port,
@@ -274,11 +274,11 @@ class Create {
             "port_messenger": this.currentProject.apps.messenger.port,
             "port_databank": this.currentProject.apps.databank.port   
         },{}, function(err,str){
-            fs.writeFileSync(projFolder + '/docker-compose.yaml', str);
+            fs.writeFileSync( path.join(projFolder, 'docker-compose.yaml') , str);
         });
         
  
-        ejs.renderFile(this.machine.templatefolder + '/pm2/pm2-' + projType + '.ejs', {
+        ejs.renderFile( path.join(this.machine.templatefolder,'pm2','pm2-' + projType + '.ejs') , {
             "appname": this.answers.appname.toLowerCase(),
             "apptype": this.answers.projtype,
             "port_www": this.currentProject.apps.www.port,
@@ -289,7 +289,7 @@ class Create {
             "port_databank": this.currentProject.apps.databank.port         
         },{}, function(err,str){
             if(err){ debug("=== error pm2 file generation"); debug(err); }
-            fs.writeFileSync(projFolder + '/pm2-ecosystem.config.yaml', str);
+            fs.writeFileSync( path.join( projFolder,'pm2-ecosystem.config.yaml') , str);
         });
 
 

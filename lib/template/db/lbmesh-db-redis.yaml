@@ -2,11 +2,10 @@ version: '3'
 services:
 
   redis:
-    image: redis
+    image: redis:latest
     restart: always
     container_name: lbm-db-redis
     volumes:
-      - ./redis/data:/data
+        - ./redis/data:/data
     ports:
-      - "6379:6379"
-  
+        - "6379:6379"

@@ -8,7 +8,7 @@ services:
     volumes:
       - ./mysql/data:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - "3380:3306"
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: lbmesh-db-mysql
@@ -33,11 +33,11 @@ services:
       - ./mongo/data:/data/db
       - ./mongo/config:/data/configdb
     ports:
-        - 27017:27017
+        - "27019:27017"
     command: mongod
 
   redis:
-    image: redis
+    image: redis:latest
     restart: always
     container_name: lbm-db-redis
     volumes:
@@ -46,7 +46,7 @@ services:
       - "6379:6379"
 
   postgres:
-    image: postgres
+    image: postgres:latest
     restart: always
     container_name: lbm-db-postgres
     volumes:
@@ -55,4 +55,5 @@ services:
       POSTGRES_PASSWORD: lbmesh-db-postgres
     ports:
       - "5432:5432"  
+  
   

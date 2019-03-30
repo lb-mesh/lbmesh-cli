@@ -53,6 +53,14 @@ class Base {
     writeGlobalConfig(){
         files.writeGlobalFile(this.machine);
     };
+
+    writeGlobalConfigWithObject(objectData){
+        files.writeGlobalFile(objectData);
+    };
+
+    readGlobalConfig(){
+        return files.readGlobalFile();
+    }
 }
 
 module.exports = Base;

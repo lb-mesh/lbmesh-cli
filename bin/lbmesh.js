@@ -48,6 +48,9 @@ const shelljs   = require('shelljs');
 
 const Create = require('../classes/create');
 const Projects = require('../classes/projects');
+const DB      = require('../classes/db');
+
+ 
 const LOG    = console.log;
 
 banner.display();
@@ -115,8 +118,7 @@ program
 
 program
   .command('projects [name] [options]')
-  .alias('project')
-  .alias('generate')
+  //.alias('project')
   .description('Get LB Mesh Project Details')
   .action((name, options)=>{
     banner.projects();
@@ -180,9 +182,9 @@ program
 
 program
   .command('db [action] [service]')
-  .alias('database')
-  .alias('datastore')
-  .alias('datasource')
+ // .alias('database')
+   .alias('datastore')
+  //.alias('datasource')
   .description('Manage DB Container Instances (start|stop|restart|status|logs|config) ')
   .action((action, service)=>{
        
@@ -193,9 +195,66 @@ program
       
       let datastoreFilePath = path.join(machine.homedir,'.lbmesh.io','lbmesh-db-stack.yaml');
     if( fs.existsSync(datastoreFilePath) ){
-      switch(myAction){
+      switch(myAction){   
         case 'config':
+            let mySettings = new DB();
+            let showTable = mySettings.retrievePorts();
+            
+            LOG( showTable.table );
+            LOG();
 
+            ask
+            .prompt([
+              // {
+              //   "type": "input",
+              //   "default": "Demo",
+              //   "name": "appname",
+              //   "message": 'What is the name of your Application?'
+              // },
+              {
+                "type": "list",
+                "default": "exit",
+                "message": "Which DB Settings would you like to update?",
+                "name": "dbSettings",
+                "choices": [
+                 // {"name": "Full Stack ( Frontend + Backend )", "value": "frontend-backend"},
+                  //new ask.Separator(),
+                  {"name":"MongoDB", "value":"mongodb"},
+                  {"name":"MySQL", "value":"mysql"},
+                  {"name":"Cloudant", "value":"cloudant"},
+                  {"name":"Redis", "value":"redis"},
+                  {"name":"Postgres", "value":"postgres"},
+                  new ask.Separator(),
+                  {"name":"No Changes, Exit", "value":"exit"},                  
+                ],
+                //"message": 'Create Project in Default Workspace $HOME/Workspace-lbmesh/ (Y) or Current Directory (n)?'
+              }
+            ]).then(answers => {
+                //LOG(answers);
+                if( answers.dbSettings !== 'exit') {
+                  ask.
+                  prompt([
+                    {
+                      "type": "input",
+                      "default": showTable.sourceData[answers.dbSettings].port,
+                      "name": "newPort",
+                      "message": 'What port would you like to use for ' + answers.dbSettings.toUpperCase() + ' ?'
+                    }                   
+                    // {
+                    //   "type": "input",
+                    //   "default": showTable.sourceData[answers].image,
+                    //   "name": "newImage",
+                    //   "message": 'What Container Image would you like to use for your ' + answers.toUpperCase() + ' Instance?'
+                    // },  
+                  ]).then( answers2 => {
+                        answers2["chosenDB"] = answers.dbSettings;
+                        mySettings.updatePorts(answers2);
+                  });
+                }
+    
+            });
+            //LOG( mySettings.retrievePorts() );
+            LOG()
         break;
         case 'start':
           if( myServices.includes(myComponent) ){
@@ -203,6 +262,7 @@ program
           } else {
             shelljs.exec("docker-compose -f " + datastoreFilePath + " up -d"); 
           }
+          LOG()
         break;
         case 'stop':
           if( myServices.includes(myComponent) ){
@@ -210,7 +270,7 @@ program
           } else {
             shelljs.exec("docker-compose -f " + datastoreFilePath + " down");  
           }
-          
+          LOG()
         break;
         case 'restart':
           if( myServices.includes(myComponent) ){
@@ -218,7 +278,7 @@ program
           } else {
             shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
           }
-          
+          LOG()
         break;
         case 'status':
           shelljs.exec("docker ps --filter name=lbm-db-*");
@@ -235,6 +295,13 @@ program
           }
         break;
         default:
+            let mySettingsView = new DB();
+            let showTableList = mySettingsView.retrievePorts();
+            
+            LOG();
+            LOG( showTableList.table );
+            LOG();
+
 
         break;
       }
