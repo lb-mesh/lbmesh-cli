@@ -116,7 +116,7 @@ class Create {
 
             break;
             case 'admin':
-                sh.cp('-r', path.join(this.machine.templatefolder,'frontend','admin','app') , paht.join(folder,'frontend',svc) );
+                sh.cp('-r', path.join(this.machine.templatefolder,'frontend','admin','app') , path.join(folder,'frontend',svc) );
 
                 
                 ejs.renderFile( path.join(this.machine.templatefolder,'frontend','admin','config.ejs'), {
@@ -299,10 +299,13 @@ class Create {
         /**
          * Close Out Global Config
          */
+        // TODO: MAKE THIS A WHILE LOOP
         if (this.answers.projtype=='frontend-backend'){
-            this.machine.portStackCount = (this.machine.portStackCount + 10);
+            this.machine.portStackCount = (this.machine.portStackExclude.includes(this.machine.portStackCount + 10))? this.machine.portStackCount + 20 : this.machine.portStackCount + 10;
         } else {
-            this.machine.portAppCount = (this.machine.portAppCount + 2);
+            this.machine.portAppCount =  (this.machine.portAppExclude.includes(this.machine.portAppCount + 2))? this.machine.portAppCount + 4 : this.machine.portAppCount + 2;
+            //(this.machine.portAppCount + 2);
+           
         }
         this.machine.projectAppsList.push( this.answers.appname );
         this.machine.projectApps.push({"name":this.answers.appname,"folder":this.currentProject.path,"type":this.answers.projtype});
@@ -475,7 +478,7 @@ class Create {
         this.currentProject.type = this.answers.projtype;
         let starterPort = (this.answers.projtype == 'frontend-backend')? this.machine.portStackCount : this.machine.portAppCount;
         if( starterPort == 4990){
-            starterPort = 5000;
+            starterPort = 4000;
         } else if (starterPort== 3950) {
             starterPort = 3500;
         }

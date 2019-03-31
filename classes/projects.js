@@ -27,6 +27,7 @@
 'use strict'
 const Base      = require('./Base');
 const chalk     = require('chalk');
+const debug     = require('debug')('app:cli:projects');
 const LOG       = console.log;
 const table     = require('markdown-table');
 const _         = require('underscore');
@@ -114,6 +115,45 @@ class Projects extends Base{
         this.machine.projectAppsList.length = 0;
         this.machine.projectApps.length = 0;
         this.writeGlobalConfig();
+    }
+
+    arrayRemove(arr, value) {
+
+        return arr.filter(function(ele){
+            return ele != value;
+        });
+     
+    }
+
+    doesProjectExist(name){
+        return this.machine.projectAppsList.includes(name);
+    }
+
+    importProjectConfig(folderpath){
+        return this.readImportProjectConfig(folderpath);
+    }
+
+    importProject(importDetails){
+
+        /**
+         * Read Project Folder & Grab Settings
+         */
+            this.machine.projectAppsList.push( importDetails.name );
+            this.machine.projectApps.push({
+                name:   importDetails.name,
+                folder: importDetails.path,
+                type:   importDetails.type
+            });
+            this.machine.portStackExclude.push( parseInt( (importDetails.apps.www.port - 1) ) );
+
+         /**
+          * Check App Settings ( Exit if Exists)
+          */
+            this.writeGlobalConfig();
+
+        /**
+         * Import Port Exclude & ProjectApps / ProjectData
+         */
     }
 
     activeAppPort(type, apps){

@@ -132,7 +132,65 @@ program
       } else {
         switch(name){
           case 'import':
-             LOG('-- IMPORT PROJECT INTO SCAFFOLD --');
+             //LOG('-- IMPORT PROJECT INTO SCAFFOLD --');
+             LOG();
+             // Are you in Project Dir
+             if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ){
+              let potentialProject = list.importProjectConfig( path.resolve('lbmesh-config.json') );  
+              //LOG( potentialProject);
+              LOG('     ---  WELCOME TO LB MESH PROJECT IMPORT ---')
+              LOG();
+              LOG('     Detected Project Name: ' + potentialProject.name.toUpperCase() ); // type ' + list.getProjectType(potentialProject.type))
+              LOG('     Detected Project Type: ' + list.getProjectType(potentialProject.type));
+              LOG();
+
+              ask.
+                  prompt([
+                    {
+                      "type": "confirm",
+                      "default": "Y",
+                      "name": "doimport",
+                      "message": 'Are you sure you want to import this project? ' 
+                    }   
+                  ]).then( answers => {
+                      //LOG(answers);
+                      if( answers.doimport ){
+                        
+                        LOG();
+                        // Check
+                        if( !list.doesProjectExist(potentialProject.name) ){
+                          list.importProject( potentialProject );
+
+                          LOG( chalk.blue('      Project '+ potentialProject.name.toUpperCase() + ' successfully imported!'))
+                          LOG('    -------------------------------------------');   
+                        } else {
+                          LOG( chalk.red('      Project with name '+ potentialProject.name.toUpperCase() + ' already exists!'))
+                          LOG('    -------------------------------------------');                            
+                        }
+
+                        LOG();
+
+                      } else {
+
+                        LOG();
+                        LOG( chalk.red('      Canceling '+ potentialProject.name.toUpperCase() + ' Project Import'))
+                        LOG('    -------------------------------------------');
+                        LOG();
+
+                      }
+                  });
+
+                //list.importProject( path.resolve('lbmesh-config.json') );
+              
+               
+             } else {
+               LOG();
+               LOG( chalk.red('Not currently in a LB Mesh Project Directory') );
+               LOG();
+             }
+             
+
+
           break;
           case 'reset':
             ask.prompt([ 
@@ -318,7 +376,7 @@ program
   .description('Start|Stop|Restart|Log environment via pm2 runtime')
   .action((action, component)=>{
     banner.runtime();
-    if( fs.existsSync(path.resolve('lbmesh-config.json')) && s.existsSync(path.resolve('docker-compose.yaml')) ){
+    if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ){
         let myAction = (action == undefined)? 'empty' : action.toLowerCase();
         let myComponent = (component == undefined)? 'all' : component.toLowerCase() ;
 
@@ -396,7 +454,7 @@ program
   .command('open')
   .description('Open Browser Windows for Project')
   .action((name)=>{
-      if( fs.existsSync(path.resolve('lbmesh-config.json')) && s.existsSync(path.resolve('docker-compose.yaml')) ) {
+      if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ) {
             banner.browser();
         let list = new Projects();
         let projDetails = list.readProjectConfig(process.cwd());
@@ -449,7 +507,7 @@ program
   .description('Generate Docker Images for LB Mesh Project')
   .action((name)=>{
       banner.build();
-      if( fs.existsSync(path.resolve('lbmesh-config.json')) && s.existsSync(path.resolve('docker-compose.yaml')) ){
+      if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ){
         shelljs.exec("docker-compose build");
       } else {
         LOG();

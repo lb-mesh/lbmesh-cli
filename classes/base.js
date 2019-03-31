@@ -50,6 +50,10 @@ class Base {
         return files.readProjectFile(projFolder);
     }
 
+    readImportProjectConfig(projConfigPath){
+        return files.importProjectFile(projConfigPath);
+    }
+
     writeGlobalConfig(){
         files.writeGlobalFile(this.machine);
     };
