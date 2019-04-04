@@ -241,7 +241,7 @@ program
 program
   .command('db [action] [service]')
  // .alias('database')
-   .alias('datastore')
+  // .alias('datastore')
   //.alias('datasource')
   .description('Manage DB Container Instances (start|stop|restart|status|logs|config) ')
   .action((action, service)=>{
