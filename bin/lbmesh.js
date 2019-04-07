@@ -339,12 +339,12 @@ program
           LOG()
         break;
         case 'status':
-          shelljs.exec("docker ps --filter name=lbm-db-*");
+          shelljs.exec("docker ps --filter name=lbm*");
           LOG();
         break;
         case 'logs':
           if( myServices.includes(myComponent) ){
-            shelljs.exec("docker logs lbm-db-" + myComponent);
+            shelljs.exec("docker logs lbmesh-db-" + myComponent + " -f");
             //  -f " + datastoreFilePath + " down"); 
           } else {
             LOG()

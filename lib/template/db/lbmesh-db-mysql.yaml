@@ -1,14 +1,16 @@
-version: '3'
+version: '2'
 services:
 
   mysql:
     image: mysql:5.7
-    container_name: lbm-db-mysql
+    container_name: lbmesh-db-mysql
     restart: always
+    mem_reservation: 128m
+    mem_limit: 384m
     volumes:
       - ./mysql/data:/var/lib/mysql
     ports:
-      - "3380:3306"
+      - "3306:3306"
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: lbmesh-db-mysql
