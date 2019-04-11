@@ -126,7 +126,7 @@ class Projects extends Base{
     }
 
     doesProjectExist(name){
-        return this.machine.projectAppsList.includes(name);
+        return this.machine.projectAppsList.includes(name.toLowerCase());
     }
 
     importProjectConfig(folderpath){
@@ -154,6 +154,32 @@ class Projects extends Base{
         /**
          * Import Port Exclude & ProjectApps / ProjectData
          */
+    }
+
+    updateImportProject(projtype){
+        switch(type){
+            case 'frontend-www':
+                myPort = apps.www.port;
+            break;
+            case 'frontend-admin':
+                myPort = apps.admin.port;
+            break;
+            case 'frontend-api':
+                myPort = apps.api.port;
+            break;
+            case 'backend-scheduler':
+                myPort = apps.scheduler.port;
+            break;
+            case 'backend-messenger':
+                myPort = apps.messenger.port;
+            break;
+            case 'backend-databank':
+                myPort = apps.databank.port;
+            break;
+            case 'frontend-backend':
+
+            break;
+        }        
     }
 
     activeAppPort(type, apps){

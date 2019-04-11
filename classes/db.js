@@ -48,7 +48,7 @@ class Db extends Base{
         };
         let myDBStack = [];
             myDBStack.push(['DB','Port','Image']);
-        let DBList = ['mongodb','mysql','cloudant','redis','postgres'];
+        let DBList = ['mongodb','mysql','cloudant','redis','postgres','mssql'];
 
         this.portsList = this.readGlobalConfig();
         
@@ -86,7 +86,9 @@ class Db extends Base{
                 "redis_image":   machineData.dbStack.redis.image,
                 "redis_port":     machineData.dbStack.redis.port,
                 "postgres_image": machineData.dbStack.postgres.image,
-                "postgres_port":  machineData.dbStack.postgres.port   
+                "postgres_port":  machineData.dbStack.postgres.port,  
+                "mssql_image": machineData.dbStack.mssql.image,
+                "mssql_port":  machineData.dbStack.mssql.port   
             },{}, function(err,str){
                 if( err ) console.log(err);
                 fs.writeFileSync( path.join(machineData.templatefolder,'db','lbmesh-db-stack.yaml'), str);

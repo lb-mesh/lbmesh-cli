@@ -47,22 +47,28 @@ class Create {
             "dbname":"",
             "apps": {
                 "www": {
-                    "port":0
+                    "port":0,
+                    "tag": ""
                 },
                 "admin": {
-                    "port":0
+                    "port":0,
+                    "tag": ""
                 },
                 "api": {
-                    "port":0
+                    "port":0,
+                    "tag": ""
                 },
                 "scheduler": {
-                    "port":0
+                    "port":0,
+                    "tag": ""
                 },
                 "messenger": {
-                    "port":0
+                    "port":0,
+                    "tag": ""
                 },
                 "databank": {
-                    "port":0
+                    "port":0,
+                    "tag": ""
                 }
             }
         };

@@ -49,6 +49,7 @@ const shelljs   = require('shelljs');
 const Create = require('../classes/create');
 const Projects = require('../classes/projects');
 const DB      = require('../classes/db');
+const INTEG   = require('../classes/integ');
 
  
 const LOG    = console.log;
@@ -151,7 +152,13 @@ program
                       "default": "Y",
                       "name": "doimport",
                       "message": 'Are you sure you want to import this project? ' 
-                    }   
+                    },
+                    {
+                      "type": "confirm",
+                      "default": "Y",
+                      "name": "donpm",
+                      "message": 'Do you need to run `npm install` in this project? ' 
+                    }     
                   ]).then( answers => {
                       //LOG(answers);
                       if( answers.doimport ){
@@ -163,6 +170,13 @@ program
 
                           LOG( chalk.blue('      Project '+ potentialProject.name.toUpperCase() + ' successfully imported!'))
                           LOG('    -------------------------------------------');   
+
+                          if( answers.donpm ){
+                            LOG();
+                            list.updateImportProject( potentialProject.type );
+                            LOG('    -------------------------------------------'); 
+                          }
+
                         } else {
                           LOG( chalk.red('      Project with name '+ potentialProject.name.toUpperCase() + ' already exists!'))
                           LOG('    -------------------------------------------');                            
@@ -240,17 +254,14 @@ program
 
 program
   .command('db [action] [service]')
- // .alias('database')
-  // .alias('datastore')
-  //.alias('datasource')
-  .description('Manage DB Container Instances (start|stop|restart|status|logs|config) ')
+  .description('Manage DB Containers (start|stop|restart|status|logs|config) ')
   .action((action, service)=>{
        
       banner.databases();
       let myAction = (action == undefined)? 'empty' : action.toLowerCase();
       let myComponent = (service == undefined)? 'all' : service.toLowerCase();
-      let myServices = ['mongodb','postgres','redis','mysql','cloudant'];
-      
+      let myServices = ['mongodb','postgres','redis','mysql','cloudant','mssql'];
+      //console.log( machine );
       let datastoreFilePath = path.join(machine.homedir,'.lbmesh.io','lbmesh-db-stack.yaml');
     if( fs.existsSync(datastoreFilePath) ){
       switch(myAction){   
@@ -282,6 +293,7 @@ program
                   {"name":"Cloudant", "value":"cloudant"},
                   {"name":"Redis", "value":"redis"},
                   {"name":"Postgres", "value":"postgres"},
+                  {"name":"MS SQL", "value":"mssql"},
                   new ask.Separator(),
                   {"name":"No Changes, Exit", "value":"exit"},                  
                 ],
@@ -315,8 +327,20 @@ program
             LOG()
         break;
         case 'start':
+            let myStart = new DB();
+            let startTable = myStart.retrievePorts();
           if( myServices.includes(myComponent) ){
             shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io','lbmesh-db-'+ myComponent +'.yaml') + " up -d"); 
+            switch(myComponent){
+              case 'cloudant':
+                LOG();
+                LOG('   OPENING CLOUDANT DASHBOARD http://localhost:' + startTable.sourceData.cloudant.port + '/dashboard.html ');
+                LOG('           CLOUDANT Username/Pass:  admin / pass');
+                LOG();
+                shelljs.exec("sleep 3s");
+                shelljs.exec("opn http://localhost:" + startTable.sourceData.cloudant.port +"/dashboard.html");                  
+              break;
+            }
           } else {
             shelljs.exec("docker-compose -f " + datastoreFilePath + " up -d"); 
           }
@@ -370,6 +394,36 @@ program
     }
 
   });
+
+program
+  .command('integ [name] [service]')
+  .description('Manage Integration Containers (start|stop|restart|status|logs) ')
+  .action((action, service)=>{
+    banner.integrations();
+    let myAction = (action == undefined)? 'empty' : action.toLowerCase();
+    let myComponent = (service == undefined)? 'all' : service.toLowerCase();
+    let myServices = ['datapower','mqlight'];
+
+    let datastoreFilePath = path.join(machine.homedir,'.lbmesh.io','lbmesh-integ-stack.yaml');
+    if( fs.existsSync(datastoreFilePath) ){
+      switch(myAction){
+        default:
+          let mySettingsView = new INTEG();
+          let showTableList = mySettingsView.retrievePorts();
+          
+          LOG();
+          LOG( showTableList.table );
+          LOG();
+        break;
+      }
+    } else {
+      LOG();
+      LOG('  - Cannot Find LB Mesh Integration Stack YAML');
+      LOG();      
+    }
+
+  });
+
 
 program
   .command('run [action] [component]')
@@ -450,6 +504,7 @@ program
   });
 
 
+
 program
   .command('open')
   .description('Open Browser Windows for Project')
@@ -508,7 +563,7 @@ program
   .action((name)=>{
       banner.build();
       if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ){
-        shelljs.exec("docker-compose build");
+       // shelljs.exec("docker-compose build");
       } else {
         LOG();
         console.error("Not in a current LB Mesh Project Directory.")
@@ -516,6 +571,12 @@ program
       }
   });
 
+  program
+  .command('k8')
+  .description('Generate Kubernetes YAML Deployment Files')
+  .action((name)=>{
+
+  });
 
 // program
 //   .command('interactive')
