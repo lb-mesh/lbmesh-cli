@@ -138,7 +138,7 @@ program
              // Are you in Project Dir
              if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ){
               let potentialProject = list.importProjectConfig( path.resolve('lbmesh-config.json') );  
-              //LOG( potentialProject);
+              // LOG( potentialProject);
               LOG('     ---  WELCOME TO LB MESH PROJECT IMPORT ---')
               LOG();
               LOG('     Detected Project Name: ' + potentialProject.name.toUpperCase() ); // type ' + list.getProjectType(potentialProject.type))
@@ -173,7 +173,67 @@ program
 
                           if( answers.donpm ){
                             LOG();
-                            list.updateImportProject( potentialProject.type );
+                            LOG(chalk.blue("  - Running NPM INSTALL for... "));    
+                            LOG();
+                            // list.updateImportProject( potentialProject.type );
+                            switch( potentialProject.type ){
+                              case 'frontend+backend':
+                                  LOG(chalk.blue("     - FRONTEND: WWW "));    
+                                  sh.cd( path.join(potentialProject.path,'frontend','www') );  
+                                  sh.exec('npm install');
+
+                                  LOG(chalk.blue("     - FRONTEND: ADMIN "));    
+                                  sh.cd( path.join(potentialProject.path,'frontend','admin') );  
+                                  sh.exec('npm install');
+
+                                  LOG(chalk.blue("     - FRONTEND: API "));    
+                                  sh.cd( path.join(potentialProject.path,'frontend','api') );  
+                                  sh.exec('npm install');
+
+                                  LOG(chalk.blue("     - BACKEND: SCHEDULER "));    
+                                  sh.cd( path.join(potentialProject.path,'backend','scheduler') );  
+                                  sh.exec('npm install');
+
+                                  LOG(chalk.blue("     - BACKEND: DATABANK "));    
+                                  sh.cd( path.join(potentialProject.path,'backend','databank') );  
+                                      sh.exec('npm install');
+
+                                      LOG(chalk.blue("     - BACKEND: MESSENGER "));    
+                                      sh.cd( path.join(potentialProject.path,'backend','messenger') );  
+                                          sh.exec('npm install');
+                              break;
+                              case 'frontend-www':
+                                LOG(chalk.blue("     - FRONTEND: WWW "));    
+                                sh.cd( path.join(potentialProject.path,'frontend','www') );  
+                                sh.exec('npm install');
+ 
+                              break;
+                              case 'frontend-admin':
+                                LOG(chalk.blue("     - FRONTEND: ADMIN "));    
+                                sh.cd( path.join(potentialProject.path,'frontend','admin') );  
+                                sh.exec('npm install');
+                              break;
+                              case 'frontend-api':
+                                LOG(chalk.blue("     - FRONTEND: API "));    
+                                sh.cd( path.join(potentialProject.path,'frontend','api') );  
+                                sh.exec('npm install');
+                              break;
+                              case 'backend-scheduler':
+                                LOG(chalk.blue("     - BACKEND: SCHEDULER "));    
+                                sh.cd( path.join(potentialProject.path,'backend','scheduler') );  
+                                sh.exec('npm install');
+                              break;
+                              case 'backend-databank':
+                                LOG(chalk.blue("     - BACKEND: DATABANK "));    
+                                sh.cd( path.join(potentialProject.path,'backend','databank') );  
+                                    sh.exec('npm install');
+                              break;
+                              case 'backend-messenger':
+                                LOG(chalk.blue("     - BACKEND: MESSENGER "));    
+                                sh.cd( path.join(potentialProject.path,'backend','messenger') );  
+                                    sh.exec('npm install');
+                              break;
+                            }
                             LOG('    -------------------------------------------'); 
                           }
 
