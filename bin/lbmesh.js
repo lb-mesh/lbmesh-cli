@@ -330,12 +330,12 @@ program
             let myStart = new DB();
             let startTable = myStart.retrievePorts();
           if( myServices.includes(myComponent) ){
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io','lbmesh-db-'+ myComponent +'.yaml') + " up -d"); 
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up -d"); 
             switch(myComponent){
               case 'cloudant':
                 LOG();
                 LOG('   OPENING CLOUDANT DASHBOARD http://localhost:' + startTable.sourceData.cloudant.port + '/dashboard.html ');
-                LOG('           CLOUDANT Username/Pass:  admin / pass');
+                LOG('           CLOUDANT User/Pass:  admin / pass');
                 LOG();
                 shelljs.exec("sleep 3s");
                 shelljs.exec("opn http://localhost:" + startTable.sourceData.cloudant.port +"/dashboard.html");                  
@@ -348,7 +348,7 @@ program
         break;
         case 'stop':
           if( myServices.includes(myComponent) ){
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io','lbmesh-db-'+ myComponent +'.yaml') + " down"); 
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " down"); 
           } else {
             shelljs.exec("docker-compose -f " + datastoreFilePath + " down");  
           }
@@ -356,7 +356,7 @@ program
         break;
         case 'restart':
           if( myServices.includes(myComponent) ){
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io','lbmesh-db-'+ myComponent +'.yaml') + " restart"); 
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " restart"); 
           } else {
             shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
           }
@@ -409,7 +409,7 @@ program
       switch(myAction){
         case 'start':
           if( myServices.includes(myComponent) ){
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io','lbmesh-integ-'+ myComponent +'.yaml') + " up -d"); 
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " up -d"); 
           } else {
             //shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
           }
@@ -417,7 +417,7 @@ program
         break;
         case 'stop':
           if( myServices.includes(myComponent) ){
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io','lbmesh-integ-'+ myComponent +'.yaml') + " down"); 
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent,'lbmesh-integ-'+ myComponent +'.yaml') + " down"); 
           } else {
             //shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
           }
@@ -425,7 +425,7 @@ program
         break;
         case 'restart':
           if( myServices.includes(myComponent) ){
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io','lbmesh-integ-'+ myComponent +'.yaml') + " restart"); 
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " restart"); 
           } else {
             //shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
           }
