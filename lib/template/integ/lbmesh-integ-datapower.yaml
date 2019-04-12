@@ -2,8 +2,8 @@ version: "2"
 services:
     datapower:
         volumes:
-            - "<%= datapower_config %>:/drouter/config"
-            - "<%= datapower_local %>:/drouter/local"
+            - "/Users/jamilspain/lbmesh.io/datapower/config:/drouter/config"
+            - "/Users/jamilspain/lbmesh.io/datapower/data:/drouter/local"
         mem_reservation: 4096m
         mem_limit: 4096m
         environment:

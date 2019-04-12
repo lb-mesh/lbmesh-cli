@@ -1,16 +1,15 @@
 version: "2"
 services:
-
-  mssql:
-    container_name: lbmesh-db-mssql
-    restart: always
-    mem_reservation: 512m
-    mem_limit: 2048m
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=lbmesh-DB@mssql
-      - MSSQL_PID=Developer
-      - MSSQL_MEMORY_LIMIT_MB=2048m
-    ports:
-      - '1443:1433'
-    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    mssql:
+        container_name: lbmesh-db-mssql
+        restart: always
+        mem_reservation: 512m
+        mem_limit: 2048m
+        environment:
+            - ACCEPT_EULA=Y
+            - SA_PASSWORD=lbmesh-DB@mssql
+            - MSSQL_PID=Developer
+            - MSSQL_MEMORY_LIMIT_MB=2048m
+        ports:
+            - "1433:1433"
+        image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu

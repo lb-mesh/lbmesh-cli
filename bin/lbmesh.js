@@ -360,10 +360,10 @@ program
           } else {
             shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
           }
-          LOG()
+          LOG();
         break;
         case 'status':
-          shelljs.exec("docker ps --filter name=lbm*");
+          shelljs.exec("docker ps --filter name=lbmesh-db*");
           LOG();
         break;
         case 'logs':
@@ -404,9 +404,47 @@ program
     let myComponent = (service == undefined)? 'all' : service.toLowerCase();
     let myServices = ['datapower','mqlight'];
 
-    let datastoreFilePath = path.join(machine.homedir,'.lbmesh.io','lbmesh-integ-stack.yaml');
-    if( fs.existsSync(datastoreFilePath) ){
+    let integrationFilePath = path.join(machine.homedir,'.lbmesh.io','lbmesh-integ-stack.yaml');
+    if( fs.existsSync(integrationFilePath) ){
       switch(myAction){
+        case 'start':
+          if( myServices.includes(myComponent) ){
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io','lbmesh-integ-'+ myComponent +'.yaml') + " up -d"); 
+          } else {
+            //shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
+          }
+          LOG();
+        break;
+        case 'stop':
+          if( myServices.includes(myComponent) ){
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io','lbmesh-integ-'+ myComponent +'.yaml') + " down"); 
+          } else {
+            //shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
+          }
+          LOG();
+        break;
+        case 'restart':
+          if( myServices.includes(myComponent) ){
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io','lbmesh-integ-'+ myComponent +'.yaml') + " restart"); 
+          } else {
+            //shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
+          }
+          LOG();
+        break;
+        case 'status':
+          shelljs.exec("docker ps --filter name=lbmesh-integ*");
+          LOG();
+        break;
+        case 'logs':
+            if( myServices.includes(myComponent) ){
+              shelljs.exec("docker logs lbmesh-integ-" + myComponent + " -f");
+              //  -f " + datastoreFilePath + " down"); 
+            } else {
+              LOG()
+              LOG(' Please supply a service name to view container logs.  Options are: datapower | mqlight | iib | acemqserver | mq')
+              LOG()
+            }
+        break;
         default:
           let mySettingsView = new INTEG();
           let showTableList = mySettingsView.retrievePorts();

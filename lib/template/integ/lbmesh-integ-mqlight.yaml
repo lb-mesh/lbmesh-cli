@@ -8,7 +8,7 @@ services:
       mem_reservation: 256m
       mem_limit: 512m
       volumes:
-        - '<%= mqlight_data %>:/var/mqlight'
+        - '/Users/jamilspain/lbmesh.io/mqlight/data:/var/mqlight'
       ports:
         - '5672:5672'
         - '9180:9180'

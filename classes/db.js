@@ -79,14 +79,20 @@ class Db extends Base{
             ejs.renderFile( path.join(machineData.templatefolder,'db','lbmesh-db-stack.ejs'), {
                 "mysql_image":    machineData.dbStack.mysql.image,
                 "mysql_port":     machineData.dbStack.mysql.port,
+                "mysql_data":     path.join(machineData.homedir,'lbmesh.io','mysql','data'),
                 "cloudant_image": machineData.dbStack.cloudant.image,
                 "cloudant_port":  machineData.dbStack.cloudant.port,
+                "cloudant_data":     path.join(machineData.homedir,'lbmesh.io','cloudant','data'),
                 "mongodb_image":  machineData.dbStack.mongodb.image,
                 "mongodb_port":   machineData.dbStack.mongodb.port,
+                "mongodb_data":     path.join(machineData.homedir,'lbmesh.io','mongodb','data'),
+                "mongodb_config":   path.join(machineData.homedir,'lbmesh.io','mongodb','config'),
                 "redis_image":   machineData.dbStack.redis.image,
                 "redis_port":     machineData.dbStack.redis.port,
+                "redis_data":     path.join(machineData.homedir,'lbmesh.io','redis','data'),
                 "postgres_image": machineData.dbStack.postgres.image,
-                "postgres_port":  machineData.dbStack.postgres.port,  
+                "postgres_port":  machineData.dbStack.postgres.port,
+                "postgres_data":  path.join(machineData.homedir,'lbmesh.io','postgres','data'), 
                 "mssql_image": machineData.dbStack.mssql.image,
                 "mssql_port":  machineData.dbStack.mssql.port   
             },{}, function(err,str){
@@ -102,6 +108,8 @@ class Db extends Base{
             ejs.renderFile( path.join(machineData.templatefolder,'db','lbmesh-db-'+updates.chosenDB+'.ejs'), {
                 [tempImage]:    machineData.dbStack[updates.chosenDB].image,
                 [tempPort]:     machineData.dbStack[updates.chosenDB].port,  
+                "homedir_data": path.join(machineData.homedir,updates.chosenDB,'lbmesh.io','data'),
+                "homedir_config": path.join(machineData.homedir,updates.chosenDB,'lbmesh.io','config')
             },{}, function(err,str){
                 if( err ) console.log(err);
                 fs.writeFileSync( path.join(machineData.templatefolder,'db','lbmesh-db-'+updates.chosenDB+'.yaml'), str);
@@ -116,7 +124,7 @@ class Db extends Base{
          * Final log Mesages
          */
         LOG();
-        LOG('  LB Mesh DB Stack Updated Successful')
+        LOG('  LB Mesh DB Stack YAML Updated Successful')
         LOG();
         LOG('  - Please restart your desired DB Service using:')
         LOG()

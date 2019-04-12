@@ -8,7 +8,7 @@ services:
     mem_reservation: 128m
     mem_limit: 384m
     volumes:
-      - ./mysql/data:/var/lib/mysql
+      - "/Users/jamilspain/lbmesh.io/mysql/data:/var/lib/mysql"
     ports:
       - "3306:3306"
     restart: always
@@ -25,7 +25,7 @@ services:
     ports:
       - "8880:80"
     volumes:
-      - ./cloudant/data:/srv
+      - "/Users/jamilspain/lbmesh.io/cloudant/data:/srv"
     privileged: true
     network_mode: bridge
 
@@ -36,8 +36,8 @@ services:
     mem_reservation: 64m
     mem_limit: 192m
     volumes:
-      - ./mongo/data:/data/db
-      - ./mongo/config:/data/configdb
+      - "/Users/jamilspain/lbmesh.io/mongodb/data:/data/db"
+      - "/Users/jamilspain/lbmesh.io/mongodb/config:/data/configdb"
     ports:
         - "27017:27017"
     command: mongod
@@ -49,7 +49,7 @@ services:
     mem_reservation: 32m
     mem_limit: 128m
     volumes:
-      - ./redis/data:/data
+      - "/Users/jamilspain/lbmesh.io/redis/data:/data"
     ports:
       - "6379:6379"
 
@@ -60,10 +60,22 @@ services:
     mem_reservation: 64m
     mem_limit: 192m
     volumes:
-      - ./postgres/data:/var/lib/postgresql/data
+      - "/Users/jamilspain/lbmesh.io/postgres/data:/var/lib/postgresql/data"
     environment:
       POSTGRES_PASSWORD: lbmesh-db-postgres
     ports:
       - "5432:5432"  
   
-  
+  mssql:
+    container_name: lbmesh-db-mssql
+    restart: always
+    mem_reservation: 512m
+    mem_limit: 2048m
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=lbmesh-DB@mssql
+        - MSSQL_PID=Developer
+        - MSSQL_MEMORY_LIMIT_MB=2048m
+    ports:
+        - "1433:1433"
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu

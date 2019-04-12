@@ -8,8 +8,8 @@ services:
     mem_limit: 192m
     container_name: lbmesh-db-mongodb
     volumes:
-      - ./mongo/data:/data/db
-      - ./mongo/config:/data/configdb
+      - "/Users/jamilspain/mongodb/lbmesh.io/data:/data/db"
+      - "/Users/jamilspain/mongodb/lbmesh.io/config:/data/configdb"
     ports:
         - "27017:27017"
     command: mongod

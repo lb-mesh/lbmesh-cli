@@ -8,7 +8,7 @@ services:
     mem_reservation: 128m
     mem_limit: 384m
     volumes:
-      - ./mysql/data:/var/lib/mysql
+      - "/Users/jamilspain/mysql/lbmesh.io/data:/var/lib/mysql"
     ports:
       - "3306:3306"
     restart: always
