@@ -152,13 +152,7 @@ program
                       "default": "Y",
                       "name": "doimport",
                       "message": 'Are you sure you want to import this project? ' 
-                    },
-                    {
-                      "type": "confirm",
-                      "default": "Y",
-                      "name": "donpm",
-                      "message": 'Do you need to run `npm install` in this project? ' 
-                    }     
+                    }   
                   ]).then( answers => {
                       //LOG(answers);
                       if( answers.doimport ){
@@ -166,76 +160,85 @@ program
                         LOG();
                         // Check
                         if( !list.doesProjectExist(potentialProject.name) ){
-                          list.importProject( potentialProject );
+
+                          ask.prompt([
+                            {
+                              "type": "confirm",
+                              "default": "Y",
+                              "name": "donpm",
+                              "message": 'Do you need to run `npm install` for this project? ' 
+                            }  
+                          ]).then( answers2 => {
+                              list.importProject( potentialProject );
+                              if(answers2.donpm ){
+                                LOG();
+                                LOG(chalk.blue("  - Running NPM INSTALL for... "));    
+                                LOG();
+                                // list.updateImportProject( potentialProject.type );
+                                switch( potentialProject.type ){
+                                  case 'frontend+backend':
+                                      LOG(chalk.blue("     - FRONTEND: WWW "));    
+                                      sh.cd( path.join(potentialProject.path,'frontend','www') );  
+                                      sh.exec('npm install');
+
+                                      LOG(chalk.blue("     - FRONTEND: ADMIN "));    
+                                      sh.cd( path.join(potentialProject.path,'frontend','admin') );  
+                                      sh.exec('npm install');
+
+                                      LOG(chalk.blue("     - FRONTEND: API "));    
+                                      sh.cd( path.join(potentialProject.path,'frontend','api') );  
+                                      sh.exec('npm install');
+
+                                      LOG(chalk.blue("     - BACKEND: SCHEDULER "));    
+                                      sh.cd( path.join(potentialProject.path,'backend','scheduler') );  
+                                      sh.exec('npm install');
+
+                                      LOG(chalk.blue("     - BACKEND: DATABANK "));    
+                                      sh.cd( path.join(potentialProject.path,'backend','databank') );  
+                                          sh.exec('npm install');
+
+                                          LOG(chalk.blue("     - BACKEND: MESSENGER "));    
+                                          sh.cd( path.join(potentialProject.path,'backend','messenger') );  
+                                              sh.exec('npm install');
+                                  break;
+                                  case 'frontend-www':
+                                    LOG(chalk.blue("     - FRONTEND: WWW "));    
+                                    sh.cd( path.join(potentialProject.path,'frontend','www') );  
+                                    sh.exec('npm install');
+    
+                                  break;
+                                  case 'frontend-admin':
+                                    LOG(chalk.blue("     - FRONTEND: ADMIN "));    
+                                    sh.cd( path.join(potentialProject.path,'frontend','admin') );  
+                                    sh.exec('npm install');
+                                  break;
+                                  case 'frontend-api':
+                                    LOG(chalk.blue("     - FRONTEND: API "));    
+                                    sh.cd( path.join(potentialProject.path,'frontend','api') );  
+                                    sh.exec('npm install');
+                                  break;
+                                  case 'backend-scheduler':
+                                    LOG(chalk.blue("     - BACKEND: SCHEDULER "));    
+                                    sh.cd( path.join(potentialProject.path,'backend','scheduler') );  
+                                    sh.exec('npm install');
+                                  break;
+                                  case 'backend-databank':
+                                    LOG(chalk.blue("     - BACKEND: DATABANK "));    
+                                    sh.cd( path.join(potentialProject.path,'backend','databank') );  
+                                        sh.exec('npm install');
+                                  break;
+                                  case 'backend-messenger':
+                                    LOG(chalk.blue("     - BACKEND: MESSENGER "));    
+                                    sh.cd( path.join(potentialProject.path,'backend','messenger') );  
+                                        sh.exec('npm install');
+                                  break;
+                                }
+                              }  
+                          });
+                         
 
                           LOG( chalk.blue('      Project '+ potentialProject.name.toUpperCase() + ' successfully imported!'))
                           LOG('    -------------------------------------------');   
-
-                          if( answers.donpm ){
-                            LOG();
-                            LOG(chalk.blue("  - Running NPM INSTALL for... "));    
-                            LOG();
-                            // list.updateImportProject( potentialProject.type );
-                            switch( potentialProject.type ){
-                              case 'frontend+backend':
-                                  LOG(chalk.blue("     - FRONTEND: WWW "));    
-                                  sh.cd( path.join(potentialProject.path,'frontend','www') );  
-                                  sh.exec('npm install');
-
-                                  LOG(chalk.blue("     - FRONTEND: ADMIN "));    
-                                  sh.cd( path.join(potentialProject.path,'frontend','admin') );  
-                                  sh.exec('npm install');
-
-                                  LOG(chalk.blue("     - FRONTEND: API "));    
-                                  sh.cd( path.join(potentialProject.path,'frontend','api') );  
-                                  sh.exec('npm install');
-
-                                  LOG(chalk.blue("     - BACKEND: SCHEDULER "));    
-                                  sh.cd( path.join(potentialProject.path,'backend','scheduler') );  
-                                  sh.exec('npm install');
-
-                                  LOG(chalk.blue("     - BACKEND: DATABANK "));    
-                                  sh.cd( path.join(potentialProject.path,'backend','databank') );  
-                                      sh.exec('npm install');
-
-                                      LOG(chalk.blue("     - BACKEND: MESSENGER "));    
-                                      sh.cd( path.join(potentialProject.path,'backend','messenger') );  
-                                          sh.exec('npm install');
-                              break;
-                              case 'frontend-www':
-                                LOG(chalk.blue("     - FRONTEND: WWW "));    
-                                sh.cd( path.join(potentialProject.path,'frontend','www') );  
-                                sh.exec('npm install');
- 
-                              break;
-                              case 'frontend-admin':
-                                LOG(chalk.blue("     - FRONTEND: ADMIN "));    
-                                sh.cd( path.join(potentialProject.path,'frontend','admin') );  
-                                sh.exec('npm install');
-                              break;
-                              case 'frontend-api':
-                                LOG(chalk.blue("     - FRONTEND: API "));    
-                                sh.cd( path.join(potentialProject.path,'frontend','api') );  
-                                sh.exec('npm install');
-                              break;
-                              case 'backend-scheduler':
-                                LOG(chalk.blue("     - BACKEND: SCHEDULER "));    
-                                sh.cd( path.join(potentialProject.path,'backend','scheduler') );  
-                                sh.exec('npm install');
-                              break;
-                              case 'backend-databank':
-                                LOG(chalk.blue("     - BACKEND: DATABANK "));    
-                                sh.cd( path.join(potentialProject.path,'backend','databank') );  
-                                    sh.exec('npm install');
-                              break;
-                              case 'backend-messenger':
-                                LOG(chalk.blue("     - BACKEND: MESSENGER "));    
-                                sh.cd( path.join(potentialProject.path,'backend','messenger') );  
-                                    sh.exec('npm install');
-                              break;
-                            }
-                            LOG('    -------------------------------------------'); 
-                          }
 
                         } else {
                           LOG( chalk.red('      Project with name '+ potentialProject.name.toUpperCase() + ' already exists!'))
