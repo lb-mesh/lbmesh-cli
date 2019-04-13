@@ -138,7 +138,7 @@ program
              // Are you in Project Dir
              if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ){
               let potentialProject = list.importProjectConfig( path.resolve('lbmesh-config.json') );  
-              // LOG( potentialProject);
+               
               LOG('     ---  WELCOME TO LB MESH PROJECT IMPORT ---')
               LOG();
               LOG('     Detected Project Name: ' + potentialProject.name.toUpperCase() ); // type ' + list.getProjectType(potentialProject.type))
@@ -152,6 +152,12 @@ program
                       "default": "Y",
                       "name": "doimport",
                       "message": 'Are you sure you want to import this project? ' 
+                    },
+                    {
+                      "type": "confirm",
+                      "default": "Y",
+                      "name": "donpm",
+                      "message": 'Do you need to run `npm install` for this project? ' 
                     }   
                   ]).then( answers => {
                       //LOG(answers);
@@ -161,82 +167,81 @@ program
                         // Check
                         if( !list.doesProjectExist(potentialProject.name) ){
 
-                          ask.prompt([
-                            {
-                              "type": "confirm",
-                              "default": "Y",
-                              "name": "donpm",
-                              "message": 'Do you need to run `npm install` for this project? ' 
-                            }  
-                          ]).then( answers2 => {
-                              list.importProject( potentialProject );
-                              if(answers2.donpm ){
+                              if(answers.donpm ){
                                 LOG();
                                 LOG(chalk.blue("  - Running NPM INSTALL for... "));    
                                 LOG();
                                 // list.updateImportProject( potentialProject.type );
                                 switch( potentialProject.type ){
-                                  case 'frontend+backend':
+                                  case 'frontend-backend':
                                       LOG(chalk.blue("     - FRONTEND: WWW "));    
-                                      sh.cd( path.join(potentialProject.path,'frontend','www') );  
-                                      sh.exec('npm install');
+                                      shelljs.cd( path.join(potentialProject.path,'frontend','www') );  
+                                      shelljs.exec('npm install');
 
                                       LOG(chalk.blue("     - FRONTEND: ADMIN "));    
-                                      sh.cd( path.join(potentialProject.path,'frontend','admin') );  
-                                      sh.exec('npm install');
+                                      shelljs.cd( path.join(potentialProject.path,'frontend','admin') );  
+                                      shelljs.exec('npm install');
 
                                       LOG(chalk.blue("     - FRONTEND: API "));    
-                                      sh.cd( path.join(potentialProject.path,'frontend','api') );  
-                                      sh.exec('npm install');
+                                      shelljs.cd( path.join(potentialProject.path,'frontend','api') );  
+                                      shelljs.exec('npm install');
 
                                       LOG(chalk.blue("     - BACKEND: SCHEDULER "));    
-                                      sh.cd( path.join(potentialProject.path,'backend','scheduler') );  
-                                      sh.exec('npm install');
+                                      shelljs.cd( path.join(potentialProject.path,'backend','scheduler') );  
+                                      shelljs.exec('npm install');
 
                                       LOG(chalk.blue("     - BACKEND: DATABANK "));    
-                                      sh.cd( path.join(potentialProject.path,'backend','databank') );  
-                                          sh.exec('npm install');
+                                      shelljs.cd( path.join(potentialProject.path,'backend','databank') );  
+                                          shelljs.exec('npm install');
 
                                           LOG(chalk.blue("     - BACKEND: MESSENGER "));    
-                                          sh.cd( path.join(potentialProject.path,'backend','messenger') );  
-                                              sh.exec('npm install');
+                                          shelljs.cd( path.join(potentialProject.path,'backend','messenger') );  
+                                              shelljs.exec('npm install');
                                   break;
                                   case 'frontend-www':
                                     LOG(chalk.blue("     - FRONTEND: WWW "));    
-                                    sh.cd( path.join(potentialProject.path,'frontend','www') );  
-                                    sh.exec('npm install');
+                                    shelljs.cd( path.join(potentialProject.path,'frontend','www') );  
+                                    shelljs.exec('npm install');
     
                                   break;
                                   case 'frontend-admin':
                                     LOG(chalk.blue("     - FRONTEND: ADMIN "));    
-                                    sh.cd( path.join(potentialProject.path,'frontend','admin') );  
-                                    sh.exec('npm install');
+                                    shelljs.cd( path.join(potentialProject.path,'frontend','admin') );  
+                                    shelljs.exec('npm install');
                                   break;
                                   case 'frontend-api':
                                     LOG(chalk.blue("     - FRONTEND: API "));    
-                                    sh.cd( path.join(potentialProject.path,'frontend','api') );  
-                                    sh.exec('npm install');
+                                    shelljs.cd( path.join(potentialProject.path,'frontend','api') );  
+                                    shelljs.exec('npm install');
                                   break;
                                   case 'backend-scheduler':
                                     LOG(chalk.blue("     - BACKEND: SCHEDULER "));    
-                                    sh.cd( path.join(potentialProject.path,'backend','scheduler') );  
-                                    sh.exec('npm install');
+                                    shelljs.cd( path.join(potentialProject.path,'backend','scheduler') );  
+                                    shelljs.exec('npm install');
                                   break;
                                   case 'backend-databank':
                                     LOG(chalk.blue("     - BACKEND: DATABANK "));    
-                                    sh.cd( path.join(potentialProject.path,'backend','databank') );  
-                                        sh.exec('npm install');
+                                    shelljs.cd( path.join(potentialProject.path,'backend','databank') );  
+                                        shelljs.exec('npm install');
                                   break;
                                   case 'backend-messenger':
                                     LOG(chalk.blue("     - BACKEND: MESSENGER "));    
-                                    sh.cd( path.join(potentialProject.path,'backend','messenger') );  
-                                        sh.exec('npm install');
+                                    shelljs.cd( path.join(potentialProject.path,'backend','messenger') );  
+                                        shelljs.exec('npm install');
                                   break;
                                 }
-                              }  
-                          });
-                         
 
+                                LOG();
+                                list.importProject( potentialProject );
+                                LOG();
+
+                              } else {
+                                LOG();
+                                list.importProject( potentialProject );
+                                LOG();
+                              }
+                         
+                          LOG();
                           LOG( chalk.blue('      Project '+ potentialProject.name.toUpperCase() + ' successfully imported!'))
                           LOG('    -------------------------------------------');   
 
@@ -389,11 +394,20 @@ program
             //LOG( mySettings.retrievePorts() );
             LOG()
         break;
+        case 'pull':
+          if( myServices.includes(myComponent) ){
+            //shelljs.exec("docker-compose stop lbmesh-db-" + myComponent +' ');
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up --no-recreate -d"); 
+          } else {
+            // shelljs.exec("docker-compose -f " + datastoreFilePath + " down");  
+          }
+        break;
         case 'start':
             let myStart = new DB();
             let startTable = myStart.retrievePorts();
           if( myServices.includes(myComponent) ){
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up -d"); 
+            //shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmeshelljs.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up -d"); 
+            shelljs.exec("docker-compose start lbmesh-db-" + myComponent +' ');
             switch(myComponent){
               case 'cloudant':
                 LOG();
@@ -405,33 +419,28 @@ program
               break;
             }
           } else {
-            shelljs.exec("docker-compose -f " + datastoreFilePath + " up -d"); 
+            //shelljs.exec("docker-compose -f " + datastoreFilePath + " up -d"); 
           }
           LOG()
         break;
         case 'stop':
+        case 'restart':
           if( myServices.includes(myComponent) ){
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " down"); 
+            shelljs.exec("docker-compose "+ myAction +"  lbmesh-db-" + myComponent +" ");
+            //shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmeshelljs.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " down"); 
           } else {
-            shelljs.exec("docker-compose -f " + datastoreFilePath + " down");  
+            //shelljs.exec("docker-compose -f " + datastoreFilePath + " down");  
           }
           LOG()
         break;
-        case 'restart':
-          if( myServices.includes(myComponent) ){
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " restart"); 
-          } else {
-            shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
-          }
-          LOG();
-        break;
+
         case 'status':
           shelljs.exec("docker ps --filter name=lbmesh-db*");
           LOG();
         break;
         case 'logs':
           if( myServices.includes(myComponent) ){
-            shelljs.exec("docker logs lbmesh-db-" + myComponent + " -f");
+            shelljs.exec("docker-compose logs lbmesh-db-" + myComponent + " -f");
             //  -f " + datastoreFilePath + " down"); 
           } else {
             LOG()
@@ -465,35 +474,55 @@ program
     banner.integrations();
     let myAction = (action == undefined)? 'empty' : action.toLowerCase();
     let myComponent = (service == undefined)? 'all' : service.toLowerCase();
-    let myServices = ['datapower','mqlight'];
+    let myServices = ['datapower','mqlight','iib'];
 
     let integrationFilePath = path.join(machine.homedir,'.lbmesh.io','lbmesh-integ-stack.yaml');
     if( fs.existsSync(integrationFilePath) ){
       switch(myAction){
         case 'start':
-          if( myServices.includes(myComponent) ){
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " up -d"); 
-          } else {
-            //shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
-          }
-          LOG();
-        break;
         case 'stop':
-          if( myServices.includes(myComponent) ){
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent,'lbmesh-integ-'+ myComponent +'.yaml') + " down"); 
-          } else {
-            //shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
-          }
-          LOG();
-        break;
         case 'restart':
           if( myServices.includes(myComponent) ){
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " restart"); 
+
+            LOG();
+            LOG('  Processing Request to ' + myAction +' integration container service...')
+            LOG();
+            shelljs.exec("docker "+ myAction +" lbmesh-integ-" + myComponent + " "); 
+            //path.join(machine.homedir,'.lbmeshelljs.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " up -d"); 
+
+            if( myAction == 'start' ){
+               switch(myComponent){
+                  case 'mqlight':
+                  LOG();
+                  LOG('   OPENING MQLIGHT DASHBOARD http://localhost:9180 ');
+                  LOG();
+                  shelljs.exec("sleep 3s");
+                  shelljs.exec("opn http://localhost:9180/#page=home");                  
+                break;
+                case 'iib':
+                  LOG();
+                  LOG('   OPENING IIB DASHBOARD http://localhost:4414 ');
+                  LOG();
+                  shelljs.exec("sleep 3s");
+                  shelljs.exec("opn http://localhost:4414");   
+                break;
+               }             
+            }
           } else {
             //shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
           }
           LOG();
         break;
+        case 'pull':
+          if( myServices.includes(myComponent) ){
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " up --no-start --no-recreate "); 
+          } else {
+            //shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
+          }
+          LOG();
+        break;
+ 
+ 
         case 'status':
           shelljs.exec("docker ps --filter name=lbmesh-integ*");
           LOG();
@@ -540,16 +569,10 @@ program
               LOG(' no action provided');
           break;
           case 'start':
-              shelljs.exec("pm2 start pm2-ecosystem.config.yaml");
-          break;
           case 'stop':
-            shelljs.exec("pm2 stop pm2-ecosystem.config.yaml");
-          break;
           case 'restart':
-            shelljs.exec("pm2 restart pm2-ecosystem.config.yaml");
-          break;
           case 'delete':
-            shelljs.exec("pm2 delete pm2-ecosystem.config.yaml");
+              shelljs.exec("pm2 " + myAction +" pm2-ecosystem.config.yaml");
           break;
           case 'logs':
             switch(myComponent){

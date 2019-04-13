@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to the "lbmesh-cli" extension will be documented in this file.
 
+## [2.5.1] 2019-04-12
+- added running npm install on project import
+
+## [2.5.0] 2019-04-11
+- added integration containers layer to project
+
 ## [2.4.2] 2019-04-06
 - added memory reservation and limits to DB Containers
 

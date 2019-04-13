@@ -47,8 +47,8 @@ class Integ extends Base{
             "sourceData": {}
         };
         let myDBStack = [];
-            myDBStack.push(['Integ','Port','Image']);
-        let DBList = ['datapower','mqlight'];
+            myDBStack.push(['Integ','Admin Port','Data Port','Image']);
+        let DBList = ['datapower','mqlight','iib'];
             // mq, acemqserver, iib
         this.portsList = this.readGlobalConfig();
         
