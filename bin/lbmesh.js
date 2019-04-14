@@ -329,6 +329,7 @@ program
       let myAction = (action == undefined)? 'empty' : action.toLowerCase();
       let myComponent = (service == undefined)? 'all' : service.toLowerCase();
       let myServices = ['mongodb','postgres','redis','mysql','cloudant','mssql'];
+      let myServicesList = 'mongodb | redis | mysql | postgres | cloudant | mssql';
       //console.log( machine );
       let datastoreFilePath = path.join(machine.homedir,'.lbmesh.io','lbmesh-db-stack.yaml');
     if( fs.existsSync(datastoreFilePath) ){
@@ -399,7 +400,9 @@ program
             //shelljs.exec("docker-compose stop lbmesh-db-" + myComponent +' ');
             shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up --no-recreate -d"); 
           } else {
-            // shelljs.exec("docker-compose -f " + datastoreFilePath + " down");  
+            LOG()
+            LOG(' Please supply a service name to view container logs.  Options are:  ' + myServicesList)
+            LOG()
           }
         break;
         case 'start':
@@ -407,7 +410,7 @@ program
             let startTable = myStart.retrievePorts();
           if( myServices.includes(myComponent) ){
             //shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmeshelljs.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up -d"); 
-            shelljs.exec("docker-compose start lbmesh-db-" + myComponent +' ');
+            shelljs.exec("docker start lbmesh-db-" + myComponent +' ');
             switch(myComponent){
               case 'cloudant':
                 LOG();
@@ -419,17 +422,21 @@ program
               break;
             }
           } else {
-            //shelljs.exec("docker-compose -f " + datastoreFilePath + " up -d"); 
+            LOG()
+            LOG(' Please supply a service name to view container logs.  Options are:  ' + myServicesList)
+            LOG()
           }
           LOG()
         break;
         case 'stop':
         case 'restart':
           if( myServices.includes(myComponent) ){
-            shelljs.exec("docker-compose "+ myAction +"  lbmesh-db-" + myComponent +" ");
+            shelljs.exec("docker  "+ myAction +"  lbmesh-db-" + myComponent +" ");
             //shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmeshelljs.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " down"); 
           } else {
-            //shelljs.exec("docker-compose -f " + datastoreFilePath + " down");  
+            LOG()
+            LOG(' Please supply a service name to view container logs.  Options are:  ' + myServicesList)
+            LOG()
           }
           LOG()
         break;
@@ -440,11 +447,11 @@ program
         break;
         case 'logs':
           if( myServices.includes(myComponent) ){
-            shelljs.exec("docker-compose logs lbmesh-db-" + myComponent + " -f");
+            shelljs.exec("docker  logs lbmesh-db-" + myComponent + " -f");
             //  -f " + datastoreFilePath + " down"); 
           } else {
             LOG()
-            LOG(' Please supply a service name to view container logs.  Options are: mongodb | redis | mysql | postgres | cloudant')
+            LOG(' Please supply a service name to view container logs.  Options are:  ' + myServicesList)
             LOG()
           }
         break;
@@ -474,7 +481,7 @@ program
     banner.integrations();
     let myAction = (action == undefined)? 'empty' : action.toLowerCase();
     let myComponent = (service == undefined)? 'all' : service.toLowerCase();
-    let myServices = ['datapower','mqlight','iib'];
+    let myServices = ['datapower','mqlight','iib','mq'];
 
     let integrationFilePath = path.join(machine.homedir,'.lbmesh.io','lbmesh-integ-stack.yaml');
     if( fs.existsSync(integrationFilePath) ){
@@ -496,15 +503,31 @@ program
                   LOG();
                   LOG('   OPENING MQLIGHT DASHBOARD http://localhost:9180 ');
                   LOG();
-                  shelljs.exec("sleep 3s");
+                  shelljs.exec("sleep 5s");
                   shelljs.exec("opn http://localhost:9180/#page=home");                  
                 break;
                 case 'iib':
                   LOG();
                   LOG('   OPENING IIB DASHBOARD http://localhost:4414 ');
                   LOG();
-                  shelljs.exec("sleep 3s");
+                  shelljs.exec("sleep 5s");
                   shelljs.exec("opn http://localhost:4414");   
+                break;
+                case 'datapower':
+                  LOG();
+                  LOG('   OPENING DATAPOWER DASHBOARD https://localhost:9090 ');
+                  LOG();
+                  shelljs.exec("sleep 5s");
+                  shelljs.exec("opn https://localhost:9090");   
+                break;
+                case 'mq':
+                  LOG();
+                  LOG('   OPENING MQ ADVANCED DASHBOARD https://localhost:9443/ibmmq/console/login.html ');
+                  LOG('   OPENING MQ ADVANCED METRICS http://localhost:9157/metrics ');
+                  LOG();
+                  shelljs.exec("sleep 5s");
+                  shelljs.exec("opn https://localhost:9443/ibmmq/console/login.html");  
+                  shelljs.exec("opn http://localhost:9157/metrics"); 
                 break;
                }             
             }
@@ -515,7 +538,16 @@ program
         break;
         case 'pull':
           if( myServices.includes(myComponent) ){
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " up --no-start --no-recreate "); 
+            // switch(myComponent){
+            //   case 'mq':
+            //     shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', 'mq-advanced', 'lbmesh-integ-'+ myComponent +'.yaml') + " up --no-start --no-recreate "); 
+            //   break;
+            //   default:
+                shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " up --no-start  "); 
+                // --no-recreate
+            //   break;
+            //  }
+            
           } else {
             //shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
           }
