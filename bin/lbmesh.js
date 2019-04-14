@@ -428,6 +428,18 @@ program
           }
           LOG()
         break;
+        case 'recreate':
+          if( myServices.includes(myComponent) ){
+            LOG();
+            LOG('   -')
+            shelljs.exec("docker rm lbmesh-db-" + myComponent);
+            LOG('   -- Rebuilding new container for ' + myComponent);
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up --no-start  "); 
+          } else {
+
+          }
+          LOG();
+        break;
         case 'stop':
         case 'restart':
           if( myServices.includes(myComponent) ){
@@ -533,6 +545,18 @@ program
             }
           } else {
             //shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
+          }
+          LOG();
+        break;
+        case 'recreate':
+          if( myServices.includes(myComponent) ){
+            LOG();
+            LOG('   -')
+            shelljs.exec("docker rm lbmesh-integ-" + myComponent);
+            LOG('   -- Rebuilding new container for ' + myComponent);
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " up --no-start  "); 
+          } else {
+
           }
           LOG();
         break;
