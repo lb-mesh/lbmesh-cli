@@ -1,10 +1,12 @@
-# LB Mesh CLI
+# LB Mesh Framework CLI
 
 LB Mesh is a Cloud Native Microservice Framework built around loopback.io.  This version is for LB3 exclusively.  
 
 This will scaffold an opinionated stack of Loopback Projects that are architected to run off PM2 or as Docker Containers ( setting the stage to be deployed to Kubernetes). This framework allows you to think cloud native first to build very complex applications or use single components to build simple microservice monoliths.  
 
 Don't have a use for the full stack? You can easily leverage any component individually. 
+
+In addition to leveraging LB for development, there are two other components that will assist with generating middleware for the Framework to use in a project.  We provide easy commands to use common databases and integration tools. All leveraging the power of Docker containers.  
 
 
 ## Installation
@@ -29,7 +31,7 @@ OR
 
 Running the command above will give you all the options available
 
-<img src="https://s3.amazonaws.com/lbmesh/lbmesh-cli2.png" height="350" />
+<img src="https://s3.amazonaws.com/lbmesh/lbmesh-cli-v2.png" height="350" />
  
 
 These cli commands are available anywhere on the filesystem. 
@@ -47,22 +49,18 @@ If you want to reset the list of projects, maybe after deleting a few, you can r
 ```
 It will as you to confirm and list will be cleared ( when you run lbmesh projects ).
 
-To reimport projects back in the list or if someone shares a project with you and you check it out through source control, you can use this command to import into list of projects.
+<div style="height:18px;"></div>
 
-```
-  $ lbmesh projects import
-```
-
+ 
 #### Working with Databases
 
-
-There is a built in management of container databases available within LB Mesh. On install, you can get a list of the available database instances with initial port settings by running this command. 
+There is a built in management of database containers available within LB Mesh. On install, you can get a list of the available database instances with initial port settings by running this command. 
 
 ```
   $ lbmesh db
 ```
 
-<img src="https://s3.amazonaws.com/lbmesh/lbmesh-db-status.png" height="350"/>
+<img src="https://s3.amazonaws.com/lbmesh/lbmesh-db-status-v2.png" height="350"/>
 
 <div style="height:12px;"></div>
 
@@ -73,21 +71,38 @@ To change any of these default ports, please use this command.
 ```
 
 It will give you a list of databases to set a new port. 
- 
+
+<div style="height:9px;"></div>
+
+**Downloading the images**
+
+To get started with any database from the list, the image must be available locally on your system. We provide an easy way to download the required image and use with the commands below. 
+
+```
+	$ lbmesh db pull [mongodb|mysql|cloudant|redis|postgres|mssql]
+```
+
+<div style="height:9px;"></div>
 
 **Starting Databases** 
 
-There are two ways to start up you databases.  If you wish to start this whole stack, run the following command. 
-
-```
-	$ lbmesh db start
-```
-
-Or you can start and individual service using the following command:
+Each database instance will need to be started up individually. 
 
 ``` 
-	$ lbmesh db start [mongodb|mysql|cloudant|redis|postgres]
+	$ lbmesh db start [mongodb|mysql|cloudant|redis|postgres|mssql]
 ```
+
+<div style="height:9px;"></div>
+
+**Viewing Database Container Logs**
+
+You can view  logs for any database container by doing the following command:
+
+```
+	$ lbmesh db logs [mongodb|mysql|cloudant|redis|postgres|mssql]
+```
+
+<div style="height:9px;"></div>
 
 **Check Database Status**
 
@@ -96,7 +111,10 @@ The DB component of LB Mesh also includes a command to check the status of what 
 ```
 	$ lbmesh db status
 ```
+
 This is a great way to confirm that containers are starting on the default ports or ones you updated the global config to use. 
+
+<div style="height:9px;"></div>
 
 **Stopping Databases**
 
@@ -104,7 +122,7 @@ All the db start commands will start the databases once your machine restarts si
 
 Individual Databases
 ```
-	$ lbmesh db stop [mongodb|mysql|cloudant|redis|postgres]
+	$ lbmesh db stop [mongodb|mysql|cloudant|redis|postgres|mssql]
 ```
 
 All Databases
@@ -113,6 +131,73 @@ All Databases
 ```
 
 All Database containers automatically persist data to the filesystem so upon restart everything will be intact.
+
+<div style="height:18px;"></div>
+
+#### Working with Integrations
+
+
+There is a built in management of integration containers available within LB Mesh. On install, you can get a list of the available integration instances with initial port settings by running this command. 
+
+```
+  $ lbmesh integ
+```
+
+<img src="https://s3.amazonaws.com/lbmesh/lbmesh-integrate.png" height="350"/>
+
+<div style="height:9px;"></div>
+
+**Downloading the Images**
+
+To get started with any integration from the list, the image must be available locally on your system. We provide an easy way to download the required image and use with the commands below. 
+
+```
+	$ lbmesh integ pull [datapower|mqlight|iib|mq|rabbitmq|acemq]
+```
+
+<div style="height:9px;"></div>
+
+**Starting Integrations** 
+
+Each integration instance will need to be started up individually. 
+
+``` 
+	$ lbmesh integ start [datapower|mqlight|iib|mq|rabbitmq|acemq]
+```
+
+<div style="height:9px;"></div>
+
+**Viewing Integration Container Logs**
+
+Just like the DB instances, you can view  logs from an integration container by doing the following command:
+
+```
+	$ lbmesh integ logs [datapower|mqlight|iib|mq|rabbitmq|acemq]
+```
+
+<div style="height:9px;"></div>
+
+
+**Check Integration Status**
+
+The INTEG component of LB Mesh also includes a command to check the status of what containers are running.  It's the same as running **docker ps** but we have included a filter to just view lbmesh integration specific containers. 
+
+```
+	$ lbmesh integ status
+```
+This is a great way to confirm that containers are starting on the default ports.  At the current moment, you are not allowed to modify the 
+**Stopping Integrations**
+
+All the integration start commands will start the integration instance.  Once your machine restarts you will need to restart the instances.  
+
+Individual Integration Instances
+```
+	$ lbmesh integ stop [datapower|mqlight|iib|mq|rabbitmq|acemq]
+```
+
+All Integration containers automatically persist data to the filesystem so upon restart everything will be intact.
+
+<div style="height:18px;"></div>
 
 
 #### Working Inside Projects
@@ -125,6 +210,8 @@ These cli commands are available inside a LBMesh Project folder.  Let's walk thr
   $ lbmesh build
 
 ```
+
+<div style="height:18px;"></div>
 
 **Running the Project**
 
@@ -139,7 +226,23 @@ lbmesh run   | status | pm2 list | Check status of apps ( uptime, memory, restar
 lbmesh run   | delete | pm2 delete pm2.ecosystem.config.yaml  | removes apps from pm2 
 lbmesh run   | logs [appname] | pm2 logs [appname] | runs logs console for app by name. check the status command to get app name. 
 
-**Opening Project**
+<div style="height:9px;"></div>
+
+**Importing Projects**
+
+At some point, you may want to share a project with someone else through source control.  Or the second use case involves a reinstallation the framework cli to upgrade to a new version ( your workspace folder will be retained ).  In either case, this command will allow you import this project into your project list.  
+
+```
+	$ lbmesh projects import
+```
+
+If this is an import from github or some other source control, you will need to run 'npm install' in order to be able to run the **lbmesh run** commands.  This command will also prompt your to run 'npm install' in all the projects folder to allow you to be able to run **lbmesh run** immediately.  
+
+<img src="https://s3.amazonaws.com/lbmesh/lbmesh-project-import.png" width="550" />
+
+<div style="height:18px;"></div>
+
+####Opening Project in Browser
 
 If you run the command **lbmesh projects [projname]** it will give you a list of the ports assigned to your project components.  To open each component in browser tabs, run the following command. 
 
@@ -147,17 +250,27 @@ If you run the command **lbmesh projects [projname]** it will give you a list of
 	$ lbmesh open
 ```
 
+<div style="height:18px;"></div>
 
+## Changelog
+
+Click to view the [CHANGELOG.MD](https://github.com/lb-mesh/lbmesh-cli/blob/master/CHANGELOG.md)
+
+<div style="height:18px;"></div>
 
 ## How can I report an issue or make a request?
 
 The easiest way is to start a git issue, and I will attempt to answer ASAP. [GitHub Issues](https://github.com/lb-mesh/lbmesh-cli/issues)
+
+<div style="height:18px;"></div>
 
 ## Authors
 
 Jamil Spain 
 * Twitter: [@iamjamilspain](https://www.twitter.com/iamjamilspain)
 * LinkedIn: [Jamil Spain Profile](https://www.linkedin.com/in/jamilspain/)
+
+<div style="height:12px;"></div>
 
 
 ## Source

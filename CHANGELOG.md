@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to the "lbmesh-cli" extension will be documented in this file.
 
-## [2.5.4] 2019-04-15
+## [2.5.4] 2019-04-16
 - added rabbitmq to the integration options
+- adding ACEMQ server to the integration stack
 
 ## [2.5.3] 2019-04-14
 - added recreate command for db and integration cli 
