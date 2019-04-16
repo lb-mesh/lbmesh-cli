@@ -397,11 +397,17 @@ program
         break;
         case 'pull':
           if( myServices.includes(myComponent) ){
+
+            LOG();
+            LOG('  Processing Request to ' + myAction +' DB ' + myComponent.toUpperCase() + ' container service...')
+            LOG();
+
             //shelljs.exec("docker-compose stop lbmesh-db-" + myComponent +' ');
             shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up --no-recreate -d"); 
           } else {
             LOG()
-            LOG(' Please supply a service name to view container logs.  Options are:  ' + myServicesList)
+            LOG(' Please supply a correct DB service name.  ');
+            LOG(' Options are:  ' + myServicesList)
             LOG()
           }
         break;
@@ -409,6 +415,11 @@ program
             let myStart = new DB();
             let startTable = myStart.retrievePorts();
           if( myServices.includes(myComponent) ){
+
+            LOG();
+            LOG('  Processing Request to ' + myAction +' DB container service...')
+            LOG();
+
             //shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmeshelljs.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up -d"); 
             shelljs.exec("docker start lbmesh-db-" + myComponent +' ');
             switch(myComponent){
@@ -423,7 +434,8 @@ program
             }
           } else {
             LOG()
-            LOG(' Please supply a service name to view container logs.  Options are:  ' + myServicesList)
+            LOG(' Please supply a correct DB service name.  ');
+            LOG(' Options are:  ' + myServicesList)
             LOG()
           }
           LOG()
@@ -431,23 +443,35 @@ program
         case 'recreate':
           if( myServices.includes(myComponent) ){
             LOG();
-            LOG('   -')
+            LOG();
+            LOG('   -- REMOVING Old DB container for ' + myComponent);
             shelljs.exec("docker rm lbmesh-db-" + myComponent);
+            LOG();
             LOG('   -- Rebuilding new container for ' + myComponent);
+            LOG();
             shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up --no-start  "); 
           } else {
-
+            LOG()
+            LOG(' Please supply a correct DB service name.  ');
+            LOG(' Options are:  ' + myServicesList)
+            LOG()
           }
           LOG();
         break;
         case 'stop':
         case 'restart':
           if( myServices.includes(myComponent) ){
+
+            LOG();
+            LOG('  Processing Request to ' + myAction +' DB container service...')
+            LOG();
+
             shelljs.exec("docker  "+ myAction +"  lbmesh-db-" + myComponent +" ");
             //shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmeshelljs.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " down"); 
           } else {
             LOG()
-            LOG(' Please supply a service name to view container logs.  Options are:  ' + myServicesList)
+            LOG(' Please supply a correct DB service name.  ');
+            LOG(' Options are:  ' + myServicesList)
             LOG()
           }
           LOG()
@@ -463,7 +487,8 @@ program
             //  -f " + datastoreFilePath + " down"); 
           } else {
             LOG()
-            LOG(' Please supply a service name to view container logs.  Options are:  ' + myServicesList)
+            LOG(' Please supply a correct DB service name.  ');
+            LOG(' Options are:  ' + myServicesList)
             LOG()
           }
         break;
@@ -493,7 +518,8 @@ program
     banner.integrations();
     let myAction = (action == undefined)? 'empty' : action.toLowerCase();
     let myComponent = (service == undefined)? 'all' : service.toLowerCase();
-    let myServices = ['datapower','mqlight','iib','mq'];
+    let myServices = ['datapower','mqlight','iib','mq','rabbitmq'];
+    let myServicesList = 'datapower | mqlight | iib | rabbitmq | acemqserver | mq';
 
     let integrationFilePath = path.join(machine.homedir,'.lbmesh.io','lbmesh-integ-stack.yaml');
     if( fs.existsSync(integrationFilePath) ){
@@ -528,57 +554,69 @@ program
                 case 'datapower':
                   LOG();
                   LOG('   OPENING DATAPOWER DASHBOARD https://localhost:9090 ');
+                  LOG('           DATAPOWER User/Pass:  admin / admin');
                   LOG();
                   shelljs.exec("sleep 5s");
                   shelljs.exec("opn https://localhost:9090");   
                 break;
+                case 'rabbitmq':
+                  LOG();
+                  LOG('   OPENING RABBITMQ DASHBOARD http://localhost:15674 ');
+                  LOG('           RABBITMQ User/Pass:  admin / rabbitmq');
+                  LOG();
+                  shelljs.exec("sleep 5s");
+                  shelljs.exec("opn http://localhost:15674");   
+                break;
                 case 'mq':
                   LOG();
                   LOG('   OPENING MQ ADVANCED DASHBOARD https://localhost:9443/ibmmq/console/login.html ');
-                  LOG('   OPENING MQ ADVANCED METRICS http://localhost:9157/metrics ');
+                  LOG('           MQ ADVANCED User/Pass:  admin / lbmesh-integ-mq');
+                  //LOG('   OPENING MQ ADVANCED METRICS http://localhost:9157/metrics ');
                   LOG();
                   shelljs.exec("sleep 5s");
                   shelljs.exec("opn https://localhost:9443/ibmmq/console/login.html");  
-                  shelljs.exec("opn http://localhost:9157/metrics"); 
+                  //shelljs.exec("opn http://localhost:9157/metrics"); 
                 break;
                }             
             }
           } else {
-            //shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
+            LOG()
+            LOG(' Please supply a correct integration service name.');
+            LOG(' Options are: ' + myServicesList)
+            LOG()  
           }
           LOG();
         break;
         case 'recreate':
           if( myServices.includes(myComponent) ){
             LOG();
-            LOG('   -')
+            LOG('   -- REMOVING old integration container for ' + myComponent);
             shelljs.exec("docker rm lbmesh-integ-" + myComponent);
-            LOG('   -- Rebuilding new container for ' + myComponent);
+            LOG();
+            LOG('   -- Rebuilding new integrationcontainer for ' + myComponent);
+            LOG();
             shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " up --no-start  "); 
           } else {
-
+            LOG()
+            LOG(' Please supply a correct integration service name.');
+            LOG(' Options are: ' + myServicesList)
+            LOG()  
           }
           LOG();
         break;
         case 'pull':
           if( myServices.includes(myComponent) ){
-            // switch(myComponent){
-            //   case 'mq':
-            //     shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', 'mq-advanced', 'lbmesh-integ-'+ myComponent +'.yaml') + " up --no-start --no-recreate "); 
-            //   break;
-            //   default:
+ 
                 shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " up --no-start  "); 
-                // --no-recreate
-            //   break;
-            //  }
-            
+         
           } else {
-            //shelljs.exec("docker-compose -f " + datastoreFilePath + " restart"); 
+            LOG()
+            LOG(' Please supply a correct integration service name.');
+            LOG(' Options are: ' + myServicesList)
+            LOG()  
           }
           LOG();
         break;
- 
- 
         case 'status':
           shelljs.exec("docker ps --filter name=lbmesh-integ*");
           LOG();
@@ -589,8 +627,9 @@ program
               //  -f " + datastoreFilePath + " down"); 
             } else {
               LOG()
-              LOG(' Please supply a service name to view container logs.  Options are: datapower | mqlight | iib | acemqserver | mq')
-              LOG()
+              LOG(' Please supply a correct integration service name.');
+              LOG(' Options are: ' + myServicesList)
+              LOG()  
             }
         break;
         default:
@@ -746,17 +785,19 @@ program
        // shelljs.exec("docker-compose build");
       } else {
         LOG();
-        console.error("Not in a current LB Mesh Project Directory.")
+        console.error("This command is only available within a current LB Mesh Project Directory.")
         LOG();
       }
   });
 
-  program
-  .command('k8')
-  .description('Generate Kubernetes YAML Deployment Files')
-  .action((name)=>{
-
-  });
+  // program
+  // .command('k8')
+  // .description('Generate Kubernetes YAML Deployment Files')
+  // .action((name)=>{
+  //   LOG();
+  //   LOG('    - FEATURE not implemented yet');
+  //   LOG();
+  // });
 
 // program
 //   .command('interactive')

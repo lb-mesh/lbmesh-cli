@@ -48,12 +48,12 @@ class Integ extends Base{
         };
         let myDBStack = [];
             myDBStack.push(['Integ','Admin Port','Data Port','Image']);
-        let DBList = ['datapower','mqlight','iib','mq'];
+        let DBList = ['datapower','mqlight','iib','mq','rabbitmq'];
             // mq, acemqserver, iib
         this.portsList = this.readGlobalConfig();
         
         _.each( DBList, (data) =>{
-            myDBStack.push([data.toUpperCase(),this.portsList.integStack[data].port,this.portsList.integStack[data].image])
+            myDBStack.push([data.toUpperCase(),this.portsList.integStack[data].port.admin,this.portsList.integStack[data].port.data,this.portsList.integStack[data].image])
         });
 
         selected.table = table(myDBStack,{ start: '  |'});

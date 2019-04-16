@@ -1,6 +1,15 @@
 # Change Log
 All notable changes to the "lbmesh-cli" extension will be documented in this file.
 
+## [2.5.4] 2019-04-15
+- added rabbitmq to the integration options
+
+## [2.5.3] 2019-04-14
+- added recreate command for db and integration cli 
+
+## [2.5.2] 2019-04-14
+- added MQ and IIB integration container images
+
 ## [2.5.1] 2019-04-12
 - added running npm install on project import
 
