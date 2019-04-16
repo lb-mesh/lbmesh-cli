@@ -143,7 +143,7 @@ There is a built in management of integration containers available within LB Mes
   $ lbmesh integ
 ```
 
-<img src="https://s3.amazonaws.com/lbmesh/lbmesh-integrate.png" height="350"/>
+<img src="https://s3.amazonaws.com/lbmesh/lbmesh-integrate-2.png" height="350"/>
 
 <div style="height:9px;"></div>
 
