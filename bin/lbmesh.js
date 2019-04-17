@@ -29,11 +29,12 @@ Author: Jamil Spain  <jamilhassanspain@gmail.com> http://www.jamilspain.com
 */
 'use strict'
 const machine = require('lbmesh-os').profile();
-const pkg = require( machine.node.globalPath + '/lbmesh-cli/package.json');
+const path     = require('path');
+const pkg = require( path.join(machine.node.globalPath, 'lbmesh-cli','package.json')) ;
 require('please-upgrade-node')(pkg)
 
 const ask = require('inquirer');
-const banner = require("../lib/banner");
+const banner = require( path.join(machine.node.globalPath,"lbmesh-cli","lib","banner" ) );
 const chalk  = require('chalk');
 const availableCommands = ['create','projects','build','run','open','help'];
 
@@ -41,15 +42,15 @@ const resolveCWD = require('resolve-cwd');
 const debug  = require('debug')('app:cli:lbmesh');
 const fs     = require('fs');
 const jsonfile = require('jsonfile');
-const path     = require('path');
+
 const program = require('commander');
 const prompt = require('prompt');
 const shelljs   = require('shelljs');
 
-const Create = require('../classes/create');
-const Projects = require('../classes/projects');
-const DB      = require('../classes/db');
-const INTEG   = require('../classes/integ');
+const Create = require( path.join(machine.node.globalPath,'lbmesh-cli','classes','create'));
+const Projects = require(path.join(machine.node.globalPath,'lbmesh-cli','classes','projects'));
+const DB      = require(path.join(machine.node.globalPath,'lbmesh-cli','classes','db'));
+const INTEG   = require(path.join(machine.node.globalPath,'lbmesh-cli','classes','integ'));
 
  
 const LOG    = console.log;

@@ -25,7 +25,9 @@
  THE SOFTWARE.
 */
 'use strict'
-const Base      = require('./Base');
+const path      = require('path');
+
+const Base      = require(path.join(machine.node.globalPath,'lbmesh-cli','classes','base') );
 const chalk     = require('chalk');
 const debug     = require('debug')('app:cli:projects');
 const LOG       = console.log;

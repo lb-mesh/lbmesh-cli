@@ -29,7 +29,7 @@ Author: Jamil Spain  <jamilhassanspain@gmail.com> http://www.jamilspain.com
 */
 'use strict'
 
-const banner = require("../lib/banner");
+const banner = require(path.join(machine.node.globalPath,'lbmesh-cli','classes','banner'));
 const jsonfile = require('jsonfile');
 
 /**

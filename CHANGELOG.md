@@ -1,7 +1,10 @@
 # Change Log
 All notable changes to the "lbmesh-cli" extension will be documented in this file.
 
-## [2.6.0] 2019-04-16
+## [2.6.2] 2019-04-17
+- fixed filepaths for require/includes to work better with linux & windows
+
+## [2.6.1] 2019-04-16
 - added rabbitmq to the integration options
 - adding ACEMQ server to the integration stack
 - modified lbmesh cli error outputs

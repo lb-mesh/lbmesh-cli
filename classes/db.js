@@ -25,13 +25,13 @@
  THE SOFTWARE.
 */
 'use strict'
-
-const Base      = require('./Base');
+const path      = require('path');
+const Base      = require(path.join(machine.node.globalPath,'lbmesh-cli','classes','base') );
 const chalk     = require('chalk');
 const LOG       = console.log;
 const ejs       = require('ejs');
 const fs        = require('fs');
-const path      = require('path');
+
 const sh        = require('shelljs');
 const table     = require('markdown-table');
 const _         = require('underscore');

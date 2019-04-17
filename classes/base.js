@@ -25,7 +25,7 @@
  THE SOFTWARE.
 */
 'use strict'
-const files = require('../lib/files');
+const files = require(path.join(machine.node.globalPath,'lbmesh-cli','lib','files'));
 
 class Base {
     constructor(){
