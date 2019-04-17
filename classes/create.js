@@ -28,6 +28,7 @@
 
 const chalk = require('chalk');
 const path  = require('path');
+const machine = require('lbmesh-os').profile();
 const LOG   = console.log;
 const debug = require('debug')('app:class:create');
 const ejs   = require('ejs');

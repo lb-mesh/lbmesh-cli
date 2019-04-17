@@ -26,6 +26,7 @@
 */
 'use strict'
 const path      = require('path');
+const machine = require('lbmesh-os').profile();
 const Base      = require(path.join(machine.node.globalPath,'lbmesh-cli','classes','base') );
 const chalk     = require('chalk');
 const LOG       = console.log;
