@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to the "lbmesh-cli" extension will be documented in this file.
 
-## [2.6.2] 2019-04-17
+## [2.6.2, 2.6.3, 2.6.4] 2019-04-17
 - fixed filepaths for require/includes to work better with linux & windows
 
 ## [2.6.1] 2019-04-16
@@ -9,12 +9,10 @@ All notable changes to the "lbmesh-cli" extension will be documented in this fil
 - adding ACEMQ server to the integration stack
 - modified lbmesh cli error outputs
 
-## [2.5.3] 2019-04-14
+## [2.5.2, 2.5.3] 2019-04-14
 - added recreate command for db and integration cli 
-
-## [2.5.2] 2019-04-14
 - added MQ and IIB integration container images
-
+ 
 ## [2.5.1] 2019-04-12
 - added running npm install on project import
 

@@ -27,12 +27,13 @@
 'use strict'
 
 const chalk = require('chalk');
+const path  = require('path');
 const LOG   = console.log;
 const debug = require('debug')('app:class:create');
 const ejs   = require('ejs');
 const files = require(path.join(machine.node.globalPath,'lbmesh-cli','lib','files'));
 const fs    = require('fs');
-const path  = require('path');
+
 const sh    = require('shelljs');
 const _     = require('underscore');
 
