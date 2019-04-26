@@ -64,6 +64,44 @@ There is a built in management of database containers available within LB Mesh. 
 
 <div style="height:12px;"></div>
 
+Let's go over the lifecycle for managing these containers.  Here is a chart to show the overall view. 
+
+<img src="https://s3.amazonaws.com/lbmesh/lbmesh-containers-2.png" />
+
+<div style="height:12px;"></div>
+
+**[lbmesh db pull] Downloading the images**
+
+To get started with any database from the list, the image must be available locally on your system. We provide an easy way to download the required image and use with the commands below. 
+
+```
+	$ lbmesh db pull [mongodb|mysql|cloudant|redis|postgres|mssql]
+```
+
+<div style="height:9px;"></div>
+
+**[lbmesh db start] Starting Databases** 
+
+Each database instance will need to be started up individually. 
+
+``` 
+	$ lbmesh db start [mongodb|mysql|cloudant|redis|postgres|mssql]
+```
+
+<div style="height:9px;"></div>
+
+**[lbmesh db logs] Viewing Database Container Logs**
+
+You can view  logs for any database container by doing the following command:
+
+```
+	$ lbmesh db logs [mongodb|mysql|cloudant|redis|postgres|mssql]
+```
+
+<div style="height:9px;"></div>
+
+**[lbmesh db config] Updating Port Config**
+
 To change any of these default ports, please use this command. 
 
 ```
@@ -74,37 +112,7 @@ It will give you a list of databases to set a new port.
 
 <div style="height:9px;"></div>
 
-**Downloading the images**
-
-To get started with any database from the list, the image must be available locally on your system. We provide an easy way to download the required image and use with the commands below. 
-
-```
-	$ lbmesh db pull [mongodb|mysql|cloudant|redis|postgres|mssql]
-```
-
-<div style="height:9px;"></div>
-
-**Starting Databases** 
-
-Each database instance will need to be started up individually. 
-
-``` 
-	$ lbmesh db start [mongodb|mysql|cloudant|redis|postgres|mssql]
-```
-
-<div style="height:9px;"></div>
-
-**Viewing Database Container Logs**
-
-You can view  logs for any database container by doing the following command:
-
-```
-	$ lbmesh db logs [mongodb|mysql|cloudant|redis|postgres|mssql]
-```
-
-<div style="height:9px;"></div>
-
-**Check Database Status**
+**[lbmesh db status] Check Database Status**
 
 The DB component of LB Mesh also includes a command to check the status of what containers are running.  It's the same as running **docker ps** but we have included a filter to just view lbmesh specific containers. 
 
@@ -116,21 +124,27 @@ This is a great way to confirm that containers are starting on the default ports
 
 <div style="height:9px;"></div>
 
-**Stopping Databases**
+**[lbmesh db stop] Stopping Databases**
 
-All the db start commands will start the databases once your machine restarts since they include the **restart: always** config.  To stop your database stack, do the following. 
+All the db start commands will start the DB container.  You will need to start the containers if you reboot your machine. To stop your specific database container, you can do the following: 
 
-Individual Databases
 ```
 	$ lbmesh db stop [mongodb|mysql|cloudant|redis|postgres|mssql]
 ```
 
-All Databases
-``` 
-	$ lbmesh db stop
+All Database containers automatically persist data to the filesystem so upon restart everything will be intact.
+
+<div style="height:9px;"></div>
+
+**[lbmesh db remove] Removing Databases**
+
+When you do a pull, it will download the source image and build a container for you to use off that image.  At some point you want to remove this database, you can run the following command:
+
+```
+	$ lbmesh db remove [mongodb|mysql|cloudant|redis|postgres|mssql]
 ```
 
-All Database containers automatically persist data to the filesystem so upon restart everything will be intact.
+It will ask you to confirm that you want to remove the container and source image.  Your data directory will still be persisted, so once you do a pull again it will pick back up where it left off.  
 
 <div style="height:18px;"></div>
 

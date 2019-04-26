@@ -46,6 +46,7 @@ const jsonfile = require('jsonfile');
 const program = require('commander');
 const prompt = require('prompt');
 const shelljs   = require('shelljs');
+const isWindows = (machine.platform == 'win32')? true : false;
 
 const Create = require( path.join(machine.node.globalPath,'lbmesh-cli','classes','create'));
 const Projects = require(path.join(machine.node.globalPath,'lbmesh-cli','classes','projects'));
@@ -58,7 +59,7 @@ const LOG    = console.log;
 banner.display();
 
 program
-  .version('1.0.0', '-v, --version')
+  .version(pkg.version, '-v, --version')
   .usage('create|projects|run|open|build [options] ');
 
 program
@@ -111,16 +112,11 @@ program
 
   })
   .on('--help', function() {
-    // console.log('  Examples:');
-    // console.log();
-    // console.log('    $ deploy exec sequential');
-    // console.log('    $ deploy exec async');
-    // console.log();
+
   });
 
 program
   .command('projects [name] [options]')
-  //.alias('project')
   .description('Get LB Mesh Project Details')
   .action((name, options)=>{
     banner.projects();
@@ -323,7 +319,7 @@ program
 
 program
   .command('db [action] [service]')
-  .description('Manage DB Containers (start|stop|restart|status|logs|config) ')
+  .description('Manage DB Containers (pull|start|stop|status|remove|recreate|logs|config) ')
   .action((action, service)=>{
        
       banner.databases();
@@ -339,25 +335,19 @@ program
             let mySettings = new DB();
             let showTable = mySettings.retrievePorts();
             
+            //LOG( showTable );
             LOG( showTable.table );
             LOG();
 
             ask
             .prompt([
-              // {
-              //   "type": "input",
-              //   "default": "Demo",
-              //   "name": "appname",
-              //   "message": 'What is the name of your Application?'
-              // },
               {
                 "type": "list",
                 "default": "exit",
                 "message": "Which DB Settings would you like to update?",
                 "name": "dbSettings",
                 "choices": [
-                 // {"name": "Full Stack ( Frontend + Backend )", "value": "frontend-backend"},
-                  //new ask.Separator(),
+                  new ask.Separator(),
                   {"name":"MongoDB", "value":"mongodb"},
                   {"name":"MySQL", "value":"mysql"},
                   {"name":"Cloudant", "value":"cloudant"},
@@ -370,7 +360,6 @@ program
                 //"message": 'Create Project in Default Workspace $HOME/Workspace-lbmesh/ (Y) or Current Directory (n)?'
               }
             ]).then(answers => {
-                //LOG(answers);
                 if( answers.dbSettings !== 'exit') {
                   ask.
                   prompt([
@@ -380,18 +369,11 @@ program
                       "name": "newPort",
                       "message": 'What port would you like to use for ' + answers.dbSettings.toUpperCase() + ' ?'
                     }                   
-                    // {
-                    //   "type": "input",
-                    //   "default": showTable.sourceData[answers].image,
-                    //   "name": "newImage",
-                    //   "message": 'What Container Image would you like to use for your ' + answers.toUpperCase() + ' Instance?'
-                    // },  
                   ]).then( answers2 => {
                         answers2["chosenDB"] = answers.dbSettings;
                         mySettings.updatePorts(answers2);
                   });
                 }
-    
             });
             //LOG( mySettings.retrievePorts() );
             LOG()
@@ -402,9 +384,8 @@ program
             LOG();
             LOG('  Processing Request to ' + myAction +' DB ' + myComponent.toUpperCase() + ' container service...')
             LOG();
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up --no-recreate -d");
 
-            //shelljs.exec("docker-compose stop lbmesh-db-" + myComponent +' ');
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up --no-recreate -d"); 
           } else {
             LOG()
             LOG(' Please supply a correct DB service name.  ');
@@ -431,7 +412,9 @@ program
                       LOG('   OPENING CLOUDANT DASHBOARD http://localhost:' + startTable.sourceData.cloudant.port + '/dashboard.html ');
                       LOG('           CLOUDANT User/Pass:  admin / pass');
                       LOG();
-                      shelljs.exec("sleep 3s");
+                      if( !isWindows ){
+                        shelljs.exec("sleep 3s");
+                      }
                       shelljs.exec("opn http://localhost:" + startTable.sourceData.cloudant.port +"/dashboard.html");                  
                     break;
                   }
@@ -450,11 +433,50 @@ program
           }
           LOG()
         break;
+        case 'remove':
+        if( myServices.includes(myComponent) ){
+          ask
+          .prompt([
+            {
+              "type": "confirm",
+              "default": "Y",
+              "name": "doremove",
+              "message": 'Are you sure you want to remove this DB container and source image? ' 
+            },
+          ]).then( answers3 => {
+            if( answers3.doremove){
+              let myRemove = new DB();
+              let showRemove = myRemove.retrievePorts();
+              LOG();
+              LOG();
+              LOG('   -- REMOVING DB container for ' + myComponent);
+              shelljs.exec("docker stop lbmesh-db-" + myComponent);
+              shelljs.exec("docker rm lbmesh-db-" + myComponent);
+              LOG();
+              LOG('   -- REMOVING SOURCE IMAGE for DB container ' + myComponent); // new container for ' + myComponent);
+              LOG();
+              shelljs.exec("docker rmi " + showRemove.sourceData[myComponent].image + " --force");
+              LOG();
+              LOG();
+            }
+          });
+
+
+        } else {
+          LOG()
+          LOG(' Please supply a correct DB service name.  ');
+          LOG(' Options are:  ' + myServicesList)
+          LOG()
+        }
+        LOG();
+        break;
         case 'recreate':
           if( myServices.includes(myComponent) ){
             LOG();
             LOG();
-            LOG('   -- REMOVING Old DB container for ' + myComponent);
+            LOG('   -- STOPPING DB container for ' + myComponent);
+            shelljs.exec("docker stop lbmesh-db-" + myComponent);
+            LOG('   -- REMOVING DB container for ' + myComponent);
             shelljs.exec("docker rm lbmesh-db-" + myComponent);
             LOG();
             LOG('   -- Rebuilding new container for ' + myComponent);
@@ -469,7 +491,7 @@ program
           LOG();
         break;
         case 'stop':
-        case 'restart':
+        //case 'restart':
           if( myServices.includes(myComponent) ){
 
             LOG();
@@ -531,7 +553,7 @@ program
 
 program
   .command('integ [name] [service]')
-  .description('Manage Integration Containers (start|stop|restart|status|logs) ')
+  .description('Manage Integration Containers (start|stop|restart|status|logs|config) ')
   .action((action, service)=>{
     banner.integrations();
     let myAction = (action == undefined)? 'empty' : action.toLowerCase();
@@ -542,9 +564,17 @@ program
     let integrationFilePath = path.join(machine.homedir,'.lbmesh.io','lbmesh-integ-stack.yaml');
     if( fs.existsSync(integrationFilePath) ){
       switch(myAction){
+        case 'config':
+            // if( myServices.includes(myComponent) ){
+
+            // } else {
+            //   LOG()
+            //   LOG(' Please supply a correct integration service name.');
+            //   LOG(' Options are: ' + myServicesList)
+            //   LOG()                
+            // }
+        break;
         case 'start':
-        case 'stop':
-        case 'restart':
           if( myServices.includes(myComponent) ){
 
             LOG();
@@ -555,63 +585,79 @@ program
 
             if( !decision.code ){
 
-                if( myAction == 'start' ){
+                let myDashboard = new INTEG();
+                let myPorts  = myDashboard.retrievePorts();
+
+                LOG(myPorts.sourceData);
+                //if( myAction == 'start' ){
                   switch(myComponent){
                       case 'mqlight':
                       LOG();
-                      LOG('   OPENING MQLIGHT DASHBOARD http://localhost:9180 ');
+                      LOG('   OPENING MQLIGHT DASHBOARD http://localhost:' + myPorts.sourceData.mqlight.port.admin );
                       LOG();
-                      shelljs.exec("sleep 5s");
-                      shelljs.exec("opn http://localhost:9180/#page=home");                  
+                      if( !isWindows ){
+                        shelljs.exec("sleep 5s");
+                      }
+                      
+                      shelljs.exec("opn http://localhost:" +  myPorts.sourceData.mqlight.port.admin );                  
                     break;
                     case 'iib':
                       LOG();
-                      LOG('   OPENING IIB DASHBOARD http://localhost:4414 ');
+                      LOG('   OPENING IIB DASHBOARD http://localhost:' +  myPorts.sourceData.iib.port.admin);
                       LOG();
-                      shelljs.exec("sleep 5s");
-                      shelljs.exec("opn http://localhost:4414");   
+                      if( !isWindows ){
+                        shelljs.exec("sleep 5s");
+                      }
+                      shelljs.exec("opn http://localhost:" +  myPorts.sourceData.iib.port.admin);   
                     break;
                     case 'datapower':
                       LOG();
-                      LOG('   OPENING DATAPOWER DASHBOARD https://localhost:9090 ');
+                      LOG('   OPENING DATAPOWER DASHBOARD https://localhost:' +  myPorts.sourceData.datapower.port.admin);
                       LOG('           DATAPOWER User/Pass:  admin / admin');
                       LOG();
-                      shelljs.exec("sleep 5s");
-                      shelljs.exec("opn https://localhost:9090");   
+                      if( !isWindows ){
+                        shelljs.exec("sleep 5s");
+                      }
+                      shelljs.exec("opn https://localhost:" +  myPorts.sourceData.datapower.port.admin);   
                     break;
                     case 'rabbitmq':
                       LOG();
-                      LOG('   OPENING RABBITMQ DASHBOARD http://localhost:15674 ');
+                      LOG('   OPENING RABBITMQ DASHBOARD http://localhost:' +  myPorts.sourceData.rabbitmq.port.admin);
                       LOG('           RABBITMQ User/Pass:  admin / rabbitmq');
                       LOG();
-                      shelljs.exec("sleep 5s");
-                      shelljs.exec("opn http://localhost:15674");   
+                      if( !isWindows ){
+                        shelljs.exec("sleep 5s");
+                      }
+                      shelljs.exec("opn http://localhost:" +  myPorts.sourceData.rabbitmq.port.admin);   
                     break;
                     case 'mq':
                       LOG();
-                      LOG('   OPENING MQ ADVANCED DASHBOARD https://localhost:9443/ibmmq/console/login.html ');
+                      LOG('   OPENING MQ ADVANCED DASHBOARD https://localhost:' +  myPorts.sourceData.mq.port.admin + '/ibmmq/console/login.html ');
                       LOG('           MQ ADVANCED User/Pass:  admin / lbmesh-integ-mq');
                       //LOG('   OPENING MQ ADVANCED METRICS http://localhost:9157/metrics ');
                       LOG();
-                      shelljs.exec("sleep 5s");
-                      shelljs.exec("opn https://localhost:9443/ibmmq/console/login.html");  
+                      if( !isWindows ){
+                        shelljs.exec("sleep 5s");
+                      }
+                      shelljs.exec("opn https://localhost:" +  myPorts.sourceData.mq.port.admin + "/ibmmq/console/login.html");  
                       //shelljs.exec("opn http://localhost:9157/metrics"); 
                     break;
                     case 'acemq':
                       LOG();
-                      LOG('   OPENING ACE MQ DASHBOARD https://localhost:9444/ibmmq/console/login.html ');
+                      LOG('   OPENING ACE MQ DASHBOARD https://localhost:' +  myPorts.sourceData.acemq.port.mq.admin + '/ibmmq/console/login.html ');
                       LOG('           ACE MQ User/Pass:  admin / lbmesh-integ-mq');
-                      LOG('   OPENING ACE SERVER DASHBOARD http://localhost:7600 ');
+                      LOG('   OPENING ACE SERVER DASHBOARD http://localhost:' + +  myPorts.sourceData.acemq.port.ace.admin );
 
                       //LOG('   OPENING MQ ADVANCED METRICS http://localhost:9157/metrics ');
                       LOG();
-                      shelljs.exec("sleep 5s");
-                      shelljs.exec("opn https://localhost:9444/ibmmq/console/login.html");  
-                      shelljs.exec("opn http://localhost:7600");  
+                      // shelljs.exec("sleep 5s");
+                      // shelljs.exec("opn https://localhost:9444/ibmmq/console/login.html");  
+                      // shelljs.exec("opn http://localhost:7600");  
                       //shelljs.exec("opn http://localhost:9157/metrics"); 
                     break;
+                    
                   }             
-                }// end if start
+               // }// end if start
             }else{
               LOG()
               LOG( chalk.red('  -- Please run the following command first to start | stop | restart --'))
@@ -625,6 +671,31 @@ program
             LOG()  
           }
           LOG();
+        break;
+        case 'stop':
+        //case 'restart':
+
+            if( myServices.includes(myComponent) ){
+                LOG();
+                LOG('  Processing Request to ' + myAction +' integration container service...')
+                LOG();
+                let decision = shelljs.exec("docker "+ myAction +" lbmesh-integ-" + myComponent + " ");
+
+                if( !decision.code ){  
+
+                } else {
+                  LOG()
+                  LOG( chalk.red('  -- Please run the following command first to start | stop | restart --'))
+                  LOG( chalk.blue('     $ lbmesh integ pull ' + myComponent))
+                  LOG();                  
+                }
+
+            } else {
+              LOG()
+              LOG(' Please supply a correct integration service name.');
+              LOG(' Options are: ' + myServicesList)
+              LOG()  
+            }
         break;
         case 'recreate':
           if( myServices.includes(myComponent) ){
@@ -660,10 +731,84 @@ program
           shelljs.exec("docker ps --filter name=lbmesh-integ*");
           LOG();
         break;
-        case 'test':
-             LOG( shelljs.exec("docker start lbmesh-integ-datapower").code ); 
-             // === 0 if successful
-             // > 0 if error
+        case 'open':
+            if( myServices.includes(myComponent) ){
+                let myAdmin = new INTEG();
+                let myAdminPorts  = myAdmin.retrievePorts();
+
+                switch(myComponent){
+                  case 'mqlight':
+                  LOG();
+                  LOG('   OPENING MQLIGHT DASHBOARD http://localhost:' +  myAdminPorts.sourceData.mqlight.port.admin );
+                  LOG();
+                   
+                  if( !isWindows ){
+                    shelljs.exec("sleep 5s");
+                  }
+                  shelljs.exec("opn http://localhost:" +  myAdminPorts.sourceData.mqlight.port.admin );                  
+                break;
+                case 'iib':
+                  LOG();
+                  LOG('   OPENING IIB DASHBOARD http://localhost:' +  myAdminPorts.sourceData.iib.port.admin);
+                  LOG();
+                  if( !isWindows ){
+                    shelljs.exec("sleep 5s");
+                  }
+                  shelljs.exec("opn http://localhost:" +  myAdminPorts.sourceData.iib.port.admin);   
+                break;
+                case 'datapower':
+                  LOG();
+                  LOG('   OPENING DATAPOWER DASHBOARD https://localhost:' +  myAdminPorts.sourceData.datapower.port.admin);
+                  LOG('           DATAPOWER User/Pass:  admin / admin');
+                  LOG();
+                  if( !isWindows ){
+                    shelljs.exec("sleep 5s");
+                  }
+                  shelljs.exec("opn https://localhost:" +  myAdminPorts.sourceData.datapower.port.admin);   
+                break;
+                case 'rabbitmq':
+                  LOG();
+                  LOG('   OPENING RABBITMQ DASHBOARD http://localhost:' +  myAdminPorts.sourceData.rabbitmq.port.admin);
+                  LOG('           RABBITMQ User/Pass:  admin / rabbitmq');
+                  LOG();
+                  if( !isWindows ){
+                    shelljs.exec("sleep 5s");
+                  }
+                  shelljs.exec("opn http://localhost:" +  myAdminPorts.sourceData.rabbitmq.port.admin);   
+                break;
+                case 'mq':
+                  LOG();
+                  LOG('   OPENING MQ ADVANCED DASHBOARD https://localhost:' +  myAdminPorts.sourceData.mq.port.admin + '/ibmmq/console/login.html ');
+                  LOG('           MQ ADVANCED User/Pass:  admin / lbmesh-integ-mq');
+                  //LOG('   OPENING MQ ADVANCED METRICS http://localhost:9157/metrics ');
+                  LOG();
+                  if( !isWindows ){
+                    shelljs.exec("sleep 5s");
+                  }
+                  shelljs.exec("opn https://localhost:" +  myAdminPorts.sourceData.mq.port.admin + "/ibmmq/console/login.html");  
+                  //shelljs.exec("opn http://localhost:9157/metrics"); 
+                break;
+                case 'acemq':
+                  LOG();
+                  LOG('   OPENING ACE MQ DASHBOARD https://localhost:' +  myAdminPorts.sourceData.acemq.port.mq.admin + '/ibmmq/console/login.html ');
+                  LOG('           ACE MQ User/Pass:  admin / lbmesh-integ-mq');
+                  LOG('   OPENING ACE SERVER DASHBOARD http://localhost:' + +  myAdminPorts.sourceData.acemq.port.ace.admin );
+
+                  //LOG('   OPENING MQ ADVANCED METRICS http://localhost:9157/metrics ');
+                  LOG();
+                  // shelljs.exec("sleep 5s");
+                  // shelljs.exec("opn https://localhost:9444/ibmmq/console/login.html");  
+                  // shelljs.exec("opn http://localhost:7600");  
+                  //shelljs.exec("opn http://localhost:9157/metrics"); 
+                break;
+                }     
+
+            } else {
+              LOG()
+              LOG(' Please supply a correct integration service name.');
+              LOG(' Options are: ' + myServicesList)
+              LOG()  
+            }
         break;
         case 'logs':
             if( myServices.includes(myComponent) ){

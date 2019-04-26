@@ -50,26 +50,32 @@ class Create {
             "apps": {
                 "www": {
                     "port":0,
+                    "image": "",
                     "tag": ""
                 },
                 "admin": {
                     "port":0,
+                    "image": "",
                     "tag": ""
                 },
                 "api": {
                     "port":0,
+                    "image": "",
                     "tag": ""
                 },
                 "scheduler": {
                     "port":0,
+                    "image": "",
                     "tag": ""
                 },
                 "messenger": {
                     "port":0,
+                    "image": "",
                     "tag": ""
                 },
                 "databank": {
                     "port":0,
+                    "image": "",
                     "tag": ""
                 }
             }
@@ -269,6 +275,7 @@ class Create {
         }
         
         fs.mkdirSync( path.join(projFolder, 'general') );
+        fs.mkdirSync( path.join(projFolder, 'middleware') );
 
         fs.writeFileSync( path.join(projFolder, 'lbmesh-config.json') ,JSON.stringify(this.currentProject,null,2));
         

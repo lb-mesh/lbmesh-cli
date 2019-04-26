@@ -1,8 +1,14 @@
 # Change Log
 All notable changes to the "lbmesh-cli" extension will be documented in this file.
 
-## [2.6.2, 2.6.3, 2.6.4] 2019-04-17
+## [2.6.7] 2019-04-26
+- fixed paths for docker-compose on windows
+- removed sleep commands for win32
+- added integration open menu option to open admin interfaces on demand. 
+
+## [2.6.2, 2.6.3, 2.6.4, 2.6.5, 2.6.6] 2019-04-17
 - fixed filepaths for require/includes to work better with linux & windows
+- fixing classes absolute paths
 
 ## [2.6.1] 2019-04-16
 - added rabbitmq to the integration options
