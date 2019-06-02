@@ -29,6 +29,7 @@ const path      = require('path');
 const machine = require('lbmesh-os').profile();
 const Base      = require(path.join(machine.node.globalPath,'lbmesh-cli','classes','base') );
 const chalk     = require('chalk');
+const debug     = require('debug')('app:classes:integ');
 const LOG       = console.log;
 const ejs       = require('ejs');
 const fs        = require('fs');
@@ -42,6 +43,255 @@ class Integ extends Base{
         super();
     }
 
+    getQuestionList(instance){
+        let questions = [];
+        debug("BUILDING QUESTIONS FOR " + instance );
+
+        switch(instance){
+            case 'datapower':
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].port.admin,
+                    "name": "admin",
+                    "message": 'What port would you for the ' + instance.toUpperCase() + ' WEB ADMIN ?'
+                });             
+            break;
+            case 'iib':
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].port.admin,
+                    "name": "admin",
+                    "message": 'What port would you for the ' + instance.toUpperCase() + ' DASHBOARD ?'
+                });
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].port.data,
+                    "name": "data",
+                    "message": 'What port would you for the ' + instance.toUpperCase() + ' WEB SERVER ?'
+                });    
+            break;
+            case 'splunk':
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].port.admin,
+                    "name": "admin",
+                    "message": 'What port to use for ' + instance.toUpperCase() + ' DASHBOARD ?'
+                });
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].port.data,
+                    "name": "data",
+                    "message": 'What port range to use for ' + instance.toUpperCase() + ' DATA ?'
+                });   
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].env.pass,
+                    "name": "admin",
+                    "message": 'What password to use for ' + instance.toUpperCase() + ' DASHBOARD admin ?'
+                }); 
+            break;
+            case 'mqlight':
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].port.admin,
+                    "name": "admin",
+                    "message": 'What port to use for ' + instance.toUpperCase() + ' DASHBOARD ?'
+                }); 
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].port.data,
+                    "name": "data",
+                    "message": 'What port to use for ' + instance.toUpperCase() + ' DATA  ?'
+                });  
+            break;
+            case 'rabbitmq':
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].port.admin,
+                    "name": "admin",
+                    "message": 'What port to use for ' + instance.toUpperCase() + ' DASHBOARD ?'
+                }); 
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].port.data,
+                    "name": "data",
+                    "message": 'What port to use for ' + instance.toUpperCase() + ' DATA  ?'
+                });  
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].env.app_pass,
+                    "name": "env_user",
+                    "message": 'What username to use for ' + instance.toUpperCase() + ' DASHBOARD ?'
+                });   
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].env.admin_pass,
+                    "name": "env_pass",
+                    "message": 'What password to use for ' + instance.toUpperCase() + ' DASHBOARD ?'
+                }); 
+            break;
+            case 'mq':
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].port.admin,
+                    "name": "admin",
+                    "message": 'What port to use for ' + instance.toUpperCase() + ' DASHBOARD ?'
+                }); 
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].port.data,
+                    "name": "data",
+                    "message": 'What port to use for ' + instance.toUpperCase() + ' DATA  ?'
+                });  
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].env.app_pass,
+                    "name": "env_app_pass",
+                    "message": 'What password to use for ' + instance.toUpperCase() + ' APP PASSWORD ?'
+                });   
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].env.admin_pass,
+                    "name": "env_admin_pass",
+                    "message": 'What password to use for ' + instance.toUpperCase() + ' DASHBOARD  admin user account ?'
+                });  
+            break;
+        }
+
+        return questions;
+    }
+
+    updatePorts(choices){
+        debug("Preparing for INTEG PORT Updates ");
+        debug(choices);
+
+        let chosen = choices.instance;
+        let fullData = this.portsList;
+        switch(chosen){
+            case 'datapower':
+                this.portsList.integStack[chosen].port.admin = choices.admin;
+            break;
+            case 'splunk':
+                    this.portsList.integStack[chosen].port.admin = choices.admin;
+                    this.portsList.integStack[chosen].port.data = choices.data;
+                    this.portsList.integStack[chosen].env.pass = choices.env_app_pass;
+            break;
+            case 'mq':
+                this.portsList.integStack[chosen].port.admin = choices.admin;
+                this.portsList.integStack[chosen].port.data = choices.data;
+                this.portsList.integStack[chosen].env.admin_pass = choices.env_admin_pass;
+                this.portsList.integStack[chosen].env.app_pass = choices.env_app_pass;
+            break;
+            case 'rabbitmq':
+                this.portsList.integStack[chosen].port.admin = choices.admin;
+                this.portsList.integStack[chosen].port.data = choices.data;
+                this.portsList.integStack[chosen].env.user = choices.env_user;
+                this.portsList.integStack[chosen].env.pass = choices.env_pass;
+            break;
+            case 'mqlight':
+                this.portsList.integStack[chosen].port.admin = choices.admin;
+                this.portsList.integStack[chosen].port.data = choices.data;
+            break;
+            case 'iib':
+                this.portsList.integStack[chosen].port.admin = choices.admin;
+                this.portsList.integStack[chosen].port.data = choices.data;
+            break;
+        }
+
+        // Write Global Config
+        this.writeGlobalConfigWithObject(this.portsList);
+
+        // Write New Container Compose File
+        
+        switch(chosen){
+            case 'datapower':
+                ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-datapower.ejs'), {
+                    "datapower_local": path.join(fullData.homedir,'.lbmesh.io','datapower','data'),
+                    "datapower_admin": choices.admin,
+                    "datapower_config": path.join(fullData.homedir,'.lbmesh.io','datapower','config')
+                },{}, function(err,str){
+                    if( err ) console.log(err);
+                    fs.writeFileSync( path.join(fullData.homedir,'.lbmesh.io','datapower','lbmesh-integ-datapower.yaml'), str);
+                });  
+            break;
+            case 'mq':
+                ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-mq.ejs'), {
+                    "mq_data": path.join(fullData.homedir,'.lbmesh.io','mq','data'),
+                    "mq_config": path.join(fullData.homedir,'.lbmesh.io','mq','config'),
+                    "mq_port_admin": fullData.integStack.mq.port.admin,
+                    "mq_port_data": fullData.integStack.mq.port.data,
+                    "mq_env_admin_pass": fullData.integStack.mq.env.admin_pass,
+                    "mq_env_app_pass": fullData.integStack.mq.env.app_pass
+                },{}, function(err,str){
+                    if( err ) console.log(err);
+                    fs.writeFileSync( path.join(fullData.homedir,'.lbmesh.io','mq','lbmesh-integ-mq.yaml'), str);
+                });
+            break;
+            case 'rabbitmq':
+                ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-rabbitmq.ejs'), {
+                    "rabbitmq_data": path.join(fullData.homedir,'.lbmesh.io','rabbitmq','data'),
+                    "rabbitmq_hostname": machine.hostname,
+                    "rabbitmq_env_user": fullData.integStack.rabbitmq.env.user,
+                    "rabbitmq_env_pass": fullData.integStack.rabbitmq.env.pass,
+                    "rabbitmq_port_admin": fullData.integStack.rabbitmq.port.admin,
+                    "rabbitmq_port_data": fullData.integStack.rabbitmq.port.data,
+                },{}, function(err,str){
+                    if( err ) console.log(err);
+                    fs.writeFileSync( path.join(fullData.homedir,'.lbmesh.io','rabbitmq','lbmesh-integ-rabbitmq.yaml'), str);
+                }); 
+            break;
+            case 'splunk':
+                    ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-splunk.ejs'), {
+                        "splunk_config": path.join(fullData.homedir,'.lbmesh.io','splunk','config'),
+                        "splunk_env_pass": fullData.integStack.splunk.env.pass,
+                        "splunk_image": fullData.integStack.splunk.image,
+                        "splunk_port_admin": fullData.integStack.splunk.port.admin,
+                        "splunk_port_data": fullData.integStack.splunk.port.data,
+                    },{}, function(err,str){
+                        if( err ) console.log(err);
+                        fs.writeFileSync( path.join(data.homedir,'.lbmesh.io','splunk','lbmesh-integ-splunk.yaml'), str);
+                    }); 
+            break;
+            case 'mqlight':
+                    ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-mqlight.ejs'), {
+                        "mqlight_data": path.join(fullData.homedir,'.lbmesh.io','mqlight','data'),
+                        "mqlight_port_admin": fullData.integStack.mqlight.port.admin,
+                        "mqlight_port_data": fullData.integStack.mqlight.port.data,
+                    },{}, function(err,str){
+                        if( err ) console.log(err);
+                        fs.writeFileSync( path.join(fullData.homedir,'.lbmesh.io','mqlight','lbmesh-integ-mqlight.yaml'), str);
+                    }); 
+            break;
+            case 'iib':
+                ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-iib.ejs'), {
+                    "iib_data": path.join(fullData.homedir,'.lbmesh.io','mqlight','data'),
+                    "iib_port_admin": fullData.integStack.iib.port.admin,
+                    "iib_port_data": fullData.integStack.iib.port.data,
+                },{}, function(err,str){
+                    if( err ) console.log(err);
+                    fs.writeFileSync( path.join(fullData.homedir,'.lbmesh.io','iib','lbmesh-integ-iib.yaml'), str);
+                }); 
+            break;
+        }
+
+        // Rewrite Container & Rebuild
+        
+            LOG();
+            LOG('   -- REMOVING old integration Container for ' + chosen);
+            sh.exec("docker stop lbmesh-integ-" + chosen);
+            sh.exec("docker rm lbmesh-integ-" + chosen);
+            LOG();
+            LOG('   -- Rebuilding new integration Container for ' + chosen);
+            LOG();
+            sh.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io',chosen, 'lbmesh-integ-'+ chosen +'.yaml') + " up --no-start  ");            
+            LOG();
+            LOG( chalk.red('  -- Please run the following command to start the new ' + chosen + ' instance --'))
+            LOG( chalk.blue('     $ lbmesh integ start ' + chosen))
+            LOG();
+
+
+    }
+
     retrievePorts(){
         let selected = {
             "table": "",
@@ -49,7 +299,7 @@ class Integ extends Base{
         };
         let myDBStack = [];
             myDBStack.push(['Integ','Admin Port','Data Port','Image']);
-        let DBList = ['datapower','mqlight','iib','mq','rabbitmq','acemq'];
+        let DBList = ['datapower','mqlight','iib','mq','rabbitmq','acemq','splunk'];
             // mq, acemqserver, iib
         this.portsList = this.readGlobalConfig();
         

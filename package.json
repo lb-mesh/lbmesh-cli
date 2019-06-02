@@ -5,7 +5,9 @@
   "bin": {
     "lbmesh": "./bin/lbmesh.js",
     "lbm": "./bin/lbmesh.js",
-    "lbmesh-helper": "./bin/lbmesh-helper.js"
+    "lbmesh-helper": "./bin/lbmesh-helper.js",
+    "lbmesh-code": "./bin/lbmesh-code.js",
+    "lbm-code": "./bin/lbmesh-code.js"
   },
   "eslintConfig": {
     "env": {
@@ -53,6 +55,7 @@
     "global-modules": "^2.0.0",
     "inquirer": "^6.2.2",
     "jsonfile": "^5.0.0",
+    "jsontoxml": "^1.0.1",
     "lbmesh-os": "^1.2.1",
     "machina": "^4.0.2",
     "markdown-table": "^1.1.2",
@@ -63,6 +66,7 @@
     "shelljs": "^0.8.3",
     "superagent": "^3.8.3",
     "underscore": "^1.9.1",
+    "utf8": "^3.0.0",
     "write": "^1.0.3"
   }
 }

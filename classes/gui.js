@@ -1,9 +1,6 @@
-#!/usr/bin/env node
 /*
- Copyright (c) Innovative Thinkrs LLC 2019. All Rights Reserved.
+ Copyright (c) Innovative Thinkrs LLC. 2019. All Rights Reserved.
  This project is licensed under the MIT License, full text below.
-
-Author: Jamil Spain  <jamilhassanspain@gmail.com> http://www.jamilspain.com
 
  --------
 
@@ -27,14 +24,35 @@ Author: Jamil Spain  <jamilhassanspain@gmail.com> http://www.jamilspain.com
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 */
+
 'use strict'
-const machine = require('lbmesh-os');
-const path = require('path');
-const banner = require(path.join(machine.node.globalPath,'lbmesh-cli','classes','banner'));
-const jsonfile = require('jsonfile');
+const path      = require('path');
+const machine   = require('lbmesh-os').profile();
+const Base      = require(path.join(machine.node.globalPath,'lbmesh-cli','classes','base') );
+const chalk     = require('chalk');
+const LOG       = console.log;
+const ejs       = require('ejs');
+const fs        = require('fs');
+
+const sh        = require('shelljs');
+const table     = require('markdown-table');
+const _         = require('underscore');
 
 
-/**
- * Display Additional Banner
- */
-banner.interactive();
+class Gui extends Base{
+    constructor(){
+        super();
+    }
+
+    isInstalled(){
+        return this.machineInstall.gui.installed;
+    }
+
+    updateStatus(){
+        this.machineInstall.gui.installed = true;
+        this.writeGlobalConfigWithObject( this.machineInstall);
+    }
+
+};
+
+module.exports = Gui;

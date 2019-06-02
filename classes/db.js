@@ -64,6 +64,60 @@ class Db extends Base{
          
     }
 
+    updateGuiPorts(updates){
+
+        this.portsList.dbStack[updates.chosenDB].port = parseInt( updates.newPort );
+        this.portsList.dbStack[updates.chosenDB].image =  updates.newImage;
+
+        /**
+         * Write Global config
+         */
+        this.writeGlobalConfigWithObject(this.portsList);
+
+        /**
+         * Write Singular Compose File
+         */
+        const tempImage = updates.chosenDB + "_image";
+        const machineData = this.portsList;
+        const tempPort  = updates.chosenDB + "_port";
+        const tempPasswd = updates.chosenDB + "_env_passwd";
+
+        if( machineData.dbStack[updates.chosenDB].env.passwd.length > 0 ){
+            ejs.renderFile( path.join(machineData.templatefolder,'db','lbmesh-db-'+updates.chosenDB+'.ejs'), {
+                [tempImage]:    machineData.dbStack[updates.chosenDB].image,
+                [tempPort]:     machineData.dbStack[updates.chosenDB].port,  
+                [tempPasswd]:     machineData.dbStack[updates.chosenDB].env.passwd, 
+                "homedir_data": path.join(machineData.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'data'),
+                "homedir_config": path.join(machineData.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config')
+            },{}, function(err,str){
+                if( err ) console.log(err);
+                fs.writeFileSync( path.join(machineData.homedir,'.lbmesh.io',updates.chosenDB, 'lbmesh-db-' + updates.chosenDB + '.yaml'), str);
+            });  
+        } else {
+            ejs.renderFile( path.join(machineData.templatefolder,'db','lbmesh-db-'+updates.chosenDB+'.ejs'), {
+                [tempImage]:    machineData.dbStack[updates.chosenDB].image,
+                [tempPort]:     machineData.dbStack[updates.chosenDB].port,  
+                "homedir_data": path.join(machineData.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'data'),
+                "homedir_config": path.join(machineData.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config')
+            },{}, function(err,str){
+                if( err ) console.log(err);
+                fs.writeFileSync( path.join(machineData.homedir,'.lbmesh.io',updates.chosenDB, 'lbmesh-db-' + updates.chosenDB + '.yaml'), str);
+            });  
+        }
+  
+
+         /**
+          * Decide to recreate container or not ( exited )
+          */
+         if( updates.containerState == 'exited') {
+            sh.exec("docker rm lbmesh-db-" + updates.chosenDB);
+            sh.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', updates.chosenDB, 'lbmesh-db-'+ updates.chosenDB +'.yaml') + " up --no-start ");
+         }
+
+          
+
+    }
+
     updatePorts(updates){
        // LOG(updates);
         this.portsList.dbStack[updates.chosenDB].port = parseInt(updates.newPort);
@@ -106,6 +160,22 @@ class Db extends Base{
          */
             const tempImage = updates.chosenDB + "_image";
             const tempPort  = updates.chosenDB + "_port";
+            const tempPasswd = db + "_env_passwd";
+
+        if( machineData.dbStack[updates.chosenDB].env.passwd.length > 0 ){
+
+            ejs.renderFile( path.join(machineData.templatefolder,'db','lbmesh-db-'+updates.chosenDB+'.ejs'), {
+                [tempImage]:    machineData.dbStack[updates.chosenDB].image,
+                [tempPort]:     machineData.dbStack[updates.chosenDB].port,  
+                [tempPasswd]: machineData.dbStack[updates.chosenDB].env.passwd,
+                "homedir_data": path.join(machineData.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'data'),
+                "homedir_config": path.join(machineData.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config')
+            },{}, function(err,str){
+                if( err ) console.log(err);
+                fs.writeFileSync( path.join(machineData.homedir,'.lbmesh.io',updates.chosenDB, 'lbmesh-db-'+updates.chosenDB+'.yaml'), str);
+            });      
+
+        } else {
             ejs.renderFile( path.join(machineData.templatefolder,'db','lbmesh-db-'+updates.chosenDB+'.ejs'), {
                 [tempImage]:    machineData.dbStack[updates.chosenDB].image,
                 [tempPort]:     machineData.dbStack[updates.chosenDB].port,  
@@ -114,7 +184,8 @@ class Db extends Base{
             },{}, function(err,str){
                 if( err ) console.log(err);
                 fs.writeFileSync( path.join(machineData.homedir,'.lbmesh.io',updates.chosenDB, 'lbmesh-db-'+updates.chosenDB+'.yaml'), str);
-            });      
+            });                
+        }
             
         /**
          * Copy to Home Dir

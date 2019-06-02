@@ -57,6 +57,13 @@ class Projects extends Base{
         return showTable; 
     }
 
+    getModelTemplate(){
+        return {
+            "model": {},
+            "definition": {}
+        }
+    }
+
     viewProjectDetails(projname){
         let selected;
         let myProjDetails = [];

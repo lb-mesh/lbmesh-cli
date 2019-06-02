@@ -25,13 +25,14 @@
  THE SOFTWARE.
 */
 'use strict'
-const path  = require('path');
-const machine = require('lbmesh-os').profile();
-const files = require(path.join(machine.node.globalPath,'lbmesh-cli','lib','files'));
+const path      = require('path');
+const machine   = require('lbmesh-os').profile();
+const debug     = require('debug')('app:classes:base');
+const files     = require(path.join(machine.node.globalPath,'lbmesh-cli','lib','files'));
 
 class Base {
     constructor(){
-        this.machine = files.readGlobalFile();        
+        this.machineInstall = files.readGlobalFile();        
     }
 
     getProjectType(label){
@@ -48,6 +49,18 @@ class Base {
         return newLabel;
     }
 
+    writeProjectConfig(dataObject){
+        files.writeProjectConfig(dataObject);
+    }
+
+    writeProjectModelMethod( projFolder, model){
+        files.writeComponentModelMethod(this.machine,projFolder,model);
+    }
+
+    writeProjectModel(projFolder, model ){ 
+        files.writeComponentModel(this.machine,projFolder,model);
+    }
+
     readProjectConfig(projFolder){
         return files.readProjectFile(projFolder);
     }
@@ -62,6 +75,10 @@ class Base {
 
     writeGlobalConfigWithObject(objectData){
         files.writeGlobalFile(objectData);
+    };
+
+    writeIntegComposeFile(objectData){
+
     };
 
     readGlobalConfig(){
