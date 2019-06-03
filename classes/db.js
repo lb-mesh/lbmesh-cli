@@ -69,6 +69,14 @@ class Db extends Base{
         this.portsList.dbStack[updates.chosenDB].port = parseInt( updates.newPort );
         this.portsList.dbStack[updates.chosenDB].image =  updates.newImage;
 
+        switch( updates.chosenDB ){
+            case 'postgres':
+            case 'mysql':
+            case 'mssql':
+                    this.portsList.dbStack[updates.chosenDB].env.passwd =  updates.newPass;
+            break;
+        }
+
         /**
          * Write Global config
          */

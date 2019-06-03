@@ -58,7 +58,7 @@ const DECISIONS = require(path.join(machine.node.globalPath,'lbmesh-cli','classe
  
 const LOG    = console.log;
 
-banner.display();
+
 
 program
   .version(pkg.version, '-v, --version')
@@ -69,7 +69,8 @@ program
   .alias('generate')
   .description('Scaffold a new LB Mesh Default Project')
   .action( ()=> {
-    
+
+    banner.display();
     banner.create();
     LOG();
   
@@ -121,8 +122,9 @@ program
   .command('projects [name] [options]')
   .description('Get LB Mesh Project Details')
   .action((name, options)=>{
+
+    banner.display();
     banner.projects();
-    
     
     let list = new Projects();
       if( name == undefined ){
@@ -318,6 +320,8 @@ program
 .command('code [component]')
 .description('Work with Project Component')
 .action( (component) => {
+
+  banner.display();
   banner.code();
 
   let myName = (component == undefined)? 'empty' : component;
@@ -348,17 +352,24 @@ program
 
 
 program
-  .command('db [action] [service]')
+  .command('db [action] [service] [display]')
+   
   .description('Manage DB Containers (pull|start|stop|status|remove|recreate|logs|config) ')
-  .action((action, service)=>{
-       
-      banner.databases();
+  .action((action, service, display)=>{
+      LOG()
 
+      let myDisplay = (display == undefined )? 'empty' : display.toLowerCase();
       let myAction = (action == undefined)? 'empty' : action.toLowerCase();
       let myComponent = (service == undefined)? 'all' : service.toLowerCase();
-      let myServices = ['mongodb','postgres','redis','mysql','cloudant','mssql'];
-      let myServicesList = 'mongodb | redis | mysql | postgres | cloudant | mssql';
+      let myServices = ['mongodb','postgres','redis','mysql','cloudant','mssql','cassandra','elasticsearch'];
+      let myServicesList = 'mongodb | redis | mysql | postgres | cloudant | mssql | cassandra | elasticsearch';
       //console.log( machine );
+
+      if( myDisplay !== 'hide' ){
+        banner.display();
+        banner.databases();
+      }
+
       let datastoreFilePath = path.join(machine.homedir,'.lbmesh.io','lbmesh-db-stack.yaml');
     if( fs.existsSync(datastoreFilePath) ){
       switch(myAction){   
@@ -379,12 +390,14 @@ program
                 "name": "dbSettings",
                 "choices": [
                   new ask.Separator(),
-                  {"name":"MongoDB", "value":"mongodb"},
-                  {"name":"MySQL", "value":"mysql"},
-                  {"name":"Cloudant", "value":"cloudant"},
-                  {"name":"Redis", "value":"redis"},
-                  {"name":"Postgres", "value":"postgres"},
+                  {"name":"MONGODB", "value":"mongodb"},
+                  {"name":"MYSQL", "value":"mysql"},
+                  {"name":"CLOUDANT", "value":"cloudant"},
+                  {"name":"REDIS", "value":"redis"},
+                  {"name":"POSTGRES", "value":"postgres"},
                   {"name":"MS SQL", "value":"mssql"},
+                  {"name":"CASSANDRA", "value":"cassandra"},
+                  {"name":"ELASTIC SEARCH", "value":"elasticsearch"},
                   new ask.Separator(),
                   {"name":"No Changes, Exit", "value":"exit"},                  
                 ],
@@ -583,15 +596,22 @@ program
   });
 
 program
-  .command('integ [name] [service]')
+  .command('integ [name] [service] [display]')
   .description('Manage Integration Containers (start|stop|restart|status|logs|config) ')
-  .action((action, service)=>{
-    banner.integrations();
+  .action((action, service, display)=>{
+    LOG();
+
+    let myDisplay = (display == undefined)? 'empty': display.toLowerCase();
     let myAction = (action == undefined)? 'empty' : action.toLowerCase();
     let myComponent = (service == undefined)? 'all' : service.toLowerCase();
     let myServices = ['datapower','mqlight','iib','mq','rabbitmq','acemq','splunk'];
     let myServicesList = 'datapower | mqlight | iib | rabbitmq | acemq | mq | splunk';
 
+    if( myDisplay !== 'hide'){
+      banner.display();
+      banner.integrations();
+    }
+    
     let integrationFilePath = path.join(machine.homedir,'.lbmesh.io','lbmesh-integ-stack.yaml');
     if( fs.existsSync(integrationFilePath) ){
       switch(myAction){
@@ -941,7 +961,10 @@ program
   .command('run [action] [component]')
   .description('Start|Stop|Restart|Log environment via pm2 runtime')
   .action((action, component)=>{
+    LOG();
+    banner.display();
     banner.runtime();
+
     if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ){
         let myAction = (action == undefined)? 'empty' : action.toLowerCase();
         let myComponent = (component == undefined)? 'all' : component.toLowerCase() ;
@@ -1015,8 +1038,13 @@ program
   .command('open')
   .description('Open Browser Windows for Project')
   .action((name)=>{
+
+    banner.display();
+    banner.browser();
+
       if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ) {
-            banner.browser();
+
+            
         let list = new Projects();
         let projDetails = list.readProjectConfig(process.cwd());
 
@@ -1067,7 +1095,10 @@ program
   .command('build [name]')
   .description('Generate Docker Container for LB Code')
   .action((name)=>{
-      banner.build();
+
+    banner.browser();
+    banner.build();
+
       if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ){
           let myName = (name == undefined)? 'none' : name.toLowerCase();
           const servicesList = ['www','api','admin','messenger','scheduler','databank'];
@@ -1340,6 +1371,8 @@ program
   .description("Get Detailed Usage Help for Command")
   .action((cmd)=> {
     let myCommand = (cmd == undefined)? 'empty' : cmd.toLowerCase();
+
+    banner.browser();
     banner.help(myCommand);
 
     switch(myCommand){
