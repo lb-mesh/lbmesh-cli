@@ -49,7 +49,7 @@ class Db extends Base{
         };
         let myDBStack = [];
             myDBStack.push(['DB','Port','Image']);
-        let DBList = ['mongodb','mysql','cloudant','redis','postgres','mssql'];
+        let DBList = ['mongodb','mysql','cloudant','redis','postgres','mssql','elasticsearch','cassandra'];
 
         this.portsList = this.readGlobalConfig();
         

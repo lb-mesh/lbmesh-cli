@@ -1,0 +1,213 @@
+<%- include('partials/header',    {active: link}) %> 
+<%- include('partials/breadcrumb',{active: link}) %>
+ 
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <%# <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                This is some text within a card block.
+                            </div>
+                        </div>
+                    </div>
+                </div> %>
+
+                <div class="row" >
+                    <div class="col-lg-7">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Databases Listing Overview</h4>
+                                <%# <h6 class="card-subtitle">Add class <code>.table-hover</code></h6> %>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>DB Name</th>
+                                                <th>Image</th>
+                                                <th>Port</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+<%
+    _.each(services.db, function(item){
+%>
+                                            <tr>
+                                                 
+                                                <td><%= item.toUpperCase() %></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.dbStack[item].image %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.dbStack[item].port %></span> </td>
+                                            </tr>
+<%
+    });
+%>
+
+                                          
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">DB Status Overview</h4>
+                                <ul class="feeds">
+<%
+    if( docker.db.length > 0 ){
+
+        _.each( docker.db, function(item){
+                    let currentClass = "";
+        switch( item.state ){
+            case 'running': currentClass="bg-success"; break;
+            case 'exited': currentClass="bg-danger"; break;
+            case 'created': currentClass="bg-inverse"; break;
+        }
+%>
+    <li>
+        <div class="<%= currentClass %>"><i class="ti-server  text-white"></i></div><%= item.service %> (<%= item.state %>) <span class="text-muted"><%= item.status %></span>
+    </li>   
+<%
+        });
+
+    } else {
+%>
+<li>
+    <div class="bg-info"><i class="far fa-bell text-white"></i></div> No Containers available. <span class="text-muted">Just Now</span>
+</li>
+<%                                  
+    }
+%>
+                                  <!--   <li>
+                                        <div class="bg-success"><i class="ti-server text-white"></i></div> Server #1 overloaded.<span class="text-muted">2 Hours ago</span></li>
+                                    <li>
+                                        <div class="bg-warning"><i class="ti-shopping-cart text-white"></i></div> New order received.<span class="text-muted">31 May</span></li>
+                                    <li>
+                                        <div class="bg-danger"><i class="ti-user text-white"></i></div> New user registered.<span class="text-muted">30 May</span></li>
+                                    <li>
+                                        <div class="bg-inverse"><i class="far fa-bell text-white"></i></div> New Version just arrived. <span class="text-muted">27 May</span></li>
+                                    <li>
+                                        <div class="bg-info"><i class="far fa-bell text-white"></i></div> You have 4 pending tasks. <span class="text-muted">Just Now</span></li>
+                               -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" >
+                    <div class="col-lg-7">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Integration Listing Overview</h4>
+                                <%# <h6 class="card-subtitle">Add class <code>.table-hover</code></h6> %>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>INTEG Name</th>
+                                                <th>Image</th>
+                                                <th>Admin</th>
+                                                <th>Data</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+<%
+    _.each(services.integ, function(item){
+        
+%>
+                                            <tr>
+                                                 
+                                                <td><%= item.toUpperCase() %></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.integStack[item].image %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.admin %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.data %></span> </td>
+                                            </tr>
+<%                          
+                    if( item == 'acemq') {
+%>  
+                                             <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">ACE</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.ace.admin %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.ace.data %></span> </td>
+                                            </tr>
+                                            <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">MQ</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.mq.admin %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.mq.data %></span> </td>
+                                            </tr>       
+<%
+                    }
+    });
+%>
+
+                                          
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">INTEG Status Overview</h4>
+                                <ul class="feeds">
+
+<%
+    if( docker.integ.length > 0 ){
+
+        _.each( docker.integ, function(item){
+        let currentClass = "";
+        switch( item.state ){
+            case 'running': currentClass="bg-success"; break;
+            case 'exited': currentClass="bg-danger"; break;
+            case 'created': currentClass="bg-inverse"; break;
+        }
+%>
+    <li>
+        <div class="<%= currentClass %>"><i class="ti-server  text-white"></i></div><%= item.service %> (<%= item.state %>) <span class="text-muted"><%= item.status %></span>
+    </li>   
+<%
+        });
+
+    } else {
+%>
+<li>
+    <div class="bg-info"><i class="far fa-bell text-white"></i></div> No Containers available. <span class="text-muted"></span>
+</li>
+<%                                  
+    }
+%>
+
+<%#                                 
+                                    <li>
+                                        <div class="bg-info"><i class="far fa-bell text-white"></i></div> You have 4 pending tasks. <span class="text-muted">Just Now</span></li>
+                                    <li>
+                                        <div class="bg-success"><i class="ti-server text-white"></i></div> Server #1 overloaded.<span class="text-muted">2 Hours ago</span></li>
+                                    <li>
+                                        <div class="bg-warning"><i class="ti-shopping-cart text-white"></i></div> New order received.<span class="text-muted">31 May</span></li>
+                                    <li>
+                                        <div class="bg-danger"><i class="ti-user text-white"></i></div> New user registered.<span class="text-muted">30 May</span></li>
+                                    <li>
+                                        <div class="bg-inverse"><i class="far fa-bell text-white"></i></div> New Version just arrived. <span class="text-muted">27 May</span></li>
+                                    <li>
+                                        <div class="bg-info"><i class="far fa-bell text-white"></i></div> You have 4 pending tasks. <span class="text-muted">Just Now</span></li>
+                                
+                                 %>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+ 
+
+<%- include('partials/footer') %>

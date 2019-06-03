@@ -70,7 +70,7 @@ class Base {
     }
 
     writeGlobalConfig(){
-        files.writeGlobalFile(this.machine);
+        files.writeGlobalFile(this.machineInstall);
     };
 
     writeGlobalConfigWithObject(objectData){

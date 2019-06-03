@@ -1,0 +1,1 @@
+{"name":"integ","plural":"integ","base":"Model","idInjection":true,"options":{"validateUpsert":true},"properties":{},"validations":[],"relations":{},"acls":[],"methods":{}}

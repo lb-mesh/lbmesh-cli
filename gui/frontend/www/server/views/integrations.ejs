@@ -1,0 +1,428 @@
+<%- include('partials/header',    {active: link}) %> 
+<%- include('partials/breadcrumb',{active: link}) %>
+
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+               <!--- <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                This is some text within a card block.
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+
+
+                    <div class="row" >
+                    <div class="col-lg-7">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Integration Listing Overview</h4>
+                                <%# <h6 class="card-subtitle">Add class <code>.table-hover</code></h6> %>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>INTEG Name</th>
+                                                <th>Image</th>
+                                                <th>Admin</th>
+                                                <th>Data</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+<%
+    _.each(services.integ, function(item){
+%>
+                                            <tr>
+                                                 
+                                                <td><a href="/integrations/<%= item %>/manage.html"><%= item.toUpperCase() %></a></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.integStack[item].image %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.admin %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.data %></span> </td>
+                                            </tr>
+<%                          
+                    if( item == 'acemq') {
+%>  
+                                             <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">ACE</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.ace.admin %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.ace.data %></span> </td>
+                                            </tr>
+                                            <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">MQ</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.mq.admin %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.mq.data %></span> </td>
+                                            </tr>       
+<%
+                    }
+    });
+%>
+
+                                          
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">INTEG Status Overview</h4>
+                                <ul class="feeds">
+
+<%
+    if( docker.integ.length > 0 ){
+
+        _.each( docker.integ, function(item){
+        let currentClass = "";
+        switch( item.state ){
+            case 'running': currentClass="bg-success"; break;
+            case 'exited': currentClass="bg-danger"; break;
+            case 'created': currentClass="bg-inverse"; break;
+        }
+%>
+    <li>
+        <div class="<%= currentClass %>"><i class="ti-server  text-white"></i></div><%= item.service %> (<%= item.state %>) <span class="text-muted"><%= item.status %></span>
+    </li>   
+<%
+        });
+
+    } else {
+%>
+<li>
+    <div class="bg-info"><i class="far fa-bell text-white"></i></div> No Containers available. <span class="text-muted"></span>
+</li>
+<%                                  
+    }
+%>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+
+    
+<%  if( detail ){  
+    
+    let isAvailable = false;
+    let intInfo = {};    
+
+    _.each( docker.integ, function(list){
+        if( list.service == services.detail ){
+            isAvailable = true;
+            intInfo = list;
+        }
+    });
+
+
+    let statusLabel = 'NOT DOWNLOADED';
+    let actionState = 'empty';
+
+%>
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-4 col-xlg-3 col-md-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <center class="m-t-30"> <img id="service-icon" data="<%= services.detail %>"   src="/cdn/logos/<%= services.detail %>.png" class="img-circle" width="100" />
+                                    <h4 class="card-title m-t-10"><%= services.detail %></h4>
+                                    <h6 class="card-subtitle"> </h6>
+                                    <div class="row text-center justify-content-md-center">
+<% 
+
+ 
+if( isAvailable ){
+    actionState = intInfo.state;
+    
+    switch(intInfo.state){
+        case 'running':
+            statusLabel = 'RUNNING';   
+        break;  
+        case 'exited':
+            statusLabel = 'STOPPED';
+        break;
+        case 'created':
+            statusLabel = 'CREATED';
+        break;
+    }
+}
+%>
+     <button type="button" disabled class="btn btn-block btn-outline-info"><%= statusLabel %></button>
+ 
+                                    </div>
+                                </center>
+                            </div>
+                            <div>
+                                <hr> 
+                            </div>
+                            <div class="card-body"> 
+                                <small class="text-muted p-t-30 db">Container Web Admin</small>
+                                <br />
+<% 
+if(actionState == 'running' ){
+    switch( services.detail ){
+        case 'mq':
+%>
+    <a   target="_blank" href="https://localhost:<%= data.integStack[services.detail].port.admin %>/ibmmq/console/login.html" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.integStack[services.detail].port.admin %></a>
+<%
+        break;
+        case 'mqlight':  
+%>
+    <a   target="_blank" href="http://localhost:<%= data.integStack[services.detail].port.admin %>/#page=home" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.integStack[services.detail].port.admin %></a>
+<%
+        break;
+        case 'iib':
+%>
+    <a   target="_blank" href="http://localhost:<%= data.integStack[services.detail].port.admin %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.integStack[services.detail].port.admin %></a>
+<%
+        break;
+        case 'splunk':
+%>
+    <a   target="_blank" href="http://localhost:<%= data.integStack[services.detail].port.admin %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.integStack[services.detail].port.admin %> ( USER admin )</a>
+<%
+        break;
+        case 'rabbitmq':
+%>
+    <a   target="_blank" href="http://localhost:<%= data.integStack[services.detail].port.admin %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.integStack[services.detail].port.admin %> ( <%= data.integStack[services.detail].env.user %>/<%= data.integStack[services.detail].env.pass %> )</a>
+<%
+        break;
+        case 'datapower':
+%>
+    <a   target="_blank" href="https://localhost:<%= data.integStack[services.detail].port.admin %>/dp/login.xml" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.integStack[services.detail].port.admin %> ( admin/admin)</a>
+   <a   target="_blank" href="https://localhost:<%= data.integStack[services.detail].port.xml %>" class="btn waves-effect waves-light btn-block btn-secondary"    >XML Management Port <%= data.integStack[services.detail].port.xml %></a>
+   <a   target="_blank" href="https://localhost:<%= data.integStack[services.detail].port.rest %>mgmt/status/default/DateTimeStatus" class="btn waves-effect waves-light btn-block btn-secondary"    >REST Management Port <%= data.integStack[services.detail].port.rest %></a> 
+<%
+        break;
+    }// end switch
+ 
+    
+  } else {
+    %>
+         
+    <%
+  } // end if  %>
+
+                                <small class="text-muted p-t-30 db">Container Actions</small>
+                                <br/>
+<form id="actionForm" method="post" action="/integrations/<%= services.detail %>/manage.html"  >
+    <input type="hidden" id="formService" name="service" value="<%= services.detail %>" />
+    <input type="hidden" id="formAction" name="action" value="<%= actionState %>" />
+    <input type="hidden" id="formCategory" name="category" value="integ" />
+    <input type="hidden" id="formImage" name="image" value="<%= data.integStack[services.detail].image %>" />
+    <input type="hidden" id="formPerform" name="nextstep" value="<%= actionState %>" />
+    <input type="hidden" id="formContainer" name="containerId" value="<%= intInfo.id %>" />
+</form>
+<% 
+    switch( actionState ){
+        case 'empty':
+%>
+                                <button type="button"  class="btn waves-effect waves-light btn-block btn-secondary" id="sa-params-pull"  >Pull</button>
+                               <!-- <button type="button" disabled class="btn waves-effect waves-light btn-block btn-secondary">Start</button>
+                                <button type="button" disabled class="btn waves-effect waves-light btn-block btn-secondary">Stop</button>
+                                <button type="button" disabled class="btn waves-effect waves-light btn-block btn-secondary">Remove</button> -->
+<%
+        break;
+        case 'running':
+%>
+                              <!--  <button type="button"  disabled class="btn waves-effect waves-light btn-block btn-secondary">Pull</button>-->
+                                <button type="button" disabled class="btn waves-effect waves-light btn-block btn-secondary">Start</button>
+                                <button type="button"  class="btn waves-effect waves-light btn-block btn-secondary" id="sa-params-stop">Stop</button>
+                               <!-- <button type="button" disabled class="btn waves-effect waves-light btn-block btn-secondary">Remove</button>-->
+<%
+break;
+        case 'exited':
+%>
+                               <!-- <button type="button"  disabled class="btn waves-effect waves-light btn-block btn-secondary">Pull</button>-->
+                                <button type="button"  class="btn waves-effect waves-light btn-block btn-secondary" id="sa-params-start">Start</button>
+                                <!--<button type="button"  disabled class="btn waves-effect waves-light btn-block btn-secondary">Stop</button>-->
+                                <button type="button"   class="btn waves-effect waves-light btn-block btn-secondary" id="sa-params-remove">Remove</button>
+<%
+        break;
+        case 'created':
+%>
+                               <!--  <button type="button"  disabled class="btn waves-effect waves-light btn-block btn-secondary" >Pull</button>-->
+                                <button type="button" class="btn waves-effect waves-light btn-block btn-secondary" id="sa-params-start">Start</button>
+                               <!-- <button type="button" disabled class="btn waves-effect waves-light btn-block btn-secondary">Stop</button>-->
+                                <button type="button" class="btn waves-effect waves-light btn-block btn-secondary" id="sa-params-remove">Remove</button>
+<%
+        break;
+    }
+%>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                    <!-- Column -->
+                    <div class="col-lg-8 col-xlg-9 col-md-7">
+                        <div class="card">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs profile-tab" role="tablist">
+                                <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home" role="tab">Settings</a> </li>
+                                <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Compose.YAML</a> </li>
+                                <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#settings" role="tab">Logs</a> </li>
+                            </ul>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="home" role="tabpanel">
+                                    <div class="card-body">
+                                        <div class="profiletimeline">
+ <!-- start -->       
+                                         
+                                             <h3 class="box-title m-t-40">General Settings</h3>
+                                            <hr>  
+                                            <form action="/integrations/<%= services.detail %>/manage.html" id="formContainerSettings" method="post">   
+                                            <input type="hidden" name="nextstep" value="settings" />
+                                            <input type="hidden" name="containerState" value="<%= actionState %>" />
+                                            <input type="hidden" name="chosenDB" value="<%= services.detail %>" />
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                     <div class="form-group">
+                                                        <label>Admin Port</label>
+                                                        <input type="text" id="newPortAdmin" name="newPortAdmin" class="form-control" value="<%= data.integStack[services.detail].port.admin %>" >
+                                                    </div>
+                                                </div>
+                                                <!--/span-->
+                                                <div class="col-md-6">
+                                                <% if( services.detail !== 'datapower' ){ %>
+                                                     <div class="form-group">
+                                                        <label>Data Port</label>
+                                                        <input type="text" id="newPortData" name="newPortData" class="form-control" value="<%= data.integStack[services.detail].port.data %>" >
+                                                    </div> 
+                                                <% } %>
+                                                </div>
+                                                <!--/span-->
+                                            </div>                                      
+                                            <div class="row">    
+                                        <%
+                                        switch( services.detail ){
+                                            case 'datapower':
+
+                                            break;
+                                            case 'acemq':
+
+                                            break;
+                                            case 'iib':
+
+                                            break;
+                                            case 'splunk':
+                                        %>
+                                                <div class="col-md-6">
+                                                     <div class="form-group">
+                                                        <label>Image</label>
+                                                        <input type="text" id="newImage" name="newImage" class="form-control" value="<%= data.integStack[services.detail].image %>" >
+                                                    </div>  
+ 
+                                                </div>
+                                                <!--/span-->
+                                                <div class="col-md-6">
+                                                     <div class="form-group">
+                                                        <label>Dashboard Password</label>
+                                                        <input type="text" id="newPass" name="newDashPass" class="form-control" value="<%= data.integStack[services.detail].env.pass %>" >
+                                                    </div>   
+     
+                                                </div>
+                                                <!--/span-->
+                                        <%
+                                            break;
+                                            case 'rabbitmq':
+                                        %>
+                                                <div class="col-md-6">
+                                                     <div class="form-group">
+                                                        <label>Dashboard Username</label>
+                                                        <input type="text" id="newPass" name="newDashUser" class="form-control" value="<%= data.integStack[services.detail].env.user %>" >
+                                                    </div>  
+ 
+                                                </div>
+                                                <!--/span-->
+                                                <div class="col-md-6">
+                                                     <div class="form-group">
+                                                        <label>Dashboard Password</label>
+                                                        <input type="text" id="newPass" name="newDashPass" class="form-control" value="<%= data.integStack[services.detail].env.pass %>" >
+                                                    </div>   
+     
+                                                </div>
+                                                <!--/span-->
+                                        <%
+                                                break;
+                                            case 'mq':
+                                        %>
+                                                <div class="col-md-6">
+                                                     <div class="form-group">
+                                                        <label>MQ Dashboard Admin Password</label>
+                                                        <input type="text" id="newPass" name="newPassAdmin" class="form-control" value="<%= data.integStack[services.detail].env.admin_pass %>" >
+                                                    </div>  
+                                                </div>
+                                                <!--/span-->
+                                                <div class="col-md-6">
+                                                     <div class="form-group">
+                                                        <label>MQ App Password</label>
+                                                        <input type="text" id="newPass" name="newPassApp" class="form-control" value="<%= data.integStack[services.detail].env.app_pass %>" >
+                                                    </div>     
+                                                </div>
+                                                <!--/span-->
+                                        <%
+                                            break;
+                                        }
+
+                                        %>
+
+                                            </div> 
+                                            <div >
+                                                <div class="form-actions">
+                                                <% if( actionState == 'running'){ %>
+                                                    <button type="buttom"  disabled class="btn btn-warning"> <i class="fa fa-check"></i> Disabled While Service Running</button>
+                                                <% } else { %>
+                                                    <button type="button"  id="sa-warning" class="btn btn-success"> <i class="fa fa-check"></i> Save</button>
+                                                <% } %>
+                                                    
+                                                </div>                                       
+                                            </div>
+                                            </form>
+ 
+ <!-- end -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--second tab-->
+                                <div class="tab-pane" id="profile" role="tabpanel">
+                                    <div class="card-body">
+                                    <div class="form-group" id="editoryaml"   >
+                                        <textarea  class="form-control" readonly rows="20" spellcheck="false"> <%= services.yaml %></textarea>
+                                           
+                                        </div>
+      
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="settings" role="tabpanel">
+                                    <div class="card-body">
+                                        <form class="form-horizontal form-material">
+                                      <div id="slimlogs"><%
+                                         _.each(services.logs,function(line){  %>
+                                            <%= line; %>
+                                            <br><br>
+                                        <% });  %>
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                </div>
+<% } %>         
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+ 
+
+<%- include('partials/footer') %>

@@ -4,10 +4,7 @@
   "description": "CLI Interface for LBMesh.io Framework",
   "bin": {
     "lbmesh": "./bin/lbmesh.js",
-    "lbm": "./bin/lbmesh.js",
-    "lbmesh-helper": "./bin/lbmesh-helper.js",
-    "lbmesh-code": "./bin/lbmesh-code.js",
-    "lbm-code": "./bin/lbmesh-code.js"
+    "lbm": "./bin/lbmesh.js"
   },
   "eslintConfig": {
     "env": {

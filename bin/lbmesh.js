@@ -596,8 +596,8 @@ program
   });
 
 program
-  .command('integ [name] [service] [display]')
-  .description('Manage Integration Containers (start|stop|restart|status|logs|config) ')
+  .command('integ [action] [service] [display]')
+  .description('Manage Integration Containers (start|stop|restart|status|pull|logs|config) ')
   .action((action, service, display)=>{
     LOG();
 
@@ -607,6 +607,7 @@ program
     let myServices = ['datapower','mqlight','iib','mq','rabbitmq','acemq','splunk'];
     let myServicesList = 'datapower | mqlight | iib | rabbitmq | acemq | mq | splunk';
 
+     
     if( myDisplay !== 'hide'){
       banner.display();
       banner.integrations();
@@ -822,7 +823,7 @@ program
         break;
         case 'pull':
           if( myServices.includes(myComponent) ){
- 
+            LOG('HELLO')
                 shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " up --no-start  "); 
          
           } else {
@@ -1299,6 +1300,10 @@ program
   .action((action)=>{
       let actions = ['init','start','stop','open','start-debug','stop-debug'];
       let myAction = (action == undefined)? 'empty' : action.toLowerCase();
+
+      banner.display();
+      LOG();
+      
       if( actions.includes(myAction) ){
           LOG();
           let myGui = new GUI();
@@ -1309,21 +1314,22 @@ program
 
                switch( myAction ){
                  case 'init':
-                    let guiPath = path.join(machine.node.globalPath,"lbmesh-cli","gui","frontend","www");
-                    LOG( guiPath );
 
-                   //  sh.cd( path.join(folder, 'backend', svc) );
-                    // sh.exec('npm install');
+                     shelljs.cd( path.join(machine.homedir,".lbmesh.io","dashboard","frontend","www") );
+                     shelljs.exec('npm install',{silent: true});
                     
                       myGui.updateStatus();
 
                     LOG();
+                    LOG( '     LB Mesh Dashboard Install Complete.  Start the dashboard with command below ')
+                    LOG();
+                    LOG( chalk.blue('     $ lbmesh dash start '))
                     LOG();
 
                  break;
                  default:
                     LOG()
-                    LOG( chalk.red('  -- Before using the LBMESH DASHBOARD, '));
+                    LOG( chalk.red('  -- Before using the LB MESH DASHBOARD, '));
                     LOG( chalk.red('     please run the installer to download dependencies first. '))
                     LOG();
                     LOG( chalk.blue('     $ lbmesh dash init '))
@@ -1338,18 +1344,23 @@ program
                     switch(myAction){
                       case 'start':
                       case 'stop':
-                        shelljs.exec("pm2 " + myAction +" " + path.join(machine.node.globalPath,"lbmesh-cli","gui","pm2-ecosystem.config.yaml"));
-                        // shelljs.exec("pm2 " + myAction +" " + path.join(machine.homedir,".lbmesh.io","dashboard","pm2-ecosystem.config.yaml"));
+                       // shelljs.exec("pm2 " + myAction +" " + path.join(machine.node.globalPath,"lbmesh-cli","gui","pm2-ecosystem.config.yaml"));
+                        shelljs.exec("pm2 " + myAction +" " + path.join(machine.homedir,".lbmesh.io","dashboard","pm2-ecosystem.config.yaml"));
+                        LOG();
+                        LOG();
+                        LOG('   OPENING LB MESH DASHBOARD WWW http://localhost:9976' )
+                        shelljs.exec("opn http://localhost:9976");
+                        LOG();
                         LOG();
                       break;
                       case 'start-debug':
                       case 'stop-debug':
-                        shelljs.exec("pm2 " + myAction +" " + path.join(machine.node.globalPath,".lbmesh.io","dashboard","pm2-gui-debug.config.yaml"));
+                        //shelljs.exec("pm2 " + myAction +" " + path.join(machine.node.globalPath,".lbmesh.io","dashboard","pm2-gui-debug.config.yaml"));
                         LOG();
                       break;
                       case 'open':
                         LOG();
-                        LOG('   OPENING LBMESH DASHBOARD WWW http://localhost:9976' )
+                        LOG('   OPENING LB MESH DASHBOARD WWW http://localhost:9976' )
                         shelljs.exec("opn http://localhost:9976");
                         LOG();
                       break;
@@ -1469,6 +1480,7 @@ program
  * No Arguments Passed, Show Extended Help Menu
  */
 if(!program.args.length  ) {
+  banner.display();
   program.help();
 };
 

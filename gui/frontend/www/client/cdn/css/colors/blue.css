@@ -1,0 +1,174 @@
+/*
+Template Name: Monster Admin
+Author: Themedesigner
+Email: niravjoshi87@gmail.com
+File: scss
+*/
+/*
+Template Name: Monster Admin
+Author: Themedesigner
+Email: niravjoshi87@gmail.com
+File: scss
+*/
+@import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700");
+/*Theme Colors*/
+/*bootstrap Color*/
+/*Light colors*/
+/*Normal Color*/
+/*Extra Variable*/
+/*Preloader*/
+.preloader {
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  position: fixed;
+  z-index: 99999;
+  background: #fff;
+}
+
+.preloader .cssload-speeding-wheel {
+  position: absolute;
+  top: calc(50% - 3.5px);
+  left: calc(50% - 3.5px);
+}
+
+/*******************
+/*Top bar
+*******************/
+.topbar {
+  background: #3366ff;
+}
+
+.topbar .top-navbar .navbar-header .navbar-brand .dark-logo {
+  display: none;
+}
+
+.topbar .top-navbar .navbar-header .navbar-brand .light-logo {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.topbar .navbar-light .navbar-nav .nav-item > a.nav-link {
+  color: #ffffff !important;
+}
+
+.topbar .navbar-light .navbar-nav .nav-item > a.nav-link:hover, .topbar .navbar-light .navbar-nav .nav-item > a.nav-link:focus {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/*******************
+/*General Elements
+*******************/
+a.link:hover, a.link:focus {
+  color: #3366ff !important;
+}
+
+.bg-theme {
+  background-color: #3366ff !important;
+}
+
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+  background-color: #3366ff;
+  border-color: #3366ff;
+}
+
+.right-sidebar .rpanel-title {
+  background: #3366ff;
+}
+
+.stylish-table tbody tr:hover, .stylish-table tbody tr.active {
+  border-left: 4px solid #3366ff;
+}
+
+.text-themecolor {
+  color: #3366ff !important;
+}
+
+.profile-tab li a.nav-link.active,
+.customtab li a.nav-link.active {
+  border-bottom: 2px solid #3366ff;
+  color: #3366ff;
+}
+
+.profile-tab li a.nav-link:hover,
+.customtab li a.nav-link:hover {
+  color: #3366ff;
+}
+
+/*******************
+/*Buttons
+*******************/
+.btn-themecolor,
+.btn-themecolor.disabled {
+  background: #3366ff;
+  color: #ffffff;
+  border: 1px solid #3366ff;
+}
+
+.btn-themecolor:hover,
+.btn-themecolor.disabled:hover {
+  background: #3366ff;
+  opacity: 0.7;
+  border: 1px solid #3366ff;
+}
+
+.btn-themecolor.active, .btn-themecolor:focus,
+.btn-themecolor.disabled.active,
+.btn-themecolor.disabled:focus {
+  background: #3366ff;
+}
+
+/*******************
+/*sidebar navigation
+*******************/
+.sidebar-nav {
+  background: #3c3c3c;
+}
+
+.sidebar-nav ul li a {
+  color: #3c3c3c;
+}
+
+.sidebar-nav ul li a.active, .sidebar-nav ul li a:hover {
+  color: #3366ff;
+}
+
+.sidebar-nav ul li a.active {
+  color: #ffffff;
+}
+
+.sidebar-nav ul li.nav-small-cap {
+  color: #99abb4;
+}
+
+.sidebar-nav > ul > li.active > a, .sidebar-nav > ul > li.active:hover > a {
+  color: #ffffff;
+  background: #3366ff;
+}
+
+.sidebar-nav > ul > li.active > a i, .sidebar-nav > ul > li.active:hover > a i {
+  color: #3366ff;
+}
+
+.sidebar-nav > ul > li.active > a:after, .sidebar-nav > ul > li.active:hover > a:after {
+  border-color: #3366ff;
+}
+
+.sidebar-nav > ul > li > a.active i, .sidebar-nav > ul > li > a:hover i {
+  color: #ffffff;
+}
+
+.sidebar-nav > ul > li > a i {
+  color: #fff;
+}
+
+.sidebar-nav > ul > li > a.active {
+  font-weight: 400;
+  background: #ffffff;
+  color: #3366ff;
+}

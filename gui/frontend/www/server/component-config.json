@@ -1,0 +1,1 @@
+{"loopback-component-explorer":{"basePath":"/api","mountPath":"/gui/explorer","uiDirs":["server/explorerapi"],"apiInfo":{"title":"LB Mesh GUI API","description":"Web Based Administration API","termsOfServiceUrl":"","contact":"","license":"","licenseUrl":""}}}

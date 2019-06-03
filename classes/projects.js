@@ -45,7 +45,7 @@ class Projects extends Base{
        let myList = [];
            myList.push(['Project Name', 'Project Type']);
 
-       _.each(this.machine.projectApps, (p)=> {
+       _.each(this.machineInstall.projectApps, (p)=> {
             myList.push([p.name, this.getProjectType(p.type)]);
        });
 
@@ -72,7 +72,7 @@ class Projects extends Base{
         let myProjPorts = [];
             myProjPorts.push(['WWW','API','Admin','Scheduler','Messenger','DataBank'])
 
-        _.each( this.machine.projectApps, (p) => {
+        _.each( this.machineInstall.projectApps, (p) => {
             if( p.name == projname ){
                 selected = p;
             }
@@ -117,12 +117,12 @@ class Projects extends Base{
     }
 
     isProject(projname) {
-        return this.machine.projectAppsList.includes(projname);
+        return this.machineInstall.projectAppsList.includes(projname);
     }
 
     resetProjectList(){
-        this.machine.projectAppsList.length = 0;
-        this.machine.projectApps.length = 0;
+        this.machineInstall.projectAppsList.length = 0;
+        this.machineInstall.projectApps.length = 0;
         this.writeGlobalConfig();
     }
 
@@ -135,7 +135,7 @@ class Projects extends Base{
     }
 
     doesProjectExist(name){
-        return this.machine.projectAppsList.includes(name.toLowerCase());
+        return this.machineInstall.projectAppsList.includes(name.toLowerCase());
     }
 
     importProjectConfig(folderpath){
@@ -147,13 +147,13 @@ class Projects extends Base{
         /**
          * Read Project Folder & Grab Settings
          */
-            this.machine.projectAppsList.push( importDetails.name );
-            this.machine.projectApps.push({
+            this.machineInstall.projectAppsList.push( importDetails.name );
+            this.machineInstall.projectApps.push({
                 name:   importDetails.name,
                 folder: importDetails.path,
                 type:   importDetails.type
             });
-            this.machine.portStackExclude.push( parseInt( (importDetails.apps.www.port - 1) ) );
+            this.machineInstall.portStackExclude.push( parseInt( (importDetails.apps.www.port - 1) ) );
 
          /**
           * Check App Settings ( Exit if Exists)
