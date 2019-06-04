@@ -147,6 +147,15 @@ if( isAvailable ){
                                 <hr> 
                             </div>
                             <div class="card-body"> 
+<%
+if( actionState == 'running' && services.detail == 'cloudant' ){
+%>
+                                <small class="text-muted p-t-30 db">Container Web Admin</small>
+                                <br />
+                                    <a   target="_blank" href="http://localhost:<%= data.dbStack[services.detail].port %>/dashboard.html" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.dbStack[services.detail].port %> ( admin/pass)</a>
+<%
+}
+%>
                                 <small class="text-muted p-t-30 db">Container Actions</small>
                                 <br/>
 <form id="actionForm" method="post" action="/databases/<%= services.detail %>/manage.html"  >

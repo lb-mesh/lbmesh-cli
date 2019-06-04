@@ -1302,6 +1302,7 @@ program
       let myAction = (action == undefined)? 'empty' : action.toLowerCase();
 
       banner.display();
+      banner.dashboard();
       LOG();
       
       if( actions.includes(myAction) ){
@@ -1314,7 +1315,9 @@ program
 
                switch( myAction ){
                  case 'init':
-
+                  LOG();
+                  LOG( '    Initializing  LB Mesh Dashboard.  Please Wait .... ')
+                 
                      shelljs.cd( path.join(machine.homedir,".lbmesh.io","dashboard","frontend","www") );
                      shelljs.exec('npm install',{silent: true});
                     
@@ -1345,11 +1348,17 @@ program
                       case 'start':
                       case 'stop':
                        // shelljs.exec("pm2 " + myAction +" " + path.join(machine.node.globalPath,"lbmesh-cli","gui","pm2-ecosystem.config.yaml"));
-                        shelljs.exec("pm2 " + myAction +" " + path.join(machine.homedir,".lbmesh.io","dashboard","pm2-ecosystem.config.yaml"));
+                        shelljs.exec("pm2 " + myAction +" " + path.join(machine.homedir,".lbmesh.io","dashboard","pm2-ecosystem.config.yaml"),{silent: true});
                         LOG();
                         LOG();
-                        LOG('   OPENING LB MESH DASHBOARD WWW http://localhost:9976' )
-                        shelljs.exec("opn http://localhost:9976");
+                        if( myAction == "start" ){
+                          LOG('   STARTING LB MESH DASHBOARD WWW ... PLEASE WAIT' )
+                          LOG();
+                          LOG('   OPENING LB MESH DASHBOARD WWW http://localhost:9976' )
+                          shelljs.exec("opn http://localhost:9976");
+                        } else {
+                          LOG('   STOPPING LB MESH DASHBOARD WWW' )
+                        }
                         LOG();
                         LOG();
                       break;
