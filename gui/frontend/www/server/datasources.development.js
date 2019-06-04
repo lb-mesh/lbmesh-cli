@@ -34,15 +34,6 @@ module.exports =  {
     "connector": "loopback-component-storage",
     "provider": "filesystem",
     "root": path.join(__dirname, 'storage')
-  },
-  "datastore": {
-    "host": "",
-    "port": null,
-    "url": DB_URL,
-    "database": "",
-    "useNewUrlParser":"true",
-    "name": "datastore",
-    "connector": "mongodb"
   }
 
 };
