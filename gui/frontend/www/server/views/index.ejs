@@ -27,6 +27,7 @@
                                                 <th>DB Name</th>
                                                 <th>Image</th>
                                                 <th>Port</th>
+                                                <th>Admin</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -36,8 +37,9 @@
                                             <tr>
                                                  
                                                 <td><%= item.toUpperCase() %></td>
-                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.dbStack[item].image %></span> </td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.dbStack[item].image.substr(0,25) %></span> </td>
                                                 <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.dbStack[item].port %></span> </td>
+           <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <% if( data.dbStack[item].admin.port > 0 ){ %> <%= data.dbStack[item].admin.port %> <% }  %></span> </td>
                                             </tr>
 <%
     });

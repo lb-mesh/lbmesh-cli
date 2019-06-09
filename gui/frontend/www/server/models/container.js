@@ -103,7 +103,7 @@ module.exports = function(Container) {
 
                     allServices.push( item );
                     
-                    if( Container.app.models.database.services.includes(item.Labels['com.docker.compose.project'])){
+                    if( Container.app.models.database.services.includes(item.Labels['com.docker.compose.project']) && Container.app.models.database.services.includes(item.Labels['com.docker.compose.service']) ){
                         servicesDB.push({
                             id: item.Id,
                             service: item.Labels['com.docker.compose.project'],

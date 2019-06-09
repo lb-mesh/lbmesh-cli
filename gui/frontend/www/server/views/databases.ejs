@@ -38,9 +38,9 @@
                                             <tr>
                                                  
                                                 <td><A href="/databases/<%= item %>/manage.html"><%= item.toUpperCase() %></a></td>
-                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.dbStack[item].image %></span> </td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.dbStack[item].image.substr(0,25) %></span> </td>
                                                 <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.dbStack[item].port %></span> </td>
-                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.dbStack[item].admin.port %></span> </td>
+                                              <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <% if( data.dbStack[item].admin.port > 0 ){ %> <%= data.dbStack[item].admin.port %> <% }  %></span> </td>
                                             </tr>
 <%
     });
@@ -282,6 +282,10 @@ break;
                                                      <div class="form-group">
                                                         <label>Root Password</label>
                                                         <input type="text" id="newPass" name="newPass" class="form-control" value="<%= data.dbStack[services.detail].env.passwd %>" >
+                                                    </div>  
+                                                     <div class="form-group">
+                                                        <label>PHP MyAdmin Port</label>
+                                                        <input type="text" id="newAdminPort" name="newAdminPort" class="form-control" value="<%= data.dbStack[services.detail].admin.port %>" >
                                                     </div>  
                                         <%
                                             break;
