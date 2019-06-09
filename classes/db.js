@@ -48,13 +48,13 @@ class Db extends Base{
             "sourceData": {}
         };
         let myDBStack = [];
-            myDBStack.push(['DB','Port','Image']);
+            myDBStack.push(['DB','Port','Admin','Image']);
         let DBList = ['mongodb','mysql','cloudant','redis','postgres','mssql','elasticsearch','cassandra'];
 
         this.portsList = this.readGlobalConfig();
         
         _.each( DBList, (data) =>{
-            myDBStack.push([data.toUpperCase(),this.portsList.dbStack[data].port,this.portsList.dbStack[data].image])
+            myDBStack.push([data.toUpperCase(),this.portsList.dbStack[data].port,(this.portsList.dbStack[data].admin.port > 0 ? this.portsList.dbStack[data].admin.port : '' ),this.portsList.dbStack[data].image])
         });
 
         selected.table = table(myDBStack,{ start: '  |'});
@@ -89,12 +89,16 @@ class Db extends Base{
         const machineData = this.portsList;
         const tempPort  = updates.chosenDB + "_port";
         const tempPasswd = updates.chosenDB + "_env_passwd";
+        const tempAdminPort =   updates.chosenDB + "_admin_port";
+        const tempAdminImage = updates.chosenDB + "_admin_image";
 
         if( machineData.dbStack[updates.chosenDB].env.passwd.length > 0 ){
             ejs.renderFile( path.join(machineData.templatefolder,'db','lbmesh-db-'+updates.chosenDB+'.ejs'), {
                 [tempImage]:    machineData.dbStack[updates.chosenDB].image,
                 [tempPort]:     machineData.dbStack[updates.chosenDB].port,  
                 [tempPasswd]:     machineData.dbStack[updates.chosenDB].env.passwd, 
+                [tempAdminImage]: machineData.dbStack[updates.chosenDB].admin.image,
+                [tempAdminPort]: machineData.dbStack[updates.chosenDB].admin.port,                
                 "homedir_data": path.join(machineData.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'data'),
                 "homedir_config": path.join(machineData.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config')
             },{}, function(err,str){
@@ -105,6 +109,8 @@ class Db extends Base{
             ejs.renderFile( path.join(machineData.templatefolder,'db','lbmesh-db-'+updates.chosenDB+'.ejs'), {
                 [tempImage]:    machineData.dbStack[updates.chosenDB].image,
                 [tempPort]:     machineData.dbStack[updates.chosenDB].port,  
+                [tempAdminImage]: machineData.dbStack[updates.chosenDB].admin.image,
+                [tempAdminPort]: machineData.dbStack[updates.chosenDB].admin.port,
                 "homedir_data": path.join(machineData.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'data'),
                 "homedir_config": path.join(machineData.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config')
             },{}, function(err,str){
@@ -168,7 +174,9 @@ class Db extends Base{
          */
             const tempImage = updates.chosenDB + "_image";
             const tempPort  = updates.chosenDB + "_port";
-            const tempPasswd = db + "_env_passwd";
+            const tempPasswd = updates.chosenDB + "_env_passwd";
+            const tempAdminPort =   updates.chosenDB + "_admin_port";
+            const tempAdminImage = updates.chosenDB + "_admin_image";
 
         if( machineData.dbStack[updates.chosenDB].env.passwd.length > 0 ){
 
@@ -176,6 +184,8 @@ class Db extends Base{
                 [tempImage]:    machineData.dbStack[updates.chosenDB].image,
                 [tempPort]:     machineData.dbStack[updates.chosenDB].port,  
                 [tempPasswd]: machineData.dbStack[updates.chosenDB].env.passwd,
+                [tempAdminImage]: machineData.dbStack[updates.chosenDB].admin.image,
+                [tempAdminPort]: machineData.dbStack[updates.chosenDB].admin.port,
                 "homedir_data": path.join(machineData.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'data'),
                 "homedir_config": path.join(machineData.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config')
             },{}, function(err,str){
@@ -187,6 +197,8 @@ class Db extends Base{
             ejs.renderFile( path.join(machineData.templatefolder,'db','lbmesh-db-'+updates.chosenDB+'.ejs'), {
                 [tempImage]:    machineData.dbStack[updates.chosenDB].image,
                 [tempPort]:     machineData.dbStack[updates.chosenDB].port,  
+                [tempAdminImage]: machineData.dbStack[updates.chosenDB].admin.image,
+                [tempAdminPort]: machineData.dbStack[updates.chosenDB].admin.port,
                 "homedir_data": path.join(machineData.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'data'),
                 "homedir_config": path.join(machineData.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config')
             },{}, function(err,str){

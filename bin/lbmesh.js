@@ -447,8 +447,8 @@ program
             LOG();
 
             //shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmeshelljs.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up -d"); 
-              let decision = shelljs.exec("docker start lbmesh-db-" + myComponent +' ');
-
+              //let decision = shelljs.exec("docker start lbmesh-db-" + myComponent +' ');
+              let decision = shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " start  "); 
               if( !decision.code ){
                   switch(myComponent){
                     case 'cloudant':
@@ -542,7 +542,8 @@ program
             LOG('  Processing Request to ' + myAction +' DB container service...')
             LOG();
 
-              let decision = shelljs.exec("docker  "+ myAction +"  lbmesh-db-" + myComponent +" ");
+              //let decision = shelljs.exec("docker  "+ myAction +"  lbmesh-db-" + myComponent +" ");
+              let decision = shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " stop  "); 
               if( !decision.code ){
 
               } else {
@@ -677,8 +678,8 @@ program
             LOG('  Processing Request to ' + myAction +' integration container service...')
             LOG();
 
-            let decision = shelljs.exec("docker "+ myAction +" lbmesh-integ-" + myComponent + " ");
-
+            //let decision = shelljs.exec("docker "+ myAction +" lbmesh-integ-" + myComponent + " ");
+            let decision = shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " start  "); 
             if( !decision.code ){
 
                 let myDashboard = new INTEG();
@@ -786,8 +787,8 @@ program
                 LOG();
                 LOG('  Processing Request to ' + myAction +' integration container service...')
                 LOG();
-                let decision = shelljs.exec("docker "+ myAction +" lbmesh-integ-" + myComponent + " ");
-
+                //let decision = shelljs.exec("docker "+ myAction +" lbmesh-integ-" + myComponent + " ");
+                let decision = shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " stop  "); 
                 if( !decision.code ){  
 
                 } else {
