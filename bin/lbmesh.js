@@ -1320,7 +1320,7 @@ program
                   LOG();
  
                   const spinner = ora('Initializing  LB Mesh Dashboard.  Please Wait ....');
-                        spinner.spinner = 'lines';
+                        spinner.spinner = 'line';
                         spinner.start();
                  
                      shelljs.cd( path.join(machine.homedir,".lbmesh.io","dashboard","frontend","www") );

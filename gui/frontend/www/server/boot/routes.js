@@ -189,7 +189,8 @@ module.exports = function(app) {
                 res.redirect('/databases/' + req.body.chosenDB + '/manage.html?status=success&action=update');
             break;
             case 'start':
-                app.models.compose.startService(req.body.containerId, function(err, results){
+                app.models.compose.startService(req.body.service, function(err, results){
+                    console.log( results );
                     if( err ){
                         res.redirect("/databases/" + req.body.service + "/manage.html?status=error&action=start");
                     } else {
@@ -198,7 +199,8 @@ module.exports = function(app) {
                 });
             break;
             case 'stop':
-                app.models.compose.stopService(req.body.containerId, function(err, results){
+                app.models.compose.stopService(req.body.service, function(err, results){
+                    console.log( results );
                     if( err ){
                         res.redirect("/databases/" + req.body.service + "/manage.html?status=error&action=stop");
                     } else {
@@ -211,11 +213,12 @@ module.exports = function(app) {
             //         res.json(results);
             //     });
             // break;
+ 
             case 'remove':
 
                 async.series({
                     container: function(callback1){
-                        app.models.container.removeService(req.body.containerId, function(err, results){
+                        app.models.compose.removeService(req.body.service, function(err, results){
                             callback1(null, results);
                         });                        
                     },
