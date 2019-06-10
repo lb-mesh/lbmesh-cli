@@ -44,6 +44,7 @@ const debug  = require('debug')('app:cli:lbmesh');
 const fs     = require('fs');
 const jsonfile = require('jsonfile');
 
+const ora = require('ora');
 const program = require('commander');
 const prompt = require('prompt');
 const shelljs   = require('shelljs');
@@ -1317,7 +1318,10 @@ program
                switch( myAction ){
                  case 'init':
                   LOG();
-                  LOG( '    Initializing  LB Mesh Dashboard.  Please Wait .... ')
+ 
+                  const spinner = ora('Initializing  LB Mesh Dashboard.  Please Wait ....');
+                        spinner.spinner = 'lines';
+                        spinner.start();
                  
                      shelljs.cd( path.join(machine.homedir,".lbmesh.io","dashboard","frontend","www") );
                      shelljs.exec('npm install',{silent: true});
@@ -1325,7 +1329,8 @@ program
                       myGui.updateStatus();
 
                     LOG();
-                    LOG( '     LB Mesh Dashboard Install Complete.  Start the dashboard with command below ')
+ 
+                    spinner.succeed('LB Mesh Dashboard Install Complete.  Start the dashboard with command below');
                     LOG();
                     LOG( chalk.blue('     $ lbmesh dash start '))
                     LOG();
