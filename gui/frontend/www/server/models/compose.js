@@ -3,6 +3,7 @@
 const dc = require('docker-compose');
 const machine = require('lbmesh-os').profile();
 const sh      = require('shelljs');
+const path    = require('path');
 
 
 module.exports = function(Compose) {
