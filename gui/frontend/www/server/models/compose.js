@@ -35,7 +35,7 @@ module.exports = function(Compose) {
  
     };
 
-    Compose.removeService = (cid, cb) => {
+    Compose.removeService = (service, cb) => {
         dc.rm({ cwd: path.join(machine.homedir,'.lbmesh.io',service), config: 'lbmesh-db-' + service + '.yaml', log: true  })
         .then(
           () => { cb(null,'done')},

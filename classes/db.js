@@ -79,6 +79,7 @@ class Db extends Base{
                     this.portsList.dbStack[updates.chosenDB].admin.port =  updates.newAdminPort;
             break;
             case 'mongodb':
+            case 'redis':
                     this.portsList.dbStack[updates.chosenDB].admin.port =  updates.newAdminPort;
             break;
         }
@@ -131,7 +132,8 @@ class Db extends Base{
           */
          if( updates.containerState == 'exited') {
             sh.exec("docker rm lbmesh-db-" + updates.chosenDB);
-            sh.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', updates.chosenDB, 'lbmesh-db-'+ updates.chosenDB +'.yaml') + " up --no-start ");
+            sh.exec("docker rm lbmesh-admin-" + updates.chosenDB);
+            sh.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', updates.chosenDB, 'lbmesh-db-'+ updates.chosenDB +'.yaml') + " up --no-start --force-recreate");
          }
 
           

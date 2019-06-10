@@ -166,6 +166,16 @@ if( actionState == 'running'  ){
 <a   target="_blank" href="http://localhost:<%= data.dbStack[services.detail].admin.port %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.dbStack[services.detail].admin.port %> </a>
 <%
     break;
+    case 'redis':
+%>
+<a   target="_blank" href="http://localhost:<%= data.dbStack[services.detail].admin.port %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.dbStack[services.detail].admin.port %> </a>
+<%
+    break;
+    case 'mysql':
+%>
+<a   target="_blank" href="http://localhost:<%= data.dbStack[services.detail].admin.port %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.dbStack[services.detail].admin.port %> </a>
+<%
+    break;
     }// end switch
 }
 %>
@@ -226,7 +236,7 @@ break;
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs profile-tab" role="tablist">
                                 <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home" role="tab">Settings</a> </li>
-                                <!-- <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Compose.YAML</a> </li> -->
+                                 <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Compose.YAML</a> </li> 
                                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#logs" role="tab">Logs</a> </li>  
                             </ul>
                             <!-- Tab panes -->
@@ -289,6 +299,14 @@ break;
                                                     </div>  
                                         <%
                                             break;
+                                            case 'redis':
+                                        %>
+                                                     <div class="form-group">
+                                                        <label>Web Admin Port</label>
+                                                        <input type="text" id="newAdminPort" name="newAdminPort" class="form-control" value="<%= data.dbStack[services.detail].admin.port %>" >
+                                                    </div>
+                                        <%
+                                            break;
                                             case 'mongodb':
                                         %>
                                                      <div class="form-group">
@@ -326,14 +344,14 @@ break;
                                 </div>
                                 <!--second tab-->
                                 <!--  -->
-                               <!--  <div class="tab-pane" id="profile" role="tabpanel">
+                                  <div class="tab-pane" id="profile" role="tabpanel">
                                     <div class="card-body">
                                         <div class="form-group" id="editoryaml"   >
                                         <textarea  class="form-control" readonly rows="20" spellcheck="false"> <%= services.yaml %></textarea>
                                            
                                         </div>
                                     </div>
-                                </div> -->
+                                </div>  
                                   <div class="tab-pane" id="logs" role="tabpanel">
                                     <div class="card-body">
                                         <div id="slimlogs"><%
