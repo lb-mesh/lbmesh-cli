@@ -173,6 +173,9 @@ class Integ extends Base{
                     this.portsList.integStack[choices.chosenDB].port.admin =  choices.newPortAdmin;
                     this.portsList.integStack[choices.chosenDB].port.data =  choices.newPortData;
             break;
+            case 'kafka':
+
+            break;
             case 'splunk':
                     this.portsList.integStack[choices.chosenDB].image =  choices.newImage;
                     this.portsList.integStack[choices.chosenDB].env.pass =  choices.newDashPass;
@@ -265,6 +268,20 @@ class Integ extends Base{
                         fs.writeFileSync( path.join(machine.homedir,'.lbmesh.io','mqlight','lbmesh-integ-mqlight.yaml'), str);
                     }); 
             break;
+            case 'kafka':
+                    ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-kafka.ejs'), {
+                        "kafka_data": path.join(machine.homedir,'.lbmesh.io','kafka','data'),
+                        "kafka_port_admin": fullData.integStack.kafka.port.admin,
+                        "kafka_port_data": fullData.integStack.kafka.port.data,
+                        "kafka_port_topics": fullData.integStack.kafka.port.topics,
+                        "kafka_port_registry": fullData.integStack.kafka.port.registry,
+                        "kafka_port_rest": fullData.integStack.kafka.port.rest,
+                        "kafka_port_zookeeper": fullData.integStack.kafka.port.zookeeper,
+                    },{}, function(err,str){
+                        if( err ) console.log(err);
+                        fs.writeFileSync( path.join(machine.homedir,'.lbmesh.io','kafka','lbmesh-integ-kafka.yaml'), str);
+                    }); 
+            break;
             case 'acemq':
                     
             break;
@@ -285,7 +302,7 @@ class Integ extends Base{
           */
          if( choices.containerState == 'exited') {
             sh.exec("docker rm lbmesh-integ-" + choices.chosenDB);
-            sh.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io',choices.chosenDB, 'lbmesh-integ-'+ choices.chosenDB +'.yaml') + " up --no-start  ");            
+            sh.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io',choices.chosenDB, 'lbmesh-integ-'+ choices.chosenDB +'.yaml') + " up --no-start --force-recreate ");            
          }
  
 
@@ -415,7 +432,7 @@ class Integ extends Base{
             LOG();
             LOG('   -- Rebuilding new integration Container for ' + chosen);
             LOG();
-            sh.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io',chosen, 'lbmesh-integ-'+ chosen +'.yaml') + " up --no-start  ");            
+            sh.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io',chosen, 'lbmesh-integ-'+ chosen +'.yaml') + " up --no-start --force-recreate  ");            
             LOG();
             LOG( chalk.red('  -- Please run the following command to start the new ' + chosen + ' instance --'))
             LOG( chalk.blue('     $ lbmesh integ start ' + chosen))

@@ -172,6 +172,8 @@ if( actionState == 'running'  ){
 <%
     break;
     case 'mysql':
+    case 'cassandra':
+    case 'elasticsearch':
 %>
 <a   target="_blank" href="http://localhost:<%= data.dbStack[services.detail].admin.port %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.dbStack[services.detail].admin.port %> </a>
 <%

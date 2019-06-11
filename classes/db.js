@@ -105,7 +105,8 @@ class Db extends Base{
                 [tempPort]:     machineData.dbStack[updates.chosenDB].port,  
                 [tempPasswd]:     machineData.dbStack[updates.chosenDB].env.passwd, 
                 [tempAdminImage]: machineData.dbStack[updates.chosenDB].admin.image,
-                [tempAdminPort]: machineData.dbStack[updates.chosenDB].admin.port,                
+                [tempAdminPort]: machineData.dbStack[updates.chosenDB].admin.port,          
+                "homedir": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB),
                 "homedir_data": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'data'),
                 "homedir_config": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config')
             },{}, function(err,str){
@@ -118,6 +119,7 @@ class Db extends Base{
                 [tempPort]:     machineData.dbStack[updates.chosenDB].port,  
                 [tempAdminImage]: machineData.dbStack[updates.chosenDB].admin.image,
                 [tempAdminPort]: machineData.dbStack[updates.chosenDB].admin.port,
+                "homedir": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB),
                 "homedir_data": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'data'),
                 "homedir_config": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config')
             },{}, function(err,str){

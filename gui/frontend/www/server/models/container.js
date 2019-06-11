@@ -32,9 +32,9 @@ module.exports = function(Container) {
     };
 
     Container.getLogs = (cid, cb) => {
-        dockerengine.getContainer('09f62c22e2eeb71dc036339b79523781f9e550cb077d108c5386c920e15ab1a2').logs( (err, data) => {
-            cb(err,data);
-        });
+        // dockerengine.getContainer('09f62c22e2eeb71dc036339b79523781f9e550cb077d108c5386c920e15ab1a2').logs( (err, data) => {
+        //     cb(err,data);
+        // });
     };
 
     Container.getOutput = (category, service, cb) => {

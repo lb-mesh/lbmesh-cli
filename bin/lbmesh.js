@@ -606,8 +606,8 @@ program
     let myDisplay = (display == undefined)? 'empty': display.toLowerCase();
     let myAction = (action == undefined)? 'empty' : action.toLowerCase();
     let myComponent = (service == undefined)? 'all' : service.toLowerCase();
-    let myServices = ['datapower','mqlight','iib','mq','rabbitmq','acemq','splunk'];
-    let myServicesList = 'datapower | mqlight | iib | rabbitmq | acemq | mq | splunk';
+    let myServices = ['datapower','mqlight','iib','mq','rabbitmq','acemq','splunk','kafka'];
+    let myServicesList = 'datapower | mqlight | iib | rabbitmq | acemq | mq | splunk | kafka';
 
      
     if( myDisplay !== 'hide'){
@@ -699,6 +699,21 @@ program
                       }
                       
                       shelljs.exec("opn http://localhost:" +  myPorts.sourceData.mqlight.port.admin + "/#page=home" );                  
+                    break;
+                    case 'kafka':
+                        LOG();
+                        LOG('   OPENING KAFKA TOPICS UI http://localhost:' + myPorts.sourceData.kafka.port.topics  + '/');
+                        LOG('   OPENING KAFKA SCHEMA REGISTRY UI http://localhost:' + myPorts.sourceData.kafka.port.registry  + '/');
+                        LOG('   OPENING KAFKA REST http://localhost:' + myPorts.sourceData.kafka.port.registry  + '/topics');
+                        LOG('           KAFKA DATA PORT: ' +  myPorts.sourceData.kafka.port.data );                       
+                        LOG();
+                        if( !isWindows ){
+                          shelljs.exec("sleep 5s");
+                        }
+                        
+                        shelljs.exec("opn http://localhost:" +  myPorts.sourceData.kafka.port.topics + "/" ); 
+                        shelljs.exec("opn http://localhost:" +  myPorts.sourceData.kafka.port.registry + "/" ); 
+                        shelljs.exec("opn http://localhost:" +  myPorts.sourceData.kafka.port.rest + "/topics" );
                     break;
                     case 'splunk':
                       LOG();
@@ -885,6 +900,21 @@ program
                     shelljs.exec("sleep 5s");
                   }
                   shelljs.exec("opn https://localhost:" +  myAdminPorts.sourceData.datapower.port.admin);   
+                break;
+                case 'kafka':
+                    LOG();
+                    LOG('   OPENING KAFKA TOPICS UI http://localhost:' + myPorts.sourceData.kafka.port.topics  + '/');
+                    LOG('   OPENING KAFKA SCHEMA REGISTRY UI http://localhost:' + myPorts.sourceData.kafka.port.registry  + '/');
+                    LOG('   OPENING KAFKA REST http://localhost:' + myPorts.sourceData.kafka.port.registry  + '/topics');
+                    LOG('           KAFKA DATA PORT: ' +  myPorts.sourceData.kafka.port.data );                       
+                    LOG();
+                    if( !isWindows ){
+                      shelljs.exec("sleep 5s");
+                    }
+                    
+                    shelljs.exec("opn http://localhost:" +  myPorts.sourceData.kafka.port.topics + "/" ); 
+                    shelljs.exec("opn http://localhost:" +  myPorts.sourceData.kafka.port.registry + "/" ); 
+                    shelljs.exec("opn http://localhost:" +  myPorts.sourceData.kafka.port.rest + "/topics" );
                 break;
                 case 'rabbitmq':
                   LOG();
