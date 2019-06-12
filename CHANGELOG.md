@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to the "lbmesh-cli" extension will be documented in this file.
 
+## [2.8.0] 2019-06-12
+- added kafka, cassandra, elasticsearch to CLI
+- added web dashboard gui ( lbmesh dash start )
+- re-architected docker container orchestration
+
 ## [2.6.7] 2019-04-26
 - fixed paths for docker-compose on windows
 - removed sleep commands for win32

@@ -31,7 +31,7 @@ OR
 
 Running the command above will give you all the options available
 
-<img src="https://s3.amazonaws.com/lbmesh/lbmesh-cli-v2.png" height="350" />
+<img src="https://s3.amazonaws.com/lbmesh/lbmesh-cli-v3.png" height="350" />
  
 
 These cli commands are available anywhere on the filesystem. 
@@ -60,7 +60,7 @@ There is a built in management of database containers available within LB Mesh. 
   $ lbmesh db
 ```
 
-<img src="https://s3.amazonaws.com/lbmesh/lbmesh-db-status-v2.png" height="350"/>
+<img src="https://s3.amazonaws.com/lbmesh/lbmesh-db-status-v3.png" height="350"/>
 
 <div style="height:12px;"></div>
 
@@ -75,7 +75,7 @@ Let's go over the lifecycle for managing these containers.  Here is a chart to s
 To get started with any database from the list, the image must be available locally on your system. We provide an easy way to download the required image and use with the commands below. 
 
 ```
-	$ lbmesh db pull [mongodb|mysql|cloudant|redis|postgres|mssql]
+	$ lbmesh db pull [mongodb|mysql|cloudant|redis|postgres|mssql|elasticsearch|cassandra]
 ```
 
 <div style="height:9px;"></div>
@@ -85,7 +85,7 @@ To get started with any database from the list, the image must be available loca
 Each database instance will need to be started up individually. 
 
 ``` 
-	$ lbmesh db start [mongodb|mysql|cloudant|redis|postgres|mssql]
+	$ lbmesh db start [mongodb|mysql|cloudant|redis|postgres|mssql|elasticsearch|cassandra]
 ```
 
 <div style="height:9px;"></div>
@@ -95,7 +95,8 @@ Each database instance will need to be started up individually.
 You can view  logs for any database container by doing the following command:
 
 ```
-	$ lbmesh db logs [mongodb|mysql|cloudant|redis|postgres|mssql]
+	$ lbmesh db logs [mongodb|mysql|cloudant|redis|postgres|mssql|elasticsearch|cassandra]
+
 ```
 
 <div style="height:9px;"></div>
@@ -129,7 +130,7 @@ This is a great way to confirm that containers are starting on the default ports
 All the db start commands will start the DB container.  You will need to start the containers if you reboot your machine. To stop your specific database container, you can do the following: 
 
 ```
-	$ lbmesh db stop [mongodb|mysql|cloudant|redis|postgres|mssql]
+	$ lbmesh db stop [mongodb|mysql|cloudant|redis|postgres|mssql|elasticsearch|cassandra]
 ```
 
 All Database containers automatically persist data to the filesystem so upon restart everything will be intact.
@@ -141,7 +142,8 @@ All Database containers automatically persist data to the filesystem so upon res
 When you do a pull, it will download the source image and build a container for you to use off that image.  At some point you want to remove this database, you can run the following command:
 
 ```
-	$ lbmesh db remove [mongodb|mysql|cloudant|redis|postgres|mssql]
+	$ lbmesh db remove [mongodb|mysql|cloudant|redis|postgres|mssql|elasticsearch|cassandra]
+
 ```
 
 It will ask you to confirm that you want to remove the container and source image.  Your data directory will still be persisted, so once you do a pull again it will pick back up where it left off.  
@@ -157,7 +159,7 @@ There is a built in management of integration containers available within LB Mes
   $ lbmesh integ
 ```
 
-<img src="https://s3.amazonaws.com/lbmesh/lbmesh-integrate-2.png" height="350"/>
+<img src="https://s3.amazonaws.com/lbmesh/lbmesh-integrate-3.png" height="350"/>
 
 <div style="height:9px;"></div>
 
@@ -166,7 +168,7 @@ There is a built in management of integration containers available within LB Mes
 To get started with any integration from the list, the image must be available locally on your system. We provide an easy way to download the required image and use with the commands below. 
 
 ```
-	$ lbmesh integ pull [datapower|mqlight|iib|mq|rabbitmq|acemq]
+	$ lbmesh integ pull [datapower|mqlight|iib|mq|rabbitmq|acemq|splunk|kafka]
 ```
 
 <div style="height:9px;"></div>
@@ -176,7 +178,7 @@ To get started with any integration from the list, the image must be available l
 Each integration instance will need to be started up individually. 
 
 ``` 
-	$ lbmesh integ start [datapower|mqlight|iib|mq|rabbitmq|acemq]
+	$ lbmesh integ start [datapower|mqlight|iib|mq|rabbitmq|acemq|splunk|kafka]
 ```
 
 <div style="height:9px;"></div>
@@ -186,7 +188,7 @@ Each integration instance will need to be started up individually.
 Just like the DB instances, you can view  logs from an integration container by doing the following command:
 
 ```
-	$ lbmesh integ logs [datapower|mqlight|iib|mq|rabbitmq|acemq]
+	$ lbmesh integ logs [datapower|mqlight|iib|mq|rabbitmq|acemq|splunk|kafka]
 ```
 
 <div style="height:9px;"></div>
@@ -206,7 +208,7 @@ All the integration start commands will start the integration instance.  Once yo
 
 Individual Integration Instances
 ```
-	$ lbmesh integ stop [datapower|mqlight|iib|mq|rabbitmq|acemq]
+	$ lbmesh integ stop [datapower|mqlight|iib|mq|rabbitmq|acemq|splunk|kafka]
 ```
 
 All Integration containers automatically persist data to the filesystem so upon restart everything will be intact.
@@ -263,6 +265,37 @@ If you run the command **lbmesh projects [projname]** it will give you a list of
 ```
 	$ lbmesh open
 ```
+
+#### Using the LBMESH Dashboard
+
+All of this functionality is great for the command line environment.  However, there is much more that you can do from a web browser.  Meet the LBMESH Dashboard.  
+
+In this first interation, manage the database and integration containers via a Web Dashboard.  When you install the npm globally, a copy of the application is generated.  To ensure it is setup properly, run the following command:
+
+```
+	$ lbmesh init
+```
+
+<img src="https://s3.amazonaws.com/lbmesh/lbmesh-dashboard.png" width="550" />
+
+Once initialized, the Dashboard can be started and stopped with the following commands
+
+
+```
+	$ lbmesh dash start
+```
+
+
+```
+	$ lbmesh dash stop
+```
+
+To have the CLI open the browser, please use this command.  
+
+```
+	$ lbmesh dash open
+```
+
 
 <div style="height:18px;"></div>
 

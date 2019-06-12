@@ -355,7 +355,7 @@ program
 program
   .command('db [action] [service] [display]')
    
-  .description('Manage DB Containers (pull|start|stop|status|remove|recreate|open|logs|config) ')
+  .description('Manage DB Containers with simple commands ')
   .action((action, service, display)=>{
       LOG()
 
@@ -777,7 +777,7 @@ program
 
 program
   .command('integ [action] [service] [display]')
-  .description('Manage Integration Containers (start|stop|restart|status|pull|logs|config|remove) ')
+  .description('Manage Integration Containers with simple commands   ')
   .action((action, service, display)=>{
     LOG();
 
@@ -1568,7 +1568,7 @@ program
 
 program
   .command('dash [action]')
-  .description('Launch Web Dashboard to manage CLI Functionality')
+  .description('Launch Web UI Dashboard to manage CLI Functionality')
   .action((action)=>{
       let actions = ['init','start','stop','open','start-debug','stop-debug'];
       let myAction = (action == undefined)? 'empty' : action.toLowerCase();
