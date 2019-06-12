@@ -119,8 +119,8 @@ class Db extends Base{
                 [tempPasswd]:     machineData.dbStack[updates.chosenDB].env.passwd, 
                 [tempAdminImage]: machineData.dbStack[updates.chosenDB].admin.image,
                 [tempAdminPort]: machineData.dbStack[updates.chosenDB].admin.port,    
-                [tempAdminUser]: machineData.dbStack[db].admin.user,
-                [tempAdminPass]: machineData.dbStack[db].admin.passwd,      
+                [tempAdminUser]: machineData.dbStack[updates.chosenDB].admin.user,
+                [tempAdminPass]: machineData.dbStack[updates.chosenDB].admin.passwd,      
                 "homedir": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB),
                 "homedir_data": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'data'),
                 "homedir_config": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config')
@@ -134,8 +134,8 @@ class Db extends Base{
                 [tempPort]:     machineData.dbStack[updates.chosenDB].port,  
                 [tempAdminImage]: machineData.dbStack[updates.chosenDB].admin.image,
                 [tempAdminPort]: machineData.dbStack[updates.chosenDB].admin.port,
-                [tempAdminUser]: machineData.dbStack[db].admin.user,
-                [tempAdminPass]: machineData.dbStack[db].admin.passwd,
+                [tempAdminUser]: machineData.dbStack[updates.chosenDB].admin.user,
+                [tempAdminPass]: machineData.dbStack[updates.chosenDB].admin.passwd,
                 "homedir": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB),
                 "homedir_data": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'data'),
                 "homedir_config": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config')

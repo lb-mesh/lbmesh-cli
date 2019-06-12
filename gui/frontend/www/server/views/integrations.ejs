@@ -68,7 +68,7 @@ if( isAvailable ){
                                 <hr> 
                             </div>
                             <div class="card-body"> 
-                                <small class="text-muted p-t-30 db">Container Web Admin</small>
+                                <small class="text-muted p-t-30 db">Container Web Dashboard</small>
                                 <br />
 <% 
 if(actionState == 'running' ){
@@ -102,6 +102,13 @@ if(actionState == 'running' ){
 %>
     <a   target="_blank" href="https://localhost:<%= data.integStack[services.detail].port.admin %>/dp/login.xml" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.integStack[services.detail].port.admin %> ( admin/admin)</a>
    <a   target="_blank" href="https://localhost:<%= data.integStack[services.detail].port.xml %>" class="btn waves-effect waves-light btn-block btn-secondary"    >XML Management Port <%= data.integStack[services.detail].port.xml %></a>
+   <a   target="_blank" href="https://localhost:<%= data.integStack[services.detail].port.rest %>mgmt/status/default/DateTimeStatus" class="btn waves-effect waves-light btn-block btn-secondary"    >REST Management Port <%= data.integStack[services.detail].port.rest %></a> 
+<%
+        break;
+        case 'kafka':
+%>
+    <a   target="_blank" href="https://localhost:<%= data.integStack[services.detail].port.admin %>/dp/login.xml" class="btn waves-effect waves-light btn-block btn-secondary"    >Topics Dashboard Port <%= data.integStack[services.detail].port.topics %> ( admin/admin)</a>
+   <a   target="_blank" href="https://localhost:<%= data.integStack[services.detail].port.xml %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Schema Dashboard Port <%= data.integStack[services.detail].port.registry %></a>
    <a   target="_blank" href="https://localhost:<%= data.integStack[services.detail].port.rest %>mgmt/status/default/DateTimeStatus" class="btn waves-effect waves-light btn-block btn-secondary"    >REST Management Port <%= data.integStack[services.detail].port.rest %></a> 
 <%
         break;

@@ -501,6 +501,16 @@ program
                       }
                       shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.redis.admin.port ); 
                   break;
+                  case 'cassandra':
+                      LOG();
+                      LOG('   OPENING CASSANDRA WEB DASHBOARD http://localhost:' + myDBPorts.sourceData.cassandra.admin.port + ' ');
+                     // LOG('           REDIS WEB User/Pass: ' + myDBPorts.sourceData.postgres.admin.user + '  / ' + startTable.sourceData.postgres.admin.passwd);
+                      LOG();
+                      if( !isWindows ){
+                        shelljs.exec("sleep 3s");
+                      }
+                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.cassandra.admin.port ); 
+                  break;
                 }
             } else {
               LOG()
@@ -615,6 +625,15 @@ program
                           shelljs.exec("sleep 3s");
                         }
                         shelljs.exec("opn http://localhost:" + startTable.sourceData.redis.admin.port ); 
+                    break;
+                    case 'cassandra':
+                        LOG();
+                        LOG('   OPENING CASSANDRA WEB DASHBOARD http://localhost:' + startTable.sourceData.cassandra.admin.port + ' ');
+                        LOG();
+                        if( !isWindows ){
+                          shelljs.exec("sleep 3s");
+                        }
+                        shelljs.exec("opn http://localhost:" + startTable.sourceData.cassandra.admin.port ); 
                     break;
                   }
 

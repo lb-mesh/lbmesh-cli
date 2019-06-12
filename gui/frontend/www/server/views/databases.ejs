@@ -73,7 +73,7 @@ if( isAvailable ){
                                 <hr> 
                             </div>
                             <div class="card-body">
-                                <small class="text-muted p-t-30 db">Container Web Admin</small>
+                                <small class="text-muted p-t-30 db">Container Web Dashboard</small>
                                 <br /> 
 <%
 if( actionState == 'running'  ){
@@ -84,19 +84,22 @@ if( actionState == 'running'  ){
                                     <a   target="_blank" href="http://localhost:<%= data.dbStack[services.detail].port %>/dashboard.html" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.dbStack[services.detail].port %> ( admin/pass)</a>
 <%
     break;
-    case 'mongodb':
+    case 'postgres':
 %>
-<a   target="_blank" href="http://localhost:<%= data.dbStack[services.detail].admin.port %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.dbStack[services.detail].admin.port %> </a>
+<a   target="_blank" href="http://localhost:<%= data.dbStack[services.detail].admin.port %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.dbStack[services.detail].admin.port %> ( <%= data.dbStack[services.detail].admin.user %> / <%= data.dbStack[services.detail].admin.passwd %>) </a>
 <%
     break;
-    case 'redis':
+    case 'elasticsearch':
 %>
 <a   target="_blank" href="http://localhost:<%= data.dbStack[services.detail].admin.port %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.dbStack[services.detail].admin.port %> </a>
+<a   target="_blank" href="http://localhost:<%= data.dbStack[services.detail].port %>" class="btn waves-effect waves-light btn-block btn-secondary"    >DB REST Port <%= data.dbStack[services.detail].port %> </a>
 <%
     break;
     case 'mysql':
+    case 'redis':
+    case 'mongodb':
     case 'cassandra':
-    case 'elasticsearch':
+ 
 %>
 <a   target="_blank" href="http://localhost:<%= data.dbStack[services.detail].admin.port %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.dbStack[services.detail].admin.port %> </a>
 <%
@@ -202,10 +205,7 @@ break;
                                                         <label>User POSTGRES Password</label>
                                                         <input type="text" id="newPass" name="newPass" class="form-control" value="<%= data.dbStack[services.detail].env.passwd %>" >
                                                     </div>  
-                                                    <div class="form-group">
-                                                        <label>Web Dashboard User Email</label>
-                                                        <input type="text" id="newAdminUser" name="newAdminUser" class="form-control" value="<%= data.dbStack[services.detail].admin.user %>" >
-                                                    </div>  
+ 
                                         <%
                                             break;
                                             case 'mssql':
@@ -251,12 +251,16 @@ break;
                                         switch( services.detail ){
                                             case 'postgres':
 %>
-                                                <div class="form-group"></div>
+                                           
 
                                                     <div class="form-group">
                                                         <label>Web Dashboard User Passwd</label>
                                                         <input type="text" id="newAdminPass" name="newAdminPass" class="form-control" value="<%= data.dbStack[services.detail].admin.passwd %>" >
                                                     </div>  
+                                                    <div class="form-group">
+                                                        <label>Web Dashboard User Email</label>
+                                                        <input type="text" id="newAdminUser" name="newAdminUser" class="form-control" value="<%= data.dbStack[services.detail].admin.user %>" >
+                                                    </div> 
 <%
                                             break;
                                             case 'mysql':
