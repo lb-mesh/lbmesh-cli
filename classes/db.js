@@ -70,17 +70,27 @@ class Db extends Base{
         this.portsList.dbStack[updates.chosenDB].image =  updates.newImage;
 
         switch( updates.chosenDB ){
+            case 'cloudant':
+                    this.portsList.dbStack[updates.chosenDB].admin.port = parseInt( updates.newPort );
+            break;
             case 'postgres':
+                    this.portsList.dbStack[updates.chosenDB].env.passwd =  updates.newPass;
+                    this.portsList.dbStack[updates.chosenDB].admin.passwd =  updates.newAdminPass;
+                    this.portsList.dbStack[updates.chosenDB].admin.user =  updates.newAdminUser;
+            break;
+ 
             case 'mssql':
                     this.portsList.dbStack[updates.chosenDB].env.passwd =  updates.newPass;
             break;
             case 'mysql':
                     this.portsList.dbStack[updates.chosenDB].env.passwd =  updates.newPass;
-                    this.portsList.dbStack[updates.chosenDB].admin.port =  updates.newAdminPort;
+                    this.portsList.dbStack[updates.chosenDB].admin.port =  parseInt(updates.newAdminPort);
             break;
             case 'mongodb':
+            case 'elasticsearch':
+            case 'cassandra':
             case 'redis':
-                    this.portsList.dbStack[updates.chosenDB].admin.port =  updates.newAdminPort;
+                    this.portsList.dbStack[updates.chosenDB].admin.port =  parseInt(updates.newAdminPort);
             break;
         }
 

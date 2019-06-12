@@ -199,8 +199,12 @@ break;
                                             case 'postgres':
                                         %>
                                                      <div class="form-group">
-                                                        <label>Root Password</label>
+                                                        <label>User POSTGRES Password</label>
                                                         <input type="text" id="newPass" name="newPass" class="form-control" value="<%= data.dbStack[services.detail].env.passwd %>" >
+                                                    </div>  
+                                                    <div class="form-group">
+                                                        <label>Web Dashboard User Email</label>
+                                                        <input type="text" id="newAdminUser" name="newAdminUser" class="form-control" value="<%= data.dbStack[services.detail].admin.user %>" >
                                                     </div>  
                                         <%
                                             break;
@@ -218,16 +222,13 @@ break;
                                                         <label>Root Password</label>
                                                         <input type="text" id="newPass" name="newPass" class="form-control" value="<%= data.dbStack[services.detail].env.passwd %>" >
                                                     </div>  
-                                                     <div class="form-group">
-                                                        <label>PHP MyAdmin Port</label>
-                                                        <input type="text" id="newAdminPort" name="newAdminPort" class="form-control" value="<%= data.dbStack[services.detail].admin.port %>" >
-                                                    </div>  
+
                                         <%
                                             break;
                                             case 'redis':
                                         %>
                                                      <div class="form-group">
-                                                        <label>Web Admin Port</label>
+                                                        <label>Web Dashboard Port</label>
                                                         <input type="text" id="newAdminPort" name="newAdminPort" class="form-control" value="<%= data.dbStack[services.detail].admin.port %>" >
                                                     </div>
                                         <%
@@ -235,7 +236,7 @@ break;
                                             case 'mongodb':
                                         %>
                                                      <div class="form-group">
-                                                        <label>Dashboard Web Port</label>
+                                                        <label>Web Dashboard Port</label>
                                                         <input type="text" id="newAdminPort" name="newAdminPort" class="form-control" value="<%= data.dbStack[services.detail].admin.port %>" >
                                                     </div>  
                                         <%
@@ -246,7 +247,46 @@ break;
                                                 </div>
                                                 <!--/span-->
                                                 <div class="col-md-6">
-    
+                                        <%
+                                        switch( services.detail ){
+                                            case 'postgres':
+%>
+                                                <div class="form-group"></div>
+
+                                                    <div class="form-group">
+                                                        <label>Web Dashboard User Passwd</label>
+                                                        <input type="text" id="newAdminPass" name="newAdminPass" class="form-control" value="<%= data.dbStack[services.detail].admin.passwd %>" >
+                                                    </div>  
+<%
+                                            break;
+                                            case 'mysql':
+%>
+                                                     <div class="form-group">
+                                                        <label>Web Dashboard Port</label>
+                                                        <input type="text" id="newAdminPort" name="newAdminPort" class="form-control" value="<%= data.dbStack[services.detail].admin.port %>" >
+                                                    </div>  
+<%
+                                            break;
+                                            case 'elasticsearch':
+%>
+                                                     <div class="form-group">
+                                                        <label>Web Dashboard Port</label>
+                                                        <input type="text" id="newAdminPort" name="newAdminPort" class="form-control" value="<%= data.dbStack[services.detail].admin.port %>" >
+                                                    </div>
+<%
+                                            break;
+                                            case 'cassandra':
+%>
+                                                     <div class="form-group">
+                                                        <label>Web Dashboard Port</label>
+                                                        <input type="text" id="newAdminPort" name="newAdminPort" class="form-control" value="<%= data.dbStack[services.detail].admin.port %>" >
+                                                    </div>
+<%
+                                            break;
+                                            
+                                            
+                                        }
+                                        %>
                                                 </div>
                                                 <!--/span-->
                                             </div> 
