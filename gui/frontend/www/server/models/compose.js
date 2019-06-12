@@ -44,4 +44,16 @@ module.exports = function(Compose) {
  
     };
 
+    Compose.removeThisService = (category, service, cb) => {
+        let cmdline = sh.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io',service,'lbmesh-' + category + '-' + service + '.yaml') + "  down --rmi all",{"silent":true} );
+        if( cmdline.code > 0 ){
+            cb(null, cmdline.stderr); 
+ 
+        } else {
+            cb(null, cmdline.stdout);
+ 
+        } 
+ 
+    };
+
 };

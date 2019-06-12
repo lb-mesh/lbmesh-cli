@@ -174,7 +174,10 @@ class Integ extends Base{
                     this.portsList.integStack[choices.chosenDB].port.data =  choices.newPortData;
             break;
             case 'kafka':
-
+                    this.portsList.integStack[choices.chosenDB].port.zookeeper =  parseInt(choices.newPortZookeeper);
+                    this.portsList.integStack[choices.chosenDB].port.registry =  parseInt(choices.newPortRegistry);
+                    this.portsList.integStack[choices.chosenDB].port.topics =  parseInt(choices.newPortTopics);
+                    this.portsList.integStack[choices.chosenDB].port.rest =  parseInt(choices.newPortRest);
             break;
             case 'splunk':
                     this.portsList.integStack[choices.chosenDB].image =  choices.newImage;
@@ -185,18 +188,18 @@ class Integ extends Base{
             case 'rabbitmq':
                     this.portsList.integStack[choices.chosenDB].env.user =  choices.newDashUser;
                     this.portsList.integStack[choices.chosenDB].env.pass =  choices.newDashPass;
-                    this.portsList.integStack[choices.chosenDB].port.admin =  choices.newPortAdmin;
-                    this.portsList.integStack[choices.chosenDB].port.data =  choices.newPortData;
+                    this.portsList.integStack[choices.chosenDB].port.admin =  parseInt(choices.newPortAdmin);
+                    this.portsList.integStack[choices.chosenDB].port.data =  parseInt(choices.newPortData);
             break;
             case 'mqlight':
-                    this.portsList.integStack[choices.chosenDB].port.admin =  choices.newPortAdmin;
-                    this.portsList.integStack[choices.chosenDB].port.data =  choices.newPortData;
+                    this.portsList.integStack[choices.chosenDB].port.admin =  parseInt(choices.newPortAdmin);
+                    this.portsList.integStack[choices.chosenDB].port.data =  parseInt(choices.newPortData);
             break;
             case 'mq':
                     this.portsList.integStack[choices.chosenDB].env.admin_pass = choices.newPassAdmin;
                     this.portsList.integStack[choices.chosenDB].env.app_pass =  choices.newPassApp;
-                    this.portsList.integStack[choices.chosenDB].port.admin =  choices.newPortAdmin;
-                    this.portsList.integStack[choices.chosenDB].port.data =  choices.newPortData;
+                    this.portsList.integStack[choices.chosenDB].port.admin =  parseInt(choices.newPortAdmin);
+                    this.portsList.integStack[choices.chosenDB].port.data = parseInt( choices.newPortData);
 
             break;
             case 'acemq':

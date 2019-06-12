@@ -195,10 +195,17 @@ break;
                                             <input type="hidden" name="chosenDB" value="<%= services.detail %>" />
                                             <div class="row">
                                                 <div class="col-md-6">
+                                                <% if( services.detail !== 'kafka' ){ %>
                                                      <div class="form-group">
                                                         <label>Admin Port</label>
                                                         <input type="text" id="newPortAdmin" name="newPortAdmin" class="form-control" value="<%= data.integStack[services.detail].port.admin %>" >
                                                     </div>
+                                                <% } else { %>
+                                                     <div class="form-group">
+                                                        <label>Zookeeper Port</label>
+                                                        <input type="text" id="newPortZookeeper" name="newPortZookeeper" class="form-control" value="<%= data.integStack[services.detail].admin.zookeeper %>" >
+                                                    </div>
+                                                <% } %>
                                                 </div>
                                                 <!--/span-->
                                                 <div class="col-md-6">
@@ -219,6 +226,33 @@ break;
                                             break;
                                             case 'acemq':
 
+                                            break;
+                                            case 'kafka':
+                                        %>
+                                                <div class="col-md-6">
+
+                                                     <div class="form-group">
+                                                        <label>REST API Port</label>
+                                                        <input type="text" id="newPortRest" name="newPortRest" class="form-control" value="<%= data.integStack[services.detail].image %>" >
+                                                    </div>  
+ 
+                                                </div>
+                                                <!--/span-->
+                                                <div class="col-md-6">
+
+                                                     <div class="form-group">
+                                                        <label>Topics Dashboard</label>
+                                                        <input type="text" id="newPortTopics" name="newPortTopics" class="form-control" value="<%= data.integStack[services.detail].env.pass %>" >
+                                                    </div>   
+                                                     <div class="form-group">
+                                                        <label>Schema Registry Dashboard</label>
+                                                        <input type="text" id="newPortRegistry" name="newPortRegistry" class="form-control" value="<%= data.integStack[services.detail].env.pass %>" >
+                                                    </div>   
+     
+                                                </div>
+                                                <!--/span-->
+
+                                        <%
                                             break;
                                             case 'iib':
 

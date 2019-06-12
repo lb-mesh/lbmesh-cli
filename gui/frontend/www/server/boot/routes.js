@@ -4,7 +4,7 @@ const path    = require('path');
 const async   = require('async');
 
 const meshDatabases = ['mongodb','mysql','redis','mssql','cloudant','postgres','elasticsearch','cassandra'];
-const meshIntegrations = ['datapower','mq','mqlight','acemq','rabbitmq','iib','splunk'];
+const meshIntegrations = ['datapower','mq','mqlight','acemq','rabbitmq','iib','splunk','kafka'];
 
 let meshData = require( path.join(machine.node.globalPath,'lbmesh-cli','gui','frontend','www','server','classes','globalfile.js') );
 let DB = require( path.join(machine.node.globalPath,'lbmesh-cli','classes','db.js') );
@@ -132,6 +132,15 @@ module.exports = function(app) {
             //     });
             // break;
             case 'remove':
+                    app.models.compose.removeThisService('integ', req.body.service, function(err, results){
+                        if( err ){
+                            res.redirect("/integrations/" + req.body.service + "/manage.html?status=error&action=stop");
+                        } else {
+                            res.redirect("/integrations/" + req.body.service + "/manage.html?status=success&action=stop");
+                        }
+                    });
+            break;
+            case 'removeddd':
 
                 async.series({
                     container: function(callback1){
@@ -213,8 +222,16 @@ module.exports = function(app) {
             //         res.json(results);
             //     });
             // break;
- 
             case 'remove':
+                    app.models.compose.removeThisService('db', req.body.service, function(err, results){
+                        if( err ){
+                            res.redirect("/databases/" + req.body.service + "/manage.html?status=error&action=stop");
+                        } else {
+                            res.redirect("/databases/" + req.body.service + "/manage.html?status=success&action=stop");
+                        }
+                    });
+            break;
+            case 'removeddd':
 
                 async.series({
                     container: function(callback1){
