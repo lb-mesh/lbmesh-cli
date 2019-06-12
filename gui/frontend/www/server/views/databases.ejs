@@ -13,83 +13,6 @@
                         </div>
                     </div>
                 </div> -->
-
-                <div class="row" >
-                    <div class="col-lg-7">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Databases Listing Overview</h4>
-                                <%# <h6 class="card-subtitle">Add class <code>.table-hover</code></h6> %>
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>DB Name</th>
-                                                <th>Image</th>
-                                                
-                                                <th>Port</th>
-                                                 <th>Admin</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-<%
-    _.each(services.db, function(item){
-%>
-                                            <tr>
-                                                 
-                                                <td><A href="/databases/<%= item %>/manage.html"><%= item.toUpperCase() %></a></td>
-                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.dbStack[item].image.substr(0,25) %></span> </td>
-                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.dbStack[item].port %></span> </td>
-                                              <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <% if( data.dbStack[item].admin.port > 0 ){ %> <%= data.dbStack[item].admin.port %> <% }  %></span> </td>
-                                            </tr>
-<%
-    });
-%>
-
-                                          
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-5 col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">DB Status Overview</h4>
-                                <ul class="feeds">
-
-<%
-    if( docker.db.length > 0 ){
-
-        _.each( docker.db, function(item){
-                    let currentClass = "";
-        switch( item.state ){
-            case 'running': currentClass="bg-success"; break;
-            case 'exited': currentClass="bg-danger"; break;
-            case 'created': currentClass="bg-inverse"; break;
-        }
-%>
-    <li>
-        <div class="<%= currentClass %>"><i class="ti-server  text-white"></i></div><%= item.service %> (<%= item.state %>) <span class="text-muted"><%= item.status %></span>
-    </li>   
-<%
-        });
-
-    } else {
-%>
-<li>
-    <div class="bg-info"><i class="far fa-bell text-white"></i></div> No Containers available. <span class="text-muted">Just Now</span>
-</li>
-<%                                  
-    }
-%>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
 <%  if( detail ){  
 
     let isAvailable = false;
@@ -370,6 +293,84 @@ break;
                     <!-- Column -->
                 </div>
 <% } %>
+
+                <div class="row" >
+                    <div class="col-lg-7">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Databases Listing Overview</h4>
+                                <%# <h6 class="card-subtitle">Add class <code>.table-hover</code></h6> %>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>DB Name</th>
+                                                <th>Image</th>
+                                                
+                                                <th>Port</th>
+                                                 <th>Admin</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+<%
+    _.each(services.db, function(item){
+%>
+                                            <tr>
+                                                 
+                                                <td><A href="/databases/<%= item %>/manage.html"><%= item.toUpperCase() %></a></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.dbStack[item].image.substr(0,25) %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.dbStack[item].port %></span> </td>
+                                              <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <% if( data.dbStack[item].admin.port > 0 ){ %> <%= data.dbStack[item].admin.port %> <% }  %></span> </td>
+                                            </tr>
+<%
+    });
+%>
+
+                                          
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">DB Status Overview</h4>
+                                <ul class="feeds">
+
+<%
+    if( docker.db.length > 0 ){
+
+        _.each( docker.db, function(item){
+                    let currentClass = "";
+        switch( item.state ){
+            case 'running': currentClass="bg-success"; break;
+            case 'exited': currentClass="bg-danger"; break;
+            case 'created': currentClass="bg-inverse"; break;
+        }
+%>
+    <li>
+        <div class="<%= currentClass %>"><i class="ti-server  text-white"></i></div><%= item.service %> (<%= item.state %>) <span class="text-muted"><%= item.status %></span>
+    </li>   
+<%
+        });
+
+    } else {
+%>
+<li>
+    <div class="bg-info"><i class="far fa-bell text-white"></i></div> No Containers available. <span class="text-muted">Just Now</span>
+</li>
+<%                                  
+    }
+%>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->

@@ -44,7 +44,7 @@ const debug  = require('debug')('app:cli:lbmesh');
 const fs     = require('fs');
 const jsonfile = require('jsonfile');
 
-const ora = require('ora');
+const Ora = require('ora');
 const program = require('commander');
 const prompt = require('prompt');
 const shelljs   = require('shelljs');
@@ -355,7 +355,7 @@ program
 program
   .command('db [action] [service] [display]')
    
-  .description('Manage DB Containers (pull|start|stop|status|remove|recreate|logs|config) ')
+  .description('Manage DB Containers (pull|start|stop|status|remove|recreate|open|logs|config) ')
   .action((action, service, display)=>{
       LOG()
 
@@ -372,6 +372,7 @@ program
       }
 
       let datastoreFilePath = path.join(machine.homedir,'.lbmesh.io','lbmesh-db-stack.yaml');
+
     if( fs.existsSync(datastoreFilePath) ){
       switch(myAction){   
         case 'config':
@@ -423,13 +424,110 @@ program
             //LOG( mySettings.retrievePorts() );
             LOG()
         break;
+        case 'open':
+ 
+            if( myServices.includes(myComponent) ){
+                let myStart = new DB();
+                let myDBPorts = myStart.retrievePorts();
+
+                switch(myComponent){
+                  case 'mssql':
+                       
+                          LOG();
+                          LOG('           MSSQL User/Pass:  sa / ' + myDBPorts.sourceData.mssql.env.passwd);
+                          LOG();
+                     
+                  break;
+                  case 'cloudant':
+                      LOG();
+                      LOG('   OPENING CLOUDANT DASHBOARD http://localhost:' + myDBPorts.sourceData.cloudant.port + '/dashboard.html ');
+                      LOG('           CLOUDANT User/Pass:  admin / pass');
+                      LOG();
+                      if( !isWindows ){
+                        shelljs.exec("sleep 3s");
+                      }
+                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.cloudant.port +"/dashboard.html");  
+                  break;
+                  case 'mongodb':
+                      LOG();
+                      LOG('   OPENING MONGODB WEB DASHBOARD http://localhost:' + myDBPorts.sourceData.mongodb.admin.port + ' ');
+                      LOG();
+
+                      if( !isWindows ){
+                        shelljs.exec("sleep 3s");
+                      }
+                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.mongodb.admin.port );    
+                  break;
+                  case 'mysql':
+                      LOG();
+                      LOG('   OPENING MYSQL WEB DASHBOARD http://localhost:' + myDBPorts.sourceData.mysql.admin.port + ' ');
+                      LOG('           MYSQL User/Pass:  root / ' + myDBPorts.sourceData.mysql.env.passwd);
+
+                      LOG();
+                      if( !isWindows ){
+                        shelljs.exec("sleep 3s");
+                      }
+                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.mysql.admin.port );    
+                  break;
+                  case 'postgres':
+                      LOG();
+                      LOG('   OPENING POSTGRES WEB DASHBOARD http://localhost:' + myDBPorts.sourceData.postgres.admin.port + ' ');
+                      LOG('           POSTGRES WEB User/Pass: ' + myDBPorts.sourceData.postgres.admin.user + '  / ' + myDBPorts.sourceData.postgres.admin.passwd);
+                      LOG('           POSTGRES DB User/Pass: postgres  / ' + myDBPorts.sourceData.postgres.env.passwd);
+                      LOG();
+                      if( !isWindows ){
+                        shelljs.exec("sleep 3s");
+                      }
+                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.postgres.admin.port ); 
+                  break;
+                  case 'elasticsearch':
+                      LOG();
+                      LOG('   OPENING ELASTICSEARCH WEB DASHBOARD http://localhost:' + myDBPorts.sourceData.elasticsearch.admin.port + ' ');
+                      LOG('           ELASTICSEARCH DATA Port: ' + myDBPorts.sourceData.elasticsearch.port );
+                      LOG();
+                      if( !isWindows ){
+                        shelljs.exec("sleep 3s");
+                      }
+                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.elasticsearch.port ); 
+                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.elasticsearch.admin.port );
+                  break;
+                  case 'redis':
+                      LOG();
+                      LOG('   OPENING REDIS WEB DASHBOARD http://localhost:' + myDBPorts.sourceData.redis.admin.port + ' ');
+                     // LOG('           REDIS WEB User/Pass: ' + myDBPorts.sourceData.postgres.admin.user + '  / ' + startTable.sourceData.postgres.admin.passwd);
+                      LOG();
+                      if( !isWindows ){
+                        shelljs.exec("sleep 3s");
+                      }
+                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.redis.admin.port ); 
+                  break;
+                }
+            } else {
+              LOG()
+              LOG(' Please supply a correct DB service name.  ');
+              LOG(' Options are:  ' + myServicesList)
+              LOG()
+            }
+        break;
         case 'pull':
           if( myServices.includes(myComponent) ){
 
             LOG();
-            LOG('  Processing Request to ' + myAction +' DB ' + myComponent.toUpperCase() + ' container service...')
+              let spinner = new Ora({
+                "text": 'Processing Request to ' + myAction +' DB ' + myComponent.toUpperCase() + ' container service...'
+              }).start();
+
+            LOG('  ')
             LOG();
             shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up --no-start ");
+            LOG();
+
+              spinner.succeed('  -- Successfully created ' + myComponent.toUpperCase() + ' INTEG Container Service ')
+              LOG();
+              LOG( chalk.red('  -- Please run the following command first to start the service --'))
+              LOG( chalk.blue('     $ lbmesh db start ' + myComponent))
+              LOG();
+              LOG();
 
           } else {
             LOG()
@@ -444,7 +542,7 @@ program
           if( myServices.includes(myComponent) ){
 
             LOG();
-            LOG('  Processing Request to ' + myAction +' DB container service...')
+            LOG('  Processing Request to ' + myAction +' ' + myComponent.toUpperCase() + ' DB container service...')
             LOG();
 
             //shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmeshelljs.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up -d"); 
@@ -452,6 +550,11 @@ program
               let decision = shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " start  "); 
               if( !decision.code ){
                   switch(myComponent){
+                    case 'mssql':
+                        LOG();
+                        LOG('           MSSQL User/Pass:  sa / ' + startTable.sourceData.mssql.env.passwd);
+                        LOG();
+                    break;
                     case 'cloudant':
                       LOG();
                       LOG('   OPENING CLOUDANT DASHBOARD http://localhost:' + startTable.sourceData.cloudant.port + '/dashboard.html ');
@@ -462,7 +565,62 @@ program
                       }
                       shelljs.exec("opn http://localhost:" + startTable.sourceData.cloudant.port +"/dashboard.html");                  
                     break;
+                    case 'mongodb':
+                        LOG();
+                        LOG('   OPENING MONGODB WEB DASHBOARD http://localhost:' + startTable.sourceData.mongodb.admin.port + ' ');
+ 
+                        LOG();
+                        if( !isWindows ){
+                          shelljs.exec("sleep 3s");
+                        }
+                        shelljs.exec("opn http://localhost:" + startTable.sourceData.mongodb.admin.port );    
+                    break;
+                    case 'mysql':
+                        LOG();
+                        LOG('   OPENING MYSQL WEB DASHBOARD http://localhost:' + startTable.sourceData.mysql.admin.port + ' ');
+                        LOG('           MYSQL User/Pass:  root / ' + startTable.sourceData.mysql.env.passwd);
+                        LOG();
+                        if( !isWindows ){
+                          shelljs.exec("sleep 3s");
+                        }
+                        shelljs.exec("opn http://localhost:" + startTable.sourceData.mysql.admin.port );    
+                    break;
+                    case 'postgres':
+                        LOG();
+                        LOG('   OPENING POSTGRES WEB DASHBOARD http://localhost:' + startTable.sourceData.postgres.admin.port + ' ');
+                        LOG('           POSTGRES WEB User/Pass: ' + startTable.sourceData.postgres.admin.user + '  / ' + startTable.sourceData.postgres.admin.passwd);
+                        LOG('           POSTGRES DB User/Pass: postgres  / ' + startTable.sourceData.postgres.env.passwd);
+                        LOG();
+                        if( !isWindows ){
+                          shelljs.exec("sleep 3s");
+                        }
+                        shelljs.exec("opn http://localhost:" + startTable.sourceData.postgres.admin.port ); 
+                    break;
+                    case 'elasticsearch':
+                        LOG();
+                        LOG('   OPENING ELASTICSEARCH WEB DASHBOARD http://localhost:' + startTable.sourceData.elasticsearch.admin.port + ' ');
+                        LOG('           ELASTICSEARCH DATA Port: ' + startTable.sourceData.elasticsearch.port );
+                        LOG();
+                        if( !isWindows ){
+                          shelljs.exec("sleep 3s");
+                        }
+                        shelljs.exec("opn http://localhost:" + startTable.sourceData.elasticsearch.port ); 
+                        shelljs.exec("opn http://localhost:" + startTable.sourceData.elasticsearch.admin.port );
+                    break;
+                    case 'redis':
+                        LOG();
+                        LOG('   OPENING REDIS WEB DASHBOARD http://localhost:' + startTable.sourceData.redis.admin.port + ' ');
+                        LOG();
+                        if( !isWindows ){
+                          shelljs.exec("sleep 3s");
+                        }
+                        shelljs.exec("opn http://localhost:" + startTable.sourceData.redis.admin.port ); 
+                    break;
                   }
+
+                  LOG();
+                  LOG();
+
               } else {
                 LOG()
                 LOG( chalk.red('  -- Please run the following command first to start | stop | restart --'))
@@ -486,23 +644,21 @@ program
               "type": "confirm",
               "default": "Y",
               "name": "doremove",
-              "message": 'Are you sure you want to remove this DB container and source image? ' 
+              "message": 'Are you sure you want to remove this ' + myComponent.toUpperCase() + ' DB container and source image? ' 
             },
           ]).then( answers3 => {
             if( answers3.doremove){
-              let myRemove = new DB();
-              let showRemove = myRemove.retrievePorts();
-              LOG();
-              LOG();
-              LOG('   -- REMOVING DB container for ' + myComponent);
-              shelljs.exec("docker stop lbmesh-db-" + myComponent);
-              shelljs.exec("docker rm lbmesh-db-" + myComponent);
-              LOG();
-              LOG('   -- REMOVING SOURCE IMAGE for DB container ' + myComponent); // new container for ' + myComponent);
-              LOG();
-              shelljs.exec("docker rmi " + showRemove.sourceData[myComponent].image + " --force");
-              LOG();
-              LOG();
+
+              let decision = shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + "  down --rmi all  ",{"silent":true}); 
+              
+              if( !decision.code ){
+                LOG()
+                LOG(' Successfully removed all services and images for ' + myComponent.toUpperCase() + ' database container service');
+                LOG()                 
+              } else {
+
+              }              
+ 
             }
           });
 
@@ -526,7 +682,10 @@ program
             LOG();
             LOG('   -- Rebuilding new container for ' + myComponent);
             LOG();
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up --no-start  "); 
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-db-'+ myComponent +'.yaml') + " up --no-start --force-recreate "); 
+
+            LOG();
+            LOG();
           } else {
             LOG()
             LOG(' Please supply a correct DB service name.  ');
@@ -540,7 +699,7 @@ program
           if( myServices.includes(myComponent) ){
 
             LOG();
-            LOG('  Processing Request to ' + myAction +' DB container service...')
+            LOG('  Processing Request to ' + myAction +' ' + myComponent.toUpperCase() + ' DB container service...')
             LOG();
 
               //let decision = shelljs.exec("docker  "+ myAction +"  lbmesh-db-" + myComponent +" ");
@@ -549,7 +708,7 @@ program
 
               } else {
                 LOG()
-                LOG( chalk.red('  -- Please run the following command first to start | stop | restart --'))
+                LOG( chalk.red('  -- Please run the following command first to start | stop | restart | remove --'))
                 LOG( chalk.blue('     $ lbmesh db pull ' + myComponent))
                 LOG();
               }
@@ -569,7 +728,7 @@ program
         break;
         case 'logs':
           if( myServices.includes(myComponent) ){
-            shelljs.exec("docker logs lbmesh-db-" + myComponent + " ");
+            shelljs.exec("docker logs lbmesh-db-" + myComponent + " -f ");
             //  -f " + datastoreFilePath + " down"); 
           } else {
             LOG()
@@ -599,7 +758,7 @@ program
 
 program
   .command('integ [action] [service] [display]')
-  .description('Manage Integration Containers (start|stop|restart|status|pull|logs|config) ')
+  .description('Manage Integration Containers (start|stop|restart|status|pull|logs|config|remove) ')
   .action((action, service, display)=>{
     LOG();
 
@@ -639,6 +798,7 @@ program
                     {"name":"MQLIGHT", "value":"mqlight"},
                     {"name":"IIB", "value":"iib"},
                     {"name":"MQ", "value":"mq"},
+                    {"name":"KAFKA", "value":"kafka"},
                     {"name":"SPLUNK", "value":"splunk"},
                     {"name":"RABBITMQ", "value":"rabbitmq"},
                     {"name":"ACEMQ", "value":"acemq"},
@@ -672,6 +832,48 @@ program
               LOG();
  
         break;
+        case 'remove':
+            if( myServices.includes(myComponent) ){
+
+              LOG();
+              LOG('  Processing Request to ' + myAction +' ' + myComponent.toUpperCase() + ' integration container service...')
+              LOG();
+
+                ask
+                .prompt([
+                  {
+                    "type": "confirm",
+                    "default": "Y",
+                    "name": "doremove",
+                    "message": 'Are you sure you want to remove this INTEGRATION ' + myComponent + ' container and source images ? ' 
+                  },
+                ]).then( answers3 => {
+                  if( answers3.doremove){
+
+                    let decision = shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + "  down --rmi all  ",{"silent":true}); 
+              
+                    if( !decision.code ){
+                      LOG()
+                      LOG(' Successfully removed all services and images for ' + myComponent + ' integration container service');
+                      LOG()                 
+                    } else {
+      
+                    }
+ 
+                  }
+                });   
+
+                LOG();
+
+
+            } else {
+              LOG()
+              LOG(' Please supply a correct integration service name.');
+              LOG(' Options are: ' + myServicesList)
+              LOG()                
+            }
+            LOG()
+        break;
         case 'start':
           if( myServices.includes(myComponent) ){
 
@@ -704,8 +906,9 @@ program
                         LOG();
                         LOG('   OPENING KAFKA TOPICS UI http://localhost:' + myPorts.sourceData.kafka.port.topics  + '/');
                         LOG('   OPENING KAFKA SCHEMA REGISTRY UI http://localhost:' + myPorts.sourceData.kafka.port.registry  + '/');
-                        LOG('   OPENING KAFKA REST http://localhost:' + myPorts.sourceData.kafka.port.registry  + '/topics');
-                        LOG('           KAFKA DATA PORT: ' +  myPorts.sourceData.kafka.port.data );                       
+                        LOG('   OPENING KAFKA REST http://localhost:' + myPorts.sourceData.kafka.port.rest  + '/topics');
+                        LOG('           KAFKA DATA PORT: ' +  myPorts.sourceData.kafka.port.data );        
+                        LOG('           KAFKA ZOOKEEPER PORT: ' +  myPorts.sourceData.kafka.port.zookeeper );                 
                         LOG();
                         if( !isWindows ){
                           shelljs.exec("sleep 5s");
@@ -757,7 +960,7 @@ program
                     case 'mq':
                       LOG();
                       LOG('   OPENING MQ ADVANCED DASHBOARD https://localhost:' +  myPorts.sourceData.mq.port.admin + '/ibmmq/console/login.html ');
-                      LOG('           MQ ADVANCED DASHBOARD User/Pass:  admin / ' +  myAdminPorts.sourceData.mq.env.admin_pass );
+                      LOG('           MQ ADVANCED DASHBOARD User/Pass:  admin / ' +  myPorts.sourceData.mq.env.admin_pass );
                       //LOG('   OPENING MQ ADVANCED METRICS http://localhost:9157/metrics ');
                       LOG();
                       if( !isWindows ){
@@ -829,7 +1032,7 @@ program
             LOG();
             LOG('   -- Rebuilding new integration container for ' + myComponent);
             LOG();
-            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " up --no-start  "); 
+            shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " up --no-start --force-recreate "); 
           } else {
             LOG()
             LOG(' Please supply a correct integration service name.');
@@ -840,8 +1043,25 @@ program
         break;
         case 'pull':
           if( myServices.includes(myComponent) ){
-            LOG('HELLO')
-                shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " up --no-start  "); 
+ 
+              let spinner = new Ora({
+                "text": 'Processing request to ' + myAction + ' ' + myComponent.toUpperCase() +' integration container service...',
+                "indent": 2
+              }); 
+              spinner.start();
+              LOG();
+
+              let decision = shelljs.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io', myComponent, 'lbmesh-integ-'+ myComponent +'.yaml') + " up --no-start  ",{"silent":true}); 
+              if( !decision.code ){
+                spinner.succeed('  -- Successfully created ' + myComponent + ' INTEG Container Service ')
+                LOG();
+                LOG( chalk.red('  -- Please run the following command first to start the service --'))
+                LOG( chalk.blue('     $ lbmesh integ start ' + myComponent))
+                LOG();
+                LOG();
+              } else {
+
+              }
          
           } else {
             LOG()
@@ -903,18 +1123,19 @@ program
                 break;
                 case 'kafka':
                     LOG();
-                    LOG('   OPENING KAFKA TOPICS UI http://localhost:' + myPorts.sourceData.kafka.port.topics  + '/');
-                    LOG('   OPENING KAFKA SCHEMA REGISTRY UI http://localhost:' + myPorts.sourceData.kafka.port.registry  + '/');
-                    LOG('   OPENING KAFKA REST http://localhost:' + myPorts.sourceData.kafka.port.registry  + '/topics');
-                    LOG('           KAFKA DATA PORT: ' +  myPorts.sourceData.kafka.port.data );                       
+                    LOG('   OPENING KAFKA TOPICS UI http://localhost:' + myAdminPorts.sourceData.kafka.port.topics  + '/');
+                    LOG('   OPENING KAFKA SCHEMA REGISTRY UI http://localhost:' + myAdminPorts.sourceData.kafka.port.registry  + '/');
+                    LOG('   OPENING KAFKA REST http://localhost:' + myAdminPorts.sourceData.kafka.port.rest  + '/topics');
+                    LOG('           KAFKA DATA PORT: ' +  myAdminPorts.sourceData.kafka.port.data );  
+                    LOG('           KAFKA ZOOKEEPER PORT: ' +  myAdminPorts.sourceData.kafka.port.zookeeper );                      
                     LOG();
                     if( !isWindows ){
                       shelljs.exec("sleep 5s");
                     }
                     
-                    shelljs.exec("opn http://localhost:" +  myPorts.sourceData.kafka.port.topics + "/" ); 
-                    shelljs.exec("opn http://localhost:" +  myPorts.sourceData.kafka.port.registry + "/" ); 
-                    shelljs.exec("opn http://localhost:" +  myPorts.sourceData.kafka.port.rest + "/topics" );
+                    shelljs.exec("opn http://localhost:" +  myAdminPorts.sourceData.kafka.port.topics + "/" ); 
+                    shelljs.exec("opn http://localhost:" +  myAdminPorts.sourceData.kafka.port.registry + "/" ); 
+                    shelljs.exec("opn http://localhost:" +  myAdminPorts.sourceData.kafka.port.rest + "/topics" );
                 break;
                 case 'rabbitmq':
                   LOG();
@@ -1349,9 +1570,12 @@ program
                  case 'init':
                   LOG();
  
-                  const spinner = ora('Initializing  LB Mesh Dashboard.  Please Wait ....');
-                        spinner.spinner = 'line';
-                        spinner.start();
+                  let spinner = new Ora({
+                    "text": 'Initializing  LB Mesh Dashboard.  Please Wait ....',
+                    "spinner": 'line'
+                  });
+                         
+                    spinner.start();
                  
                      shelljs.cd( path.join(machine.homedir,".lbmesh.io","dashboard","frontend","www") );
                      shelljs.exec('npm install',{silent: true});
@@ -1359,8 +1583,10 @@ program
                       myGui.updateStatus();
 
                     LOG();
+                    LOG();
  
                     spinner.succeed('LB Mesh Dashboard Install Complete.  Start the dashboard with command below');
+
                     LOG();
                     LOG( chalk.blue('     $ lbmesh dash start '))
                     LOG();
