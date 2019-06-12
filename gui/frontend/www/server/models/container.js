@@ -114,7 +114,7 @@ module.exports = function(Container) {
                         dbServicesExist.push( item.Labels['com.docker.compose.project'] )
                     }
 
-                    if( Container.app.models.integ.services.includes(item.Labels['com.docker.compose.project'])){
+                    if( Container.app.models.integ.services.includes(item.Labels['com.docker.compose.project']) && Container.app.models.integ.services.includes(item.Labels['com.docker.compose.service'])){
                         servicesInteg.push({
                             id: item.Id,
                             service: item.Labels['com.docker.compose.project'],

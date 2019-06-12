@@ -123,7 +123,7 @@
                                                  
                                                 <td><%= item.toUpperCase() %></td>
                                                 <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.integStack[item].image %></span> </td>
-                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.admin %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%  if( data.integStack[item].port.admin > 0 ) { %> <%= data.integStack[item].port.admin %> <% } %></span> </td>
                                                 <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.data %></span> </td>
                                             </tr>
 <%                          
@@ -143,6 +143,38 @@
                                                 <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.mq.admin %></span> </td>
                                                 <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.mq.data %></span> </td>
                                             </tr>       
+<%
+                    }
+                    if( item == 'kafka' ){
+%>
+                                             <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">Zookeeper</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.zookeeper %> </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> </span> </td>
+                                            </tr>
+                                             <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">REST API</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.rest %></span> </td>
+                                            </tr>
+                                            <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">Topics Dashboard</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.topics %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  </span> </td>
+                                            </tr>  
+                                            <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">Schema Registry Dashboard</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.registry %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  </span> </td>
+                                            </tr> 
 <%
                     }
     });

@@ -107,9 +107,9 @@ if(actionState == 'running' ){
         break;
         case 'kafka':
 %>
-    <a   target="_blank" href="https://localhost:<%= data.integStack[services.detail].port.admin %>/dp/login.xml" class="btn waves-effect waves-light btn-block btn-secondary"    >Topics Dashboard Port <%= data.integStack[services.detail].port.topics %> ( admin/admin)</a>
-   <a   target="_blank" href="https://localhost:<%= data.integStack[services.detail].port.xml %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Schema Dashboard Port <%= data.integStack[services.detail].port.registry %></a>
-   <a   target="_blank" href="https://localhost:<%= data.integStack[services.detail].port.rest %>mgmt/status/default/DateTimeStatus" class="btn waves-effect waves-light btn-block btn-secondary"    >REST Management Port <%= data.integStack[services.detail].port.rest %></a> 
+    <a   target="_blank" href="http://localhost:<%= data.integStack[services.detail].port.topics %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Topics Dashboard Port <%= data.integStack[services.detail].port.topics %> </a>
+   <a   target="_blank" href="http://localhost:<%= data.integStack[services.detail].port.registry %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Schema Dashboard Port <%= data.integStack[services.detail].port.registry %></a>
+   <a   target="_blank" href="http://localhost:<%= data.integStack[services.detail].port.rest %>" class="btn waves-effect waves-light btn-block btn-secondary"    >REST Management Port <%= data.integStack[services.detail].port.rest %></a> 
 <%
         break;
     }// end switch
@@ -143,8 +143,8 @@ if(actionState == 'running' ){
         break;
         case 'running':
 %>
-                              <!--  <button type="button"  disabled class="btn waves-effect waves-light btn-block btn-secondary">Pull</button>-->
-                                <button type="button" disabled class="btn waves-effect waves-light btn-block btn-secondary">Start</button>
+                              <!--  <button type="button"  disabled class="btn waves-effect waves-light btn-block btn-secondary">Pull</button>
+                                <button type="button" disabled class="btn waves-effect waves-light btn-block btn-secondary">Start</button>-->
                                 <button type="button"  class="btn waves-effect waves-light btn-block btn-secondary" id="sa-params-stop">Stop</button>
                                <!-- <button type="button" disabled class="btn waves-effect waves-light btn-block btn-secondary">Remove</button>-->
 <%
@@ -203,7 +203,7 @@ break;
                                                 <% } else { %>
                                                      <div class="form-group">
                                                         <label>Zookeeper Port</label>
-                                                        <input type="text" id="newPortZookeeper" name="newPortZookeeper" class="form-control" value="<%= data.integStack[services.detail].admin.zookeeper %>" >
+                                                        <input type="text" id="newPortZookeeper" name="newPortZookeeper" class="form-control" value="<%= data.integStack[services.detail].port.zookeeper %>" >
                                                     </div>
                                                 <% } %>
                                                 </div>
@@ -233,7 +233,7 @@ break;
 
                                                      <div class="form-group">
                                                         <label>REST API Port</label>
-                                                        <input type="text" id="newPortRest" name="newPortRest" class="form-control" value="<%= data.integStack[services.detail].image %>" >
+                                                        <input type="text" id="newPortRest" name="newPortRest" class="form-control" value="<%= data.integStack[services.detail].port.rest %>" >
                                                     </div>  
  
                                                 </div>
@@ -242,11 +242,11 @@ break;
 
                                                      <div class="form-group">
                                                         <label>Topics Dashboard</label>
-                                                        <input type="text" id="newPortTopics" name="newPortTopics" class="form-control" value="<%= data.integStack[services.detail].env.pass %>" >
+                                                        <input type="text" id="newPortTopics" name="newPortTopics" class="form-control" value="<%= data.integStack[services.detail].port.topics %>" >
                                                     </div>   
                                                      <div class="form-group">
                                                         <label>Schema Registry Dashboard</label>
-                                                        <input type="text" id="newPortRegistry" name="newPortRegistry" class="form-control" value="<%= data.integStack[services.detail].env.pass %>" >
+                                                        <input type="text" id="newPortRegistry" name="newPortRegistry" class="form-control" value="<%= data.integStack[services.detail].port.registry %>" >
                                                     </div>   
      
                                                 </div>
@@ -389,7 +389,7 @@ break;
                                                  
                                                 <td><a href="/integrations/<%= item %>/manage.html"><%= item.toUpperCase() %></a></td>
                                                 <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.integStack[item].image %></span> </td>
-                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.admin %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%  if( data.integStack[item].port.admin > 0 ) { %> <%= data.integStack[item].port.admin %> <% } %></span> </td>
                                                 <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.data %></span> </td>
                                             </tr>
 <%                          
@@ -409,6 +409,38 @@ break;
                                                 <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.mq.admin %></span> </td>
                                                 <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.mq.data %></span> </td>
                                             </tr>       
+<%
+                    }
+                    if( item == 'kafka' ){
+%>
+                                             <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">Zookeeper</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.zookeeper %> </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> </span> </td>
+                                            </tr>
+                                             <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">REST API</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.rest %></span> </td>
+                                            </tr>
+                                            <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">Topics Dashboard</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.topics %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  </span> </td>
+                                            </tr>  
+                                            <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">Schema Registry Dashboard</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.registry %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  </span> </td>
+                                            </tr> 
 <%
                     }
     });

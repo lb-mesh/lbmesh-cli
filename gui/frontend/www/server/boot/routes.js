@@ -109,7 +109,7 @@ module.exports = function(app) {
             break;
             case 'start':
                  //   res.json( req.body );
-                app.models.container.startService(req.body.containerId, function(err, results){
+                app.models.compose.startService('integ', req.body.service, function(err, results){
                     if( err ){
                         res.redirect("/integrations/" + req.body.service + "/manage.html?status=error&action=start&reason="+err.reason);
                     } else {
@@ -118,7 +118,7 @@ module.exports = function(app) {
                 });
             break;
             case 'stop':
-                app.models.container.stopService(req.body.containerId, function(err, results){
+                app.models.compose.stopService('integ', req.body.service, function(err, results){
                     if( err ){
                         res.redirect("/integrations/" + req.body.service + "/manage.html?status=error&action=stop");
                     } else {
@@ -198,7 +198,7 @@ module.exports = function(app) {
                 res.redirect('/databases/' + req.body.chosenDB + '/manage.html?status=success&action=update');
             break;
             case 'start':
-                app.models.compose.startService(req.body.service, function(err, results){
+                app.models.compose.startService('db', req.body.service, function(err, results){
                     console.log( results );
                     if( err ){
                         res.redirect("/databases/" + req.body.service + "/manage.html?status=error&action=start");
@@ -208,7 +208,7 @@ module.exports = function(app) {
                 });
             break;
             case 'stop':
-                app.models.compose.stopService(req.body.service, function(err, results){
+                app.models.compose.stopService('db', req.body.service, function(err, results){
                     console.log( results );
                     if( err ){
                         res.redirect("/databases/" + req.body.service + "/manage.html?status=error&action=stop");

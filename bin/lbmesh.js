@@ -1635,10 +1635,10 @@ program
                         if( myAction == "start" ){
                           LOG('   STARTING LB MESH DASHBOARD WWW ... PLEASE WAIT' )
                           LOG();
-                          LOG('   OPENING LB MESH DASHBOARD WWW http://localhost:9976' )
-                          shelljs.exec("opn http://localhost:9976");
+                          // LOG('   OPENING LB MESH DASHBOARD WWW http://localhost:9976' )
+                          // shelljs.exec("opn http://localhost:9976");
                         } else {
-                          LOG('   STOPPING LB MESH DASHBOARD WWW' )
+                          LOG('   STOPPING LB MESH DASHBOARD WWW ... PLEASE WAIT' )
                         }
                         LOG();
                         LOG();

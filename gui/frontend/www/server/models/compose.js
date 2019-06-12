@@ -8,9 +8,9 @@ const path    = require('path');
 
 module.exports = function(Compose) {
 
-    Compose.startService = (service, cb) => {
+    Compose.startService = (category, service, cb) => {
  
-        let cmdline = sh.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io',service,'lbmesh-db-' + service + '.yaml') + " start",{"silent":true} );
+        let cmdline = sh.exec("docker-compose -f " + path.join(machine.homedir,'.lbmesh.io',service,'lbmesh-' + category + '-' + service + '.yaml') + " start",{"silent":true} );
         if( cmdline.code > 0 ){
             cb(null, cmdline.stderr); 
  
@@ -20,8 +20,8 @@ module.exports = function(Compose) {
         } 
     };
 
-    Compose.stopService = (service, cb) => {
-        dc.stop({ cwd: path.join(machine.homedir,'.lbmesh.io',service), config: 'lbmesh-db-' + service + '.yaml', log: true })
+    Compose.stopService = (category, service, cb) => {
+        dc.stop({ cwd: path.join(machine.homedir,'.lbmesh.io',service), config: 'lbmesh-' + category + '-' + service + '.yaml', log: true })
         .then(
           () => { 
             //console.log('done')
