@@ -54,11 +54,11 @@ class Base {
     }
 
     writeProjectModelMethod( projFolder, model){
-        files.writeComponentModelMethod(this.machine,projFolder,model);
+        files.writeComponentModelMethod(this.machineInstall,projFolder,model);
     }
 
     writeProjectModel(projFolder, model ){ 
-        files.writeComponentModel(this.machine,projFolder,model);
+        files.writeComponentModel(this.machineInstall,projFolder,model);
     }
 
     readProjectConfig(projFolder){

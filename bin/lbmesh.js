@@ -446,7 +446,7 @@ program
                       if( !isWindows ){
                         shelljs.exec("sleep 3s");
                       }
-                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.cloudant.port +"/dashboard.html");  
+                      shelljs.exec("open http://localhost:" + myDBPorts.sourceData.cloudant.port +"/dashboard.html");  
                   break;
                   case 'mongodb':
                       LOG();
@@ -456,7 +456,7 @@ program
                       if( !isWindows ){
                         shelljs.exec("sleep 3s");
                       }
-                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.mongodb.admin.port );    
+                      shelljs.exec("open http://localhost:" + myDBPorts.sourceData.mongodb.admin.port );    
                   break;
                   case 'mysql':
                       LOG();
@@ -467,7 +467,7 @@ program
                       if( !isWindows ){
                         shelljs.exec("sleep 3s");
                       }
-                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.mysql.admin.port );    
+                      shelljs.exec("open http://localhost:" + myDBPorts.sourceData.mysql.admin.port );    
                   break;
                   case 'postgres':
                       LOG();
@@ -478,7 +478,7 @@ program
                       if( !isWindows ){
                         shelljs.exec("sleep 3s");
                       }
-                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.postgres.admin.port ); 
+                      shelljs.exec("open http://localhost:" + myDBPorts.sourceData.postgres.admin.port ); 
                   break;
                   case 'elasticsearch':
                       LOG();
@@ -488,8 +488,8 @@ program
                       if( !isWindows ){
                         shelljs.exec("sleep 3s");
                       }
-                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.elasticsearch.port ); 
-                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.elasticsearch.admin.port );
+                      shelljs.exec("open http://localhost:" + myDBPorts.sourceData.elasticsearch.port ); 
+                      shelljs.exec("open http://localhost:" + myDBPorts.sourceData.elasticsearch.admin.port );
                   break;
                   case 'redis':
                       LOG();
@@ -499,7 +499,7 @@ program
                       if( !isWindows ){
                         shelljs.exec("sleep 3s");
                       }
-                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.redis.admin.port ); 
+                      shelljs.exec("open http://localhost:" + myDBPorts.sourceData.redis.admin.port ); 
                   break;
                   case 'cassandra':
                       LOG();
@@ -509,7 +509,7 @@ program
                       if( !isWindows ){
                         shelljs.exec("sleep 3s");
                       }
-                      shelljs.exec("opn http://localhost:" + myDBPorts.sourceData.cassandra.admin.port ); 
+                      shelljs.exec("open http://localhost:" + myDBPorts.sourceData.cassandra.admin.port ); 
                   break;
                 }
             } else {
@@ -573,7 +573,7 @@ program
                       if( !isWindows ){
                         shelljs.exec("sleep 3s");
                       }
-                      shelljs.exec("opn http://localhost:" + startTable.sourceData.cloudant.port +"/dashboard.html");                  
+                      shelljs.exec("open http://localhost:" + startTable.sourceData.cloudant.port +"/dashboard.html");                  
                     break;
                     case 'mongodb':
                         LOG();
@@ -583,7 +583,7 @@ program
                         if( !isWindows ){
                           shelljs.exec("sleep 3s");
                         }
-                        shelljs.exec("opn http://localhost:" + startTable.sourceData.mongodb.admin.port );    
+                        shelljs.exec("open http://localhost:" + startTable.sourceData.mongodb.admin.port );    
                     break;
                     case 'mysql':
                         LOG();
@@ -593,7 +593,7 @@ program
                         if( !isWindows ){
                           shelljs.exec("sleep 3s");
                         }
-                        shelljs.exec("opn http://localhost:" + startTable.sourceData.mysql.admin.port );    
+                        shelljs.exec("open http://localhost:" + startTable.sourceData.mysql.admin.port );    
                     break;
                     case 'postgres':
                         LOG();
@@ -604,7 +604,7 @@ program
                         if( !isWindows ){
                           shelljs.exec("sleep 3s");
                         }
-                        shelljs.exec("opn http://localhost:" + startTable.sourceData.postgres.admin.port ); 
+                        shelljs.exec("open http://localhost:" + startTable.sourceData.postgres.admin.port ); 
                     break;
                     case 'elasticsearch':
                         LOG();
@@ -614,8 +614,8 @@ program
                         if( !isWindows ){
                           shelljs.exec("sleep 3s");
                         }
-                        shelljs.exec("opn http://localhost:" + startTable.sourceData.elasticsearch.port ); 
-                        shelljs.exec("opn http://localhost:" + startTable.sourceData.elasticsearch.admin.port );
+                        shelljs.exec("open http://localhost:" + startTable.sourceData.elasticsearch.port ); 
+                        shelljs.exec("open http://localhost:" + startTable.sourceData.elasticsearch.admin.port );
                     break;
                     case 'redis':
                         LOG();
@@ -624,7 +624,7 @@ program
                         if( !isWindows ){
                           shelljs.exec("sleep 3s");
                         }
-                        shelljs.exec("opn http://localhost:" + startTable.sourceData.redis.admin.port ); 
+                        shelljs.exec("open http://localhost:" + startTable.sourceData.redis.admin.port ); 
                     break;
                     case 'cassandra':
                         LOG();
@@ -633,7 +633,7 @@ program
                         if( !isWindows ){
                           shelljs.exec("sleep 3s");
                         }
-                        shelljs.exec("opn http://localhost:" + startTable.sourceData.cassandra.admin.port ); 
+                        shelljs.exec("open http://localhost:" + startTable.sourceData.cassandra.admin.port ); 
                     break;
                   }
 
@@ -919,7 +919,7 @@ program
                         shelljs.exec("sleep 5s");
                       }
                       
-                      shelljs.exec("opn http://localhost:" +  myPorts.sourceData.mqlight.port.admin + "/#page=home" );                  
+                      shelljs.exec("open http://localhost:" +  myPorts.sourceData.mqlight.port.admin + "/#page=home" );                  
                     break;
                     case 'kafka':
                         LOG();
@@ -933,9 +933,9 @@ program
                           shelljs.exec("sleep 5s");
                         }
                         
-                        shelljs.exec("opn http://localhost:" +  myPorts.sourceData.kafka.port.topics + "/" ); 
-                        shelljs.exec("opn http://localhost:" +  myPorts.sourceData.kafka.port.registry + "/" ); 
-                        shelljs.exec("opn http://localhost:" +  myPorts.sourceData.kafka.port.rest + "/topics" );
+                        shelljs.exec("open http://localhost:" +  myPorts.sourceData.kafka.port.topics + "/" ); 
+                        shelljs.exec("open http://localhost:" +  myPorts.sourceData.kafka.port.registry + "/" ); 
+                        shelljs.exec("open http://localhost:" +  myPorts.sourceData.kafka.port.rest + "/topics" );
                     break;
                     case 'splunk':
                       LOG();
@@ -944,7 +944,7 @@ program
                       if( !isWindows ){
                         shelljs.exec("sleep 5s");
                       }
-                      shelljs.exec("opn http://localhost:" +  myPorts.sourceData.splunk.port.admin);   
+                      shelljs.exec("open http://localhost:" +  myPorts.sourceData.splunk.port.admin);   
                     break;
                     case 'iib':
                       LOG();
@@ -953,7 +953,7 @@ program
                       if( !isWindows ){
                         shelljs.exec("sleep 5s");
                       }
-                      shelljs.exec("opn http://localhost:" +  myPorts.sourceData.iib.port.admin);   
+                      shelljs.exec("open http://localhost:" +  myPorts.sourceData.iib.port.admin);   
                     break;
                     case 'datapower':
                       LOG();
@@ -963,7 +963,7 @@ program
                       if( !isWindows ){
                         shelljs.exec("sleep 5s");
                       }
-                      shelljs.exec("opn https://localhost:" +  myPorts.sourceData.datapower.port.admin);   
+                      shelljs.exec("open https://localhost:" +  myPorts.sourceData.datapower.port.admin);   
                     break;
                     case 'rabbitmq':
                       LOG();
@@ -974,7 +974,7 @@ program
                       if( !isWindows ){
                         shelljs.exec("sleep 5s");
                       }
-                      shelljs.exec("opn http://localhost:" +  myPorts.sourceData.rabbitmq.port.admin);   
+                      shelljs.exec("open http://localhost:" +  myPorts.sourceData.rabbitmq.port.admin);   
                     break;
                     case 'mq':
                       LOG();
@@ -985,8 +985,8 @@ program
                       if( !isWindows ){
                         shelljs.exec("sleep 5s");
                       }
-                      shelljs.exec("opn https://localhost:" +  myPorts.sourceData.mq.port.admin + "/ibmmq/console/login.html");  
-                      //shelljs.exec("opn http://localhost:9157/metrics"); 
+                      shelljs.exec("open https://localhost:" +  myPorts.sourceData.mq.port.admin + "/ibmmq/console/login.html");  
+                      //shelljs.exec("open http://localhost:9157/metrics"); 
                     break;
                     case 'acemq':
                       LOG();
@@ -997,9 +997,9 @@ program
                       //LOG('   OPENING MQ ADVANCED METRICS http://localhost:9157/metrics ');
                       LOG();
                       // shelljs.exec("sleep 5s");
-                      // shelljs.exec("opn https://localhost:9444/ibmmq/console/login.html");  
-                      // shelljs.exec("opn http://localhost:7600");  
-                      //shelljs.exec("opn http://localhost:9157/metrics"); 
+                      // shelljs.exec("open https://localhost:9444/ibmmq/console/login.html");  
+                      // shelljs.exec("open http://localhost:7600");  
+                      //shelljs.exec("open http://localhost:9157/metrics"); 
                     break;
                     
                   }             
@@ -1110,7 +1110,7 @@ program
                   if( !isWindows ){
                     shelljs.exec("sleep 5s");
                   }
-                  shelljs.exec("opn http://localhost:" +  myAdminPorts.sourceData.mqlight.port.admin + "/#page=home" );                  
+                  shelljs.exec("open http://localhost:" +  myAdminPorts.sourceData.mqlight.port.admin + "/#page=home" );                  
                 break;
                 case 'iib':
                   LOG();
@@ -1119,7 +1119,7 @@ program
                   if( !isWindows ){
                     shelljs.exec("sleep 5s");
                   }
-                  shelljs.exec("opn http://localhost:" +  myAdminPorts.sourceData.iib.port.admin);   
+                  shelljs.exec("open http://localhost:" +  myAdminPorts.sourceData.iib.port.admin);   
                 break;
                 case 'splunk':
                   LOG();
@@ -1128,7 +1128,7 @@ program
                   if( !isWindows ){
                     shelljs.exec("sleep 5s");
                   }
-                  shelljs.exec("opn http://localhost:" +  myAdminPorts.sourceData.splunk.port.admin);   
+                  shelljs.exec("open http://localhost:" +  myAdminPorts.sourceData.splunk.port.admin);   
                 break;
                 case 'datapower':
                   LOG();
@@ -1138,7 +1138,7 @@ program
                   if( !isWindows ){
                     shelljs.exec("sleep 5s");
                   }
-                  shelljs.exec("opn https://localhost:" +  myAdminPorts.sourceData.datapower.port.admin);   
+                  shelljs.exec("open https://localhost:" +  myAdminPorts.sourceData.datapower.port.admin);   
                 break;
                 case 'kafka':
                     LOG();
@@ -1152,9 +1152,9 @@ program
                       shelljs.exec("sleep 5s");
                     }
                     
-                    shelljs.exec("opn http://localhost:" +  myAdminPorts.sourceData.kafka.port.topics + "/" ); 
-                    shelljs.exec("opn http://localhost:" +  myAdminPorts.sourceData.kafka.port.registry + "/" ); 
-                    shelljs.exec("opn http://localhost:" +  myAdminPorts.sourceData.kafka.port.rest + "/topics" );
+                    shelljs.exec("open http://localhost:" +  myAdminPorts.sourceData.kafka.port.topics + "/" ); 
+                    shelljs.exec("open http://localhost:" +  myAdminPorts.sourceData.kafka.port.registry + "/" ); 
+                    shelljs.exec("open http://localhost:" +  myAdminPorts.sourceData.kafka.port.rest + "/topics" );
                 break;
                 case 'rabbitmq':
                   LOG();
@@ -1165,7 +1165,7 @@ program
                   if( !isWindows ){
                     shelljs.exec("sleep 5s");
                   }
-                  shelljs.exec("opn http://localhost:" +  myAdminPorts.sourceData.rabbitmq.port.admin);   
+                  shelljs.exec("open http://localhost:" +  myAdminPorts.sourceData.rabbitmq.port.admin);   
                 break;
                 case 'mq':
                   LOG();
@@ -1176,8 +1176,8 @@ program
                   if( !isWindows ){
                     shelljs.exec("sleep 5s");
                   }
-                  shelljs.exec("opn https://localhost:" +  myAdminPorts.sourceData.mq.port.admin + "/ibmmq/console/login.html");  
-                  //shelljs.exec("opn http://localhost:9157/metrics"); 
+                  shelljs.exec("open https://localhost:" +  myAdminPorts.sourceData.mq.port.admin + "/ibmmq/console/login.html");  
+                  //shelljs.exec("open http://localhost:9157/metrics"); 
                 break;
                 case 'acemq':
                   LOG();
@@ -1188,9 +1188,9 @@ program
                   //LOG('   OPENING MQ ADVANCED METRICS http://localhost:9157/metrics ');
                   LOG();
                   // shelljs.exec("sleep 5s");
-                  // shelljs.exec("opn https://localhost:9444/ibmmq/console/login.html");  
-                  // shelljs.exec("opn http://localhost:7600");  
-                  //shelljs.exec("opn http://localhost:9157/metrics"); 
+                  // shelljs.exec("open https://localhost:9444/ibmmq/console/login.html");  
+                  // shelljs.exec("open http://localhost:7600");  
+                  //shelljs.exec("open http://localhost:9157/metrics"); 
                 break;
                 }     
 
@@ -1325,32 +1325,32 @@ program
           LOG();
           if( projDetails.apps.www.port > 0 ){
             LOG('   OPENING FRONTEND-WWW http://localhost:' + projDetails.apps.www.port + ' for Project ' + projDetails.name)
-            shelljs.exec("opn http://localhost:" + projDetails.apps.www.port);
+            shelljs.exec("open http://localhost:" + projDetails.apps.www.port);
           }
 
           if( projDetails.apps.admin.port > 0 ){
             LOG('   OPENING FRONTEND-ADMIN http://localhost:' + projDetails.apps.admin.port + ' for Project ' + projDetails.name)
-            shelljs.exec("opn http://localhost:" + projDetails.apps.admin.port);
+            shelljs.exec("open http://localhost:" + projDetails.apps.admin.port);
           }
 
           if( projDetails.apps.api.port > 0 ){
             LOG('   OPENING FRONTEND-API http://localhost:' + projDetails.apps.api.port + ' for Project ' + projDetails.name)
-            shelljs.exec("opn http://localhost:" + projDetails.apps.api.port + "/wwwapi/explorer");
+            shelljs.exec("open http://localhost:" + projDetails.apps.api.port + "/wwwapi/explorer");
           }
 
           if( projDetails.apps.scheduler.port > 0 ){
             LOG('   OPENING BACKEND-SCHEDULER http://localhost:' + projDetails.apps.scheduler.port + ' for Project ' + projDetails.name)
-            shelljs.exec("opn http://localhost:" + projDetails.apps.scheduler.port + "/scheduler/explorer");
+            shelljs.exec("open http://localhost:" + projDetails.apps.scheduler.port + "/scheduler/explorer");
           }
 
           if( projDetails.apps.messenger.port > 0 ){
             LOG('   OPENING BACKEND-MESSENGER http://localhost:' + projDetails.apps.messenger.port + ' for Project ' + projDetails.name)
-            shelljs.exec("opn http://localhost:" + projDetails.apps.messenger.port + "/messenger/explorer");
+            shelljs.exec("open http://localhost:" + projDetails.apps.messenger.port + "/messenger/explorer");
           }
 
           if( projDetails.apps.databank.port > 0 ){
             LOG('   OPENING BACKEND-DATABANK http://localhost:' + projDetails.apps.databank.port + ' for Project ' + projDetails.name)
-            shelljs.exec("opn http://localhost:" + projDetails.apps.databank.port + "/databank/explorer");
+            shelljs.exec("open http://localhost:" + projDetails.apps.databank.port + "/databank/explorer");
           }
           LOG();
 
@@ -1636,7 +1636,7 @@ program
                           LOG('   STARTING LB MESH DASHBOARD WWW ... PLEASE WAIT' )
                           LOG();
                           // LOG('   OPENING LB MESH DASHBOARD WWW http://localhost:9976' )
-                          // shelljs.exec("opn http://localhost:9976");
+                          // shelljs.exec("open http://localhost:9976");
                         } else {
                           LOG('   STOPPING LB MESH DASHBOARD WWW ... PLEASE WAIT' )
                         }
@@ -1651,7 +1651,7 @@ program
                       case 'open':
                         LOG();
                         LOG('   OPENING LB MESH DASHBOARD WWW http://localhost:9976' )
-                        shelljs.exec("opn http://localhost:9976");
+                        shelljs.exec("open http://localhost:9976");
                         LOG();
                       break;
                     }

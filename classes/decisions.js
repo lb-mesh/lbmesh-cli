@@ -369,37 +369,43 @@ class Decisions extends Projects{
                                     "message": 'Select ' + component.toUpperCase() + ' Model to Remove ?'
                                 }                   
                                 ]).then( answers2 => {
-                                    LOG();
-                                    LOG("Request to remove model " + answers2.modelname );
-                                    LOG();
-                                        ask.
-                                        prompt([
-                                            {
-                                                "type": "confirm",
-                                                "default": "Y",
-                                                "name": "doremove",
-                                                "message": 'Are you sure you want to remove this model? ' 
-                                            },               
-                                        ]).then( answers3 => {
-                                            //LOG( answers3 );
-                                            LOG();
-                                            if( answers3.doremove ){
-                                                /**
-                                                 * Process Flow: databank-remove-model
-                                                 */
-                                                let projData = { 
-                                                    "profile": this.readProjectConfig( process.cwd() ),
-                                                    "create": {
-                                                        "app": component,
-                                                        "model": answers2.modelname
-                                                    }};
-        
-                                                this.executeFlow('databank-remove-model', projData);
-        
-                                            } else {
-                                                this.startProcess( component );
-                                            }
-                                        });
+
+                                    if( answers2.modelname !== 'exit' ){
+                                        LOG();
+                                        LOG("Request to remove model " + answers2.modelname );
+                                        LOG();
+                                            ask.
+                                            prompt([
+                                                {
+                                                    "type": "confirm",
+                                                    "default": "Y",
+                                                    "name": "doremove",
+                                                    "message": 'Are you sure you want to remove this model? ' 
+                                                },               
+                                            ]).then( answers3 => {
+                                                //LOG( answers3 );
+                                                LOG();
+                                                if( answers3.doremove ){
+                                                    /**
+                                                     * Process Flow: databank-remove-model
+                                                     */
+                                                    let projData = { 
+                                                        "profile": this.readProjectConfig( process.cwd() ),
+                                                        "create": {
+                                                            "app": component,
+                                                            "model": answers2.modelname
+                                                        }};
+            
+                                                    this.executeFlow('databank-remove-model', projData);
+            
+                                                } else {
+                                                    this.startProcess( component );
+                                                }
+                                            });
+                                    } else {
+                                        LOG();
+                                        this.startProcess( component );
+                                    }
 
                                 }); 
                             })
