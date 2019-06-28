@@ -70,6 +70,20 @@ class Integ extends Base{
                     "message": 'What port would you for the ' + instance.toUpperCase() + ' WEB SERVER ?'
                 });    
             break;
+            case 'ace':
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].port.admin,
+                    "name": "admin",
+                    "message": 'What port would you for the ' + instance.toUpperCase() + ' DASHBOARD ?'
+                });
+                questions.push({
+                    "type": "input",
+                    "default": this.portsList.integStack[instance].port.data,
+                    "name": "data",
+                    "message": 'What port would you for the ' + instance.toUpperCase() + ' WEB SERVER ?'
+                });    
+            break;
             case 'splunk':
                 questions.push({
                     "type": "input",
@@ -173,6 +187,10 @@ class Integ extends Base{
                     this.portsList.integStack[choices.chosenDB].port.admin =  choices.newPortAdmin;
                     this.portsList.integStack[choices.chosenDB].port.data =  choices.newPortData;
             break;
+            case 'ace':
+                    this.portsList.integStack[choices.chosenDB].port.admin =  choices.newPortAdmin;
+                    this.portsList.integStack[choices.chosenDB].port.data =  choices.newPortData;
+            break;
             case 'kafka':
                     this.portsList.integStack[choices.chosenDB].port.zookeeper =  parseInt(choices.newPortZookeeper);
                     this.portsList.integStack[choices.chosenDB].port.registry =  parseInt(choices.newPortRegistry);
@@ -261,6 +279,16 @@ class Integ extends Base{
                         fs.writeFileSync( path.join(machine.homedir,'.lbmesh.io','splunk','lbmesh-integ-splunk.yaml'), str);
                     }); 
             break;
+            case 'mqtt':
+                    ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-mqtt.ejs'), {
+                        "mqtt_data": path.join(machine.homedir,'.lbmesh.io','mqtt','data'),
+                        "mqtt_port_admin": fullData.integStack.mqtt.port.admin,
+                        "mqtt_port_data": fullData.integStack.mqtt.port.data,
+                    },{}, function(err,str){
+                        if( err ) console.log(err);
+                        fs.writeFileSync( path.join(machine.homedir,'.lbmesh.io','mqlight','lbmesh-integ-mqtt.yaml'), str);
+                    }); 
+            break;
             case 'mqlight':
                     ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-mqlight.ejs'), {
                         "mqlight_data": path.join(machine.homedir,'.lbmesh.io','mqlight','data'),
@@ -287,6 +315,16 @@ class Integ extends Base{
             break;
             case 'acemq':
                     
+            break;
+            case 'ace':
+                    ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-ace.ejs'), {
+                        "ace_data": path.join(machine.homedir,'.lbmesh.io','ace','data'),
+                        "ace_port_admin": fullData.integStack.ace.port.admin,
+                        "ace_port_data": fullData.integStack.ace.port.data,
+                    },{}, function(err,str){
+                        if( err ) console.log(err);
+                        fs.writeFileSync( path.join(machine.homedir,'.lbmesh.io','ace','lbmesh-integ-ace.yaml'), str);
+                    }); 
             break;
             case 'iib':
                 ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-iib.ejs'), {
@@ -340,6 +378,14 @@ class Integ extends Base{
                 this.portsList.integStack[chosen].env.pass = choices.env_pass;
             break;
             case 'mqlight':
+                this.portsList.integStack[chosen].port.admin = choices.admin;
+                this.portsList.integStack[chosen].port.data = choices.data;
+            break;
+            case 'mqtt':
+                this.portsList.integStack[chosen].port.socket = choices.socket;
+                this.portsList.integStack[chosen].port.data = choices.data;
+            break;
+            case 'ace':
                 this.portsList.integStack[chosen].port.admin = choices.admin;
                 this.portsList.integStack[chosen].port.data = choices.data;
             break;
@@ -414,9 +460,30 @@ class Integ extends Base{
                         fs.writeFileSync( path.join(fullData.homedir,'.lbmesh.io','mqlight','lbmesh-integ-mqlight.yaml'), str);
                     }); 
             break;
+            case 'mqtt':
+                    ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-mqtt.ejs'), {
+                        "mqtt_data": path.join(fullData.homedir,'.lbmesh.io','mqtt','data'),
+                        "mqtt_port_admin": fullData.integStack.mqtt.port.admin,
+                        "mqtt_port_socket": fullData.integStack.mqtt.port.socket,
+                        "mqtt_port_data": fullData.integStack.mqtt.port.data,
+                    },{}, function(err,str){
+                        if( err ) console.log(err);
+                        fs.writeFileSync( path.join(fullData.homedir,'.lbmesh.io','mqtt','lbmesh-integ-mqtt.yaml'), str);
+                    });
+            break;
+            case 'ace':
+                    ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-ace.ejs'), {
+                        "ace_data": path.join(fullData.homedir,'.lbmesh.io','ace','data'),
+                        "ace_port_admin": fullData.integStack.ace.port.admin,
+                        "ace_port_data": fullData.integStack.ace.port.data,
+                    },{}, function(err,str){
+                        if( err ) console.log(err);
+                        fs.writeFileSync( path.join(fullData.homedir,'.lbmesh.io','ace','lbmesh-integ-ace.yaml'), str);
+                    });
+            break;
             case 'iib':
                 ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-iib.ejs'), {
-                    "iib_data": path.join(fullData.homedir,'.lbmesh.io','mqlight','data'),
+                    "iib_data": path.join(fullData.homedir,'.lbmesh.io','iib','data'),
                     "iib_port_admin": fullData.integStack.iib.port.admin,
                     "iib_port_data": fullData.integStack.iib.port.data,
                 },{}, function(err,str){

@@ -353,6 +353,333 @@ program
 
 
 program
+  .command('run [action] [component]')
+  .description('Start|Stop|Restart|Log environment via pm2 runtime')
+  .action((action, component)=>{
+    LOG();
+    banner.display();
+    banner.runtime();
+
+    if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ){
+        let myAction = (action == undefined)? 'empty' : action.toLowerCase();
+        let myComponent = (component == undefined)? 'all' : component.toLowerCase() ;
+
+        switch(myAction){
+          case 'empty':
+              LOG(' no action provided');
+          break;
+          case 'start':
+          case 'stop':
+          case 'restart':
+          case 'delete':
+              shelljs.exec("pm2 " + myAction +" pm2-ecosystem.config.yaml");
+          break;
+          case 'logs':
+            switch(myComponent){
+              case 'all':
+
+              break;
+              default:
+                shelljs.exec("pm2 logs " + myComponent);
+              break;
+            }
+          break;
+          case 'status':
+            shelljs.exec("pm2 status pm2-ecosystem.config.yaml", [ 'arg1', 'arg2', 'arg3' ], { stdio: 'inherit'});
+          break;
+          case 'docker':
+            
+              switch(myComponent){
+                case 'up':
+                  shelljs.exec("docker-compose up", {stdio: 'inherit'});
+                break;
+                case 'down':
+                shelljs.exec("docker-compose down", {stdio: 'inherit'});
+                break;
+                default:
+                  LOG()
+                  LOG('   Current Running Docker Processes')
+                  LOG();
+                  shelljs.exec("docker ps", {stdio: 'inherit'});
+                  LOG()
+                  LOG('   Current Docker Images')
+                  LOG();
+                  shelljs.exec("docker images", {stdio: 'inherit'});
+                  LOG();
+                break;
+              }
+          break;
+          default:
+            LOG();
+            LOG(" COMMAND NOT RECOGNIZED ");
+            LOG();
+          break;
+
+        }
+ 
+
+    } else {
+      LOG();
+      console.error("Not in a current LB Mesh Project Directory.")
+      banner.runhelp();
+      LOG();
+    }
+    
+  });
+
+  
+program
+  .command('open')
+  .description('Open Browser Windows for Project')
+  .action((name)=>{
+
+    banner.display();
+    banner.browser();
+
+      if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ) {
+
+            
+        let list = new Projects();
+        let projDetails = list.readProjectConfig(process.cwd());
+
+          // Loop thru all the apps ports
+          LOG();
+          if( projDetails.apps.www.port > 0 ){
+            LOG('   OPENING FRONTEND-WWW http://localhost:' + projDetails.apps.www.port + ' for Project ' + projDetails.name)
+            shelljs.exec("open http://localhost:" + projDetails.apps.www.port);
+          }
+
+          if( projDetails.apps.admin.port > 0 ){
+            LOG('   OPENING FRONTEND-ADMIN http://localhost:' + projDetails.apps.admin.port + ' for Project ' + projDetails.name)
+            shelljs.exec("open http://localhost:" + projDetails.apps.admin.port);
+          }
+
+          if( projDetails.apps.api.port > 0 ){
+            LOG('   OPENING FRONTEND-API http://localhost:' + projDetails.apps.api.port + ' for Project ' + projDetails.name)
+            shelljs.exec("open http://localhost:" + projDetails.apps.api.port + "/wwwapi/explorer");
+          }
+
+          if( projDetails.apps.scheduler.port > 0 ){
+            LOG('   OPENING BACKEND-SCHEDULER http://localhost:' + projDetails.apps.scheduler.port + ' for Project ' + projDetails.name)
+            shelljs.exec("open http://localhost:" + projDetails.apps.scheduler.port + "/scheduler/explorer");
+          }
+
+          if( projDetails.apps.messenger.port > 0 ){
+            LOG('   OPENING BACKEND-MESSENGER http://localhost:' + projDetails.apps.messenger.port + ' for Project ' + projDetails.name)
+            shelljs.exec("open http://localhost:" + projDetails.apps.messenger.port + "/messenger/explorer");
+          }
+
+          if( projDetails.apps.databank.port > 0 ){
+            LOG('   OPENING BACKEND-DATABANK http://localhost:' + projDetails.apps.databank.port + ' for Project ' + projDetails.name)
+            shelljs.exec("open http://localhost:" + projDetails.apps.databank.port + "/databank/explorer");
+          }
+          LOG();
+
+      } else {
+        LOG();
+        banner.browser();
+        console.error("Not in a current LB Mesh Project Directory.")
+        banner.runhelp();
+        LOG();
+      }
+  });
+
+
+program
+  .command('build [name]')
+  .description('Generate Docker Container for LB Code')
+  .action((name)=>{
+
+    banner.browser();
+    banner.build();
+
+      if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ){
+          let myName = (name == undefined)? 'none' : name.toLowerCase();
+          const servicesList = ['www','api','admin','messenger','scheduler','databank'];
+
+          let list = new Projects();
+          let projDetails = list.readProjectConfig(process.cwd());
+
+            LOG('     ---  WELCOME TO LB MESH PROJECT BUILD ---')
+            LOG();
+            LOG('     Detected Project Name: ' + projDetails.name.toUpperCase() ); 
+            LOG('     Detected Project Type: ' + list.getProjectType(projDetails.type));
+            LOG(); 
+
+          LOG(myName);
+          switch(projDetails.type){
+            case 'frontend-backend':
+                if( servicesList.includes(myName) ){
+                    /**
+                     * Build Container specified
+                     */
+                      ask.prompt([{
+                        "type": "input",
+                        "default": "latest",
+                        "name": "tagLabel",
+                        "message": 'Specify a label tag for the component ' + list.getProjectType( (myName=='www'||myName=='admin'||myName=='api')? 'frontend-' + myName : 'backend-' + myName ) + '? '
+                      }]).then( answers2 => {
+  
+                          switch( myName ){
+                            case 'www':
+                              shelljs.exec("docker build -t " + projDetails.name + "-www:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','www','.') );
+                            break;
+                            case 'admin':
+                              shelljs.exec("docker build -t " + projDetails.name + "-admin:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','admin','.') );
+                            break;
+                            case 'api':
+                              shelljs.exec("docker build -t " + projDetails.name + "-api:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','api','.') );
+                            break;
+                            case 'messenger':
+                              shelljs.exec("docker build -t " + projDetails.name + "-messenger:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','messenger','.') );
+                            break;
+                            case 'databank':
+                              shelljs.exec("docker build -t " + projDetails.name + "-databank:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','databank','.') );
+                            break;
+                            case 'scheduler':
+                              shelljs.exec("docker build -t " + projDetails.name + "-scheduler:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','scheduler','.') );
+                            break;
+                          }
+                          LOG();
+
+                      });
+                } else {
+                    ask.
+                    prompt([
+                        {
+                          "type": "confirm",
+                          "default": "Y",
+                          "name": "buildall",
+                          "message": 'Would you like to build all containers with same tag? ' 
+                        },                 
+                    ])
+                    .then(answers => {
+                        if( answers.buildall ){
+                            // Ask for Tag
+                            ask.prompt([{
+                              "type": "input",
+                              "default": "latest",
+                              "name": "tagLabel",
+                              "message": 'Specify a label to tag all containers in this PROJECT? '
+                            }]).then(answers2 => {
+                                LOG()
+                                LOG(' ---- BUILDING PROJECT ' + projDetails.name.toUpperCase() + ' with TAG ' + answers2.tagLabel );
+                                LOG();
+                                LOG();
+                                    // docker build -t imagename:tag .
+                                    shelljs.exec("docker build -t " + projDetails.name + "-www:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','www','.') );
+                                    LOG();
+                                      projDetails.apps.www.image = projDetails.name + "-www";
+                                      projDetails.app.www.tag = answers2.tagLabel;
+
+                                    shelljs.exec("docker build -t " + projDetails.name + "-admin:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','admin','.') );
+                                    LOG();
+                                      projDetails.apps.admin.image = projDetails.name + "-admin";
+                                      projDetails.app.admin.tag = answers2.tagLabel;
+
+                                    shelljs.exec("docker build -t " + projDetails.name + "-api:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','api','.') );
+                                    LOG();
+                                    LOG();
+                                      projDetails.apps.api.image = projDetails.name + "-api";
+                                      projDetails.app.api.tag = answers2.tagLabel;
+
+                                    shelljs.exec("docker build -t " + projDetails.name + "-messenger:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','messenger','.') ); 
+                                    LOG();
+                                      projDetails.apps.messenger.image = projDetails.name + "-messenger";
+                                      projDetails.app.messenger.tag = answers2.tagLabel;
+
+                                    shelljs.exec("docker build -t " + projDetails.name + "-scheduler:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','scheduler','.') );
+                                    LOG();
+                                      projDetails.apps.scheduler.image = projDetails.name + "-scheduler";
+                                      projDetails.app.scheduler.tag = answers2.tagLabel;
+                                      
+                                    shelljs.exec("docker build -t " + projDetails.name + "-databank:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','databank','.') );
+                                    LOG();
+                                    LOG();
+                                      projDetails.apps.databank.image = projDetails.name + "-databank";
+                                      projDetails.app.databank.tag = answers2.tagLabel;
+
+                                    
+                            });
+                        } else {
+                            // Want to build individual container
+                            ask.prompt([
+                              {
+                                "type": "list",
+                                "default": "exit",
+                                "message": "Which project component would you like to build?",
+                                "name": "component",
+                                "choices": [
+                                  new ask.Separator(),
+                                  {"name":"Frontend - WWW", "value":"www"},
+                                  {"name":"Frontend - Admin", "value":"admin"},
+                                  {"name":"Frontend - API", "value":"api"},
+                                  {"name":"Backend - Messenger", "value":"messenger"},
+                                  {"name":"Backend - Databank", "value":"databank"},
+                                  {"name":"Backend - Scheduler", "value":"scheduler"},
+                                  new ask.Separator(),
+                                  {"name":"None, Exit without action", "value":"exit"},                  
+                                ]
+                              }
+                            ]).then(answers => {
+                               if( answers.component !== 'exit' ){
+                                  ask.prompt([{
+                                    "type": "input",
+                                    "default": "latest",
+                                    "name": "tagLabel",
+                                    "message": 'Specify a label to tag this component? '
+                                  }]).then(answers2 => {
+                                      LOG()
+                                      LOG(' ---- BUILDING PROJECT ' + projDetails.name.toUpperCase() + ' COMPONENT ' + answers.component + ' with TAG ' + answers2.tagLabel );
+                                      LOG();
+                                      LOG();
+                                          // docker build -t imagename:tag .
+                                          switch( answers.component ){
+                                            case 'www':
+                                              shelljs.exec("docker build -t " + projDetails.name + "-www:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','www','.') );
+                                            break;
+                                            case 'admin':
+                                              shelljs.exec("docker build -t " + projDetails.name + "-admin:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','admin','.') );
+                                            break;
+                                            case 'api':
+                                              shelljs.exec("docker build -t " + projDetails.name + "-api:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','api','.') );
+                                            break;
+                                            case 'messenger':
+                                              shelljs.exec("docker build -t " + projDetails.name + "-messenger:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','messenger','.') );
+                                            break;
+                                            case 'databank':
+                                              shelljs.exec("docker build -t " + projDetails.name + "-databank:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','databank','.') );
+                                            break;
+                                            case 'scheduler':
+                                               shelljs.exec("docker build -t " + projDetails.name + "-scheduler:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','scheduler','.') );
+                                            break;
+                                          }
+                                      LOG();
+                                          
+                                  }); 
+                               } else {
+                                 LOG();
+                                 LOG();
+                               }                             
+                            });
+                        }
+                    });
+                }
+            break;
+            default:
+
+            break;
+          }
+
+      } else {
+        LOG();
+        console.error("This command is only available within a current LB Mesh Project Directory.")
+        LOG();
+      }
+  });
+
+
+program
   .command('db [action] [service] [display]')
    
   .description('Manage DB Containers with simple commands ')
@@ -784,8 +1111,8 @@ program
     let myDisplay = (display == undefined)? 'empty': display.toLowerCase();
     let myAction = (action == undefined)? 'empty' : action.toLowerCase();
     let myComponent = (service == undefined)? 'all' : service.toLowerCase();
-    let myServices = ['datapower','mqlight','iib','mq','rabbitmq','acemq','splunk','kafka'];
-    let myServicesList = 'datapower | mqlight | iib | rabbitmq | acemq | mq | splunk | kafka';
+    let myServices = ['datapower','mqlight','iib','mq','rabbitmq','acemq','ace','mqtt','splunk','kafka'];
+    let myServicesList = 'datapower | mqlight | iib | rabbitmq | acemq | mq | splunk | kafka | mqtt | ace';
 
      
     if( myDisplay !== 'hide'){
@@ -955,6 +1282,15 @@ program
                       }
                       shelljs.exec("open http://localhost:" +  myPorts.sourceData.iib.port.admin);   
                     break;
+                    case 'ace':
+                      LOG();
+                      LOG('   OPENING ACE DASHBOARD http://localhost:' +  myPorts.sourceData.ace.port.admin);
+                      LOG();
+                      if( !isWindows ){
+                        shelljs.exec("sleep 5s");
+                      }
+                      shelljs.exec("open http://localhost:" +  myAdminPorts.sourceData.iib.port.admin);   
+                    break;
                     case 'datapower':
                       LOG();
                       LOG('   OPENING DATAPOWER DASHBOARD https://localhost:' +  myPorts.sourceData.datapower.port.admin);
@@ -993,7 +1329,7 @@ program
                       LOG('   OPENING ACE MQ DASHBOARD https://localhost:' +  myPorts.sourceData.acemq.port.mq.admin + '/ibmmq/console/login.html ');
                       LOG('           ACE MQ User/Pass:  admin / lbmesh-integ-mq');
                       LOG('   OPENING ACE SERVER DASHBOARD http://localhost:'  +  myPorts.sourceData.acemq.port.ace.admin );
-
+                      LOG('           ACE Dashboard User/Pass:  admin / acemq');
                       //LOG('   OPENING MQ ADVANCED METRICS http://localhost:9157/metrics ');
                       LOG();
                       // shelljs.exec("sleep 5s");
@@ -1112,6 +1448,15 @@ program
                   }
                   shelljs.exec("open http://localhost:" +  myAdminPorts.sourceData.mqlight.port.admin + "/#page=home" );                  
                 break;
+                case 'ace':
+                  LOG();
+                  LOG('   OPENING ACE DASHBOARD http://localhost:' +  myAdminPorts.sourceData.ace.port.admin);
+                  LOG();
+                  if( !isWindows ){
+                    shelljs.exec("sleep 5s");
+                  }
+                  shelljs.exec("open http://localhost:" +  myAdminPorts.sourceData.iib.port.admin);   
+                break;
                 case 'iib':
                   LOG();
                   LOG('   OPENING IIB DASHBOARD http://localhost:' +  myAdminPorts.sourceData.iib.port.admin);
@@ -1184,7 +1529,7 @@ program
                   LOG('   OPENING ACE MQ DASHBOARD https://localhost:' +  myAdminPorts.sourceData.acemq.port.mq.admin + '/ibmmq/console/login.html ');
                   LOG('           ACE MQ User/Pass:  admin / lbmesh-integ-mq');
                   LOG('   OPENING ACE SERVER DASHBOARD http://localhost:' + +  myAdminPorts.sourceData.acemq.port.ace.admin );
-
+                  LOG('           ACE Dashboard User/Pass:  admin / acemq');
                   //LOG('   OPENING MQ ADVANCED METRICS http://localhost:9157/metrics ');
                   LOG();
                   // shelljs.exec("sleep 5s");
@@ -1227,334 +1572,6 @@ program
       LOG();      
     }
 
-  });
-
-
-program
-  .command('run [action] [component]')
-  .description('Start|Stop|Restart|Log environment via pm2 runtime')
-  .action((action, component)=>{
-    LOG();
-    banner.display();
-    banner.runtime();
-
-    if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ){
-        let myAction = (action == undefined)? 'empty' : action.toLowerCase();
-        let myComponent = (component == undefined)? 'all' : component.toLowerCase() ;
-
-        switch(myAction){
-          case 'empty':
-              LOG(' no action provided');
-          break;
-          case 'start':
-          case 'stop':
-          case 'restart':
-          case 'delete':
-              shelljs.exec("pm2 " + myAction +" pm2-ecosystem.config.yaml");
-          break;
-          case 'logs':
-            switch(myComponent){
-              case 'all':
-
-              break;
-              default:
-                shelljs.exec("pm2 logs " + myComponent);
-              break;
-            }
-          break;
-          case 'status':
-            shelljs.exec("pm2 status pm2-ecosystem.config.yaml", [ 'arg1', 'arg2', 'arg3' ], { stdio: 'inherit'});
-          break;
-          case 'docker':
-            
-              switch(myComponent){
-                case 'up':
-                  shelljs.exec("docker-compose up", {stdio: 'inherit'});
-                break;
-                case 'down':
-                shelljs.exec("docker-compose down", {stdio: 'inherit'});
-                break;
-                default:
-                  LOG()
-                  LOG('   Current Running Docker Processes')
-                  LOG();
-                  shelljs.exec("docker ps", {stdio: 'inherit'});
-                  LOG()
-                  LOG('   Current Docker Images')
-                  LOG();
-                  shelljs.exec("docker images", {stdio: 'inherit'});
-                  LOG();
-                break;
-              }
-          break;
-          default:
-            LOG();
-            LOG(" COMMAND NOT RECOGNIZED ");
-            LOG();
-          break;
-
-        }
- 
-
-    } else {
-      LOG();
-      console.error("Not in a current LB Mesh Project Directory.")
-      banner.runhelp();
-      LOG();
-    }
-    
-  });
-
-
-
-program
-  .command('open')
-  .description('Open Browser Windows for Project')
-  .action((name)=>{
-
-    banner.display();
-    banner.browser();
-
-      if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ) {
-
-            
-        let list = new Projects();
-        let projDetails = list.readProjectConfig(process.cwd());
-
-          // Loop thru all the apps ports
-          LOG();
-          if( projDetails.apps.www.port > 0 ){
-            LOG('   OPENING FRONTEND-WWW http://localhost:' + projDetails.apps.www.port + ' for Project ' + projDetails.name)
-            shelljs.exec("open http://localhost:" + projDetails.apps.www.port);
-          }
-
-          if( projDetails.apps.admin.port > 0 ){
-            LOG('   OPENING FRONTEND-ADMIN http://localhost:' + projDetails.apps.admin.port + ' for Project ' + projDetails.name)
-            shelljs.exec("open http://localhost:" + projDetails.apps.admin.port);
-          }
-
-          if( projDetails.apps.api.port > 0 ){
-            LOG('   OPENING FRONTEND-API http://localhost:' + projDetails.apps.api.port + ' for Project ' + projDetails.name)
-            shelljs.exec("open http://localhost:" + projDetails.apps.api.port + "/wwwapi/explorer");
-          }
-
-          if( projDetails.apps.scheduler.port > 0 ){
-            LOG('   OPENING BACKEND-SCHEDULER http://localhost:' + projDetails.apps.scheduler.port + ' for Project ' + projDetails.name)
-            shelljs.exec("open http://localhost:" + projDetails.apps.scheduler.port + "/scheduler/explorer");
-          }
-
-          if( projDetails.apps.messenger.port > 0 ){
-            LOG('   OPENING BACKEND-MESSENGER http://localhost:' + projDetails.apps.messenger.port + ' for Project ' + projDetails.name)
-            shelljs.exec("open http://localhost:" + projDetails.apps.messenger.port + "/messenger/explorer");
-          }
-
-          if( projDetails.apps.databank.port > 0 ){
-            LOG('   OPENING BACKEND-DATABANK http://localhost:' + projDetails.apps.databank.port + ' for Project ' + projDetails.name)
-            shelljs.exec("open http://localhost:" + projDetails.apps.databank.port + "/databank/explorer");
-          }
-          LOG();
-
-      } else {
-        LOG();
-        banner.browser();
-        console.error("Not in a current LB Mesh Project Directory.")
-        banner.runhelp();
-        LOG();
-      }
-  });
-
-
-program
-  .command('build [name]')
-  .description('Generate Docker Container for LB Code')
-  .action((name)=>{
-
-    banner.browser();
-    banner.build();
-
-      if( fs.existsSync(path.resolve('lbmesh-config.json')) && fs.existsSync(path.resolve('docker-compose.yaml')) ){
-          let myName = (name == undefined)? 'none' : name.toLowerCase();
-          const servicesList = ['www','api','admin','messenger','scheduler','databank'];
-
-          let list = new Projects();
-          let projDetails = list.readProjectConfig(process.cwd());
-
-            LOG('     ---  WELCOME TO LB MESH PROJECT BUILD ---')
-            LOG();
-            LOG('     Detected Project Name: ' + projDetails.name.toUpperCase() ); 
-            LOG('     Detected Project Type: ' + list.getProjectType(projDetails.type));
-            LOG(); 
-
-          LOG(myName);
-          switch(projDetails.type){
-            case 'frontend-backend':
-                if( servicesList.includes(myName) ){
-                    /**
-                     * Build Container specified
-                     */
-                      ask.prompt([{
-                        "type": "input",
-                        "default": "latest",
-                        "name": "tagLabel",
-                        "message": 'Specify a label tag for the component ' + list.getProjectType( (myName=='www'||myName=='admin'||myName=='api')? 'frontend-' + myName : 'backend-' + myName ) + '? '
-                      }]).then( answers2 => {
-  
-                          switch( myName ){
-                            case 'www':
-                              shelljs.exec("docker build -t " + projDetails.name + "-www:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','www','.') );
-                            break;
-                            case 'admin':
-                              shelljs.exec("docker build -t " + projDetails.name + "-admin:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','admin','.') );
-                            break;
-                            case 'api':
-                              shelljs.exec("docker build -t " + projDetails.name + "-api:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','api','.') );
-                            break;
-                            case 'messenger':
-                              shelljs.exec("docker build -t " + projDetails.name + "-messenger:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','messenger','.') );
-                            break;
-                            case 'databank':
-                              shelljs.exec("docker build -t " + projDetails.name + "-databank:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','databank','.') );
-                            break;
-                            case 'scheduler':
-                              shelljs.exec("docker build -t " + projDetails.name + "-scheduler:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','scheduler','.') );
-                            break;
-                          }
-                          LOG();
-
-                      });
-                } else {
-                    ask.
-                    prompt([
-                        {
-                          "type": "confirm",
-                          "default": "Y",
-                          "name": "buildall",
-                          "message": 'Would you like to build all containers with same tag? ' 
-                        },                 
-                    ])
-                    .then(answers => {
-                        if( answers.buildall ){
-                            // Ask for Tag
-                            ask.prompt([{
-                              "type": "input",
-                              "default": "latest",
-                              "name": "tagLabel",
-                              "message": 'Specify a label to tag all containers in this PROJECT? '
-                            }]).then(answers2 => {
-                                LOG()
-                                LOG(' ---- BUILDING PROJECT ' + projDetails.name.toUpperCase() + ' with TAG ' + answers2.tagLabel );
-                                LOG();
-                                LOG();
-                                    // docker build -t imagename:tag .
-                                    shelljs.exec("docker build -t " + projDetails.name + "-www:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','www','.') );
-                                    LOG();
-                                      projDetails.apps.www.image = projDetails.name + "-www";
-                                      projDetails.app.www.tag = answers2.tagLabel;
-
-                                    shelljs.exec("docker build -t " + projDetails.name + "-admin:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','admin','.') );
-                                    LOG();
-                                      projDetails.apps.admin.image = projDetails.name + "-admin";
-                                      projDetails.app.admin.tag = answers2.tagLabel;
-
-                                    shelljs.exec("docker build -t " + projDetails.name + "-api:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','api','.') );
-                                    LOG();
-                                    LOG();
-                                      projDetails.apps.api.image = projDetails.name + "-api";
-                                      projDetails.app.api.tag = answers2.tagLabel;
-
-                                    shelljs.exec("docker build -t " + projDetails.name + "-messenger:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','messenger','.') ); 
-                                    LOG();
-                                      projDetails.apps.messenger.image = projDetails.name + "-messenger";
-                                      projDetails.app.messenger.tag = answers2.tagLabel;
-
-                                    shelljs.exec("docker build -t " + projDetails.name + "-scheduler:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','scheduler','.') );
-                                    LOG();
-                                      projDetails.apps.scheduler.image = projDetails.name + "-scheduler";
-                                      projDetails.app.scheduler.tag = answers2.tagLabel;
-                                      
-                                    shelljs.exec("docker build -t " + projDetails.name + "-databank:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','databank','.') );
-                                    LOG();
-                                    LOG();
-                                      projDetails.apps.databank.image = projDetails.name + "-databank";
-                                      projDetails.app.databank.tag = answers2.tagLabel;
-
-                                    
-                            });
-                        } else {
-                            // Want to build individual container
-                            ask.prompt([
-                              {
-                                "type": "list",
-                                "default": "exit",
-                                "message": "Which project component would you like to build?",
-                                "name": "component",
-                                "choices": [
-                                  new ask.Separator(),
-                                  {"name":"Frontend - WWW", "value":"www"},
-                                  {"name":"Frontend - Admin", "value":"admin"},
-                                  {"name":"Frontend - API", "value":"api"},
-                                  {"name":"Backend - Messenger", "value":"messenger"},
-                                  {"name":"Backend - Databank", "value":"databank"},
-                                  {"name":"Backend - Scheduler", "value":"scheduler"},
-                                  new ask.Separator(),
-                                  {"name":"None, Exit without action", "value":"exit"},                  
-                                ]
-                              }
-                            ]).then(answers => {
-                               if( answers.component !== 'exit' ){
-                                  ask.prompt([{
-                                    "type": "input",
-                                    "default": "latest",
-                                    "name": "tagLabel",
-                                    "message": 'Specify a label to tag this component? '
-                                  }]).then(answers2 => {
-                                      LOG()
-                                      LOG(' ---- BUILDING PROJECT ' + projDetails.name.toUpperCase() + ' COMPONENT ' + answers.component + ' with TAG ' + answers2.tagLabel );
-                                      LOG();
-                                      LOG();
-                                          // docker build -t imagename:tag .
-                                          switch( answers.component ){
-                                            case 'www':
-                                              shelljs.exec("docker build -t " + projDetails.name + "-www:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','www','.') );
-                                            break;
-                                            case 'admin':
-                                              shelljs.exec("docker build -t " + projDetails.name + "-admin:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','admin','.') );
-                                            break;
-                                            case 'api':
-                                              shelljs.exec("docker build -t " + projDetails.name + "-api:" + answers2.tagLabel + " " + path.join(process.cwd(),'frontend','api','.') );
-                                            break;
-                                            case 'messenger':
-                                              shelljs.exec("docker build -t " + projDetails.name + "-messenger:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','messenger','.') );
-                                            break;
-                                            case 'databank':
-                                              shelljs.exec("docker build -t " + projDetails.name + "-databank:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','databank','.') );
-                                            break;
-                                            case 'scheduler':
-                                               shelljs.exec("docker build -t " + projDetails.name + "-scheduler:" + answers2.tagLabel + " " + path.join(process.cwd(),'backend','scheduler','.') );
-                                            break;
-                                          }
-                                      LOG();
-                                          
-                                  }); 
-                               } else {
-                                 LOG();
-                                 LOG();
-                               }                             
-                            });
-                        }
-                    });
-                }
-            break;
-            default:
-
-            break;
-          }
-
-      } else {
-        LOG();
-        console.error("This command is only available within a current LB Mesh Project Directory.")
-        LOG();
-      }
   });
 
   // program

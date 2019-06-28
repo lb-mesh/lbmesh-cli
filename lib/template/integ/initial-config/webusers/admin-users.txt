@@ -1,3 +1,4 @@
 # admin account user password
 # admin1 passwd1
 # admin2 passwd2
+admin admin acemq

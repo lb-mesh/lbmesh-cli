@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to the "lbmesh-cli" extension will be documented in this file.
 
+## [2.8.3] 2019-06-28
+- added mqtt to CLI
+- opened up ACE ONLY image
+
 ## [2.8.0] 2019-06-12
 - added kafka, cassandra, elasticsearch to CLI
 - added web dashboard gui ( lbmesh dash start )
