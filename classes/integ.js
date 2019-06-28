@@ -282,6 +282,8 @@ class Integ extends Base{
             case 'mqtt':
                     ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-mqtt.ejs'), {
                         "mqtt_data": path.join(machine.homedir,'.lbmesh.io','mqtt','data'),
+                        "mqtt_log": path.join(machine.homedir,'.lbmesh.io','mqtt','log'),
+                        "mqtt_config": path.join(data.homedir,'.lbmesh.io','mqtt','config','mosquitto.conf'),
                         "mqtt_port_admin": fullData.integStack.mqtt.port.admin,
                         "mqtt_port_data": fullData.integStack.mqtt.port.data,
                     },{}, function(err,str){
@@ -462,7 +464,9 @@ class Integ extends Base{
             break;
             case 'mqtt':
                     ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-mqtt.ejs'), {
-                        "mqtt_data": path.join(fullData.homedir,'.lbmesh.io','mqtt','data'),
+                        "mqtt_data": path.join(machine.homedir,'.lbmesh.io','mqtt','data'),
+                        "mqtt_log": path.join(machine.homedir,'.lbmesh.io','mqtt','log'),
+                        "mqtt_config": path.join(data.homedir,'.lbmesh.io','mqtt','config','mosquitto.conf'),
                         "mqtt_port_admin": fullData.integStack.mqtt.port.admin,
                         "mqtt_port_socket": fullData.integStack.mqtt.port.socket,
                         "mqtt_port_data": fullData.integStack.mqtt.port.data,
@@ -518,7 +522,7 @@ class Integ extends Base{
         };
         let myDBStack = [];
             myDBStack.push(['Integ','Admin Port','Data Port','Image']);
-        let DBList = ['datapower','mqlight','iib','mq','rabbitmq','acemq','splunk','kafka'];
+        let DBList = ['datapower','mq','mqlight','rabbitmq','mqtt','iib','ace','acemq','splunk','kafka'];
             // mq, acemqserver, iib
         this.portsList = this.readGlobalConfig();
         
