@@ -1289,7 +1289,7 @@ program
                       if( !isWindows ){
                         shelljs.exec("sleep 5s");
                       }
-                      shelljs.exec("open http://localhost:" +  myAdminPorts.sourceData.iib.port.admin);   
+                      shelljs.exec("open http://localhost:" +  myPorts.sourceData.ace.port.admin);   
                     break;
                     case 'datapower':
                       LOG();
@@ -1455,7 +1455,7 @@ program
                   if( !isWindows ){
                     shelljs.exec("sleep 5s");
                   }
-                  shelljs.exec("open http://localhost:" +  myAdminPorts.sourceData.iib.port.admin);   
+                  shelljs.exec("open http://localhost:" +  myAdminPorts.sourceData.ace.port.admin);   
                 break;
                 case 'iib':
                   LOG();
