@@ -88,6 +88,11 @@ if(actionState == 'running' ){
     <a   target="_blank" href="http://localhost:<%= data.integStack[services.detail].port.admin %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.integStack[services.detail].port.admin %></a>
 <%
         break;
+        case 'ace':
+%>
+    <a   target="_blank" href="http://localhost:<%= data.integStack[services.detail].port.admin %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.integStack[services.detail].port.admin %></a>
+<%
+        break;
         case 'splunk':
 %>
     <a   target="_blank" href="http://localhost:<%= data.integStack[services.detail].port.admin %>" class="btn waves-effect waves-light btn-block btn-secondary"    >Dashboard Port <%= data.integStack[services.detail].port.admin %> ( USER admin )</a>
@@ -177,8 +182,9 @@ break;
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs profile-tab" role="tablist">
                                 <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home" role="tab">Settings</a> </li>
-                                 <!--  <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Compose.YAML</a> </li>  --> 
-                                <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#settings" role="tab">Logs</a> </li>
+                                 <!--  <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile" role="tab">YAML</a> </li>  --> 
+                                <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#settings" role="tab">LOGS</a> </li>
+                                <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#notes" role="tab">NOTES</a> </li>
                             </ul>
                             <!-- Tab panes -->
                             <div class="tab-content">
@@ -195,12 +201,19 @@ break;
                                             <input type="hidden" name="chosenDB" value="<%= services.detail %>" />
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                <% if( services.detail !== 'kafka' ){ %>
-                                                     <div class="form-group">
+                                                <% if( services.detail == 'mqtt' ){ %>
+                                                    <div class="form-group">
+                                                        <label>Web Socket Port</label>
+                                                        <input type="text" id="newPortSocket" name="newPortSocket" class="form-control" value="<%= data.integStack[services.detail].port.socket %>" >
+                                                    </div> 
+
+                                                <% } else if ( services.detail !== 'kafka' ) { %>
+                                                       <div class="form-group">
                                                         <label>Admin Port</label>
                                                         <input type="text" id="newPortAdmin" name="newPortAdmin" class="form-control" value="<%= data.integStack[services.detail].port.admin %>" >
-                                                    </div>
-                                                <% } else { %>
+                                                    </div>                                                 
+                                                    
+                                                  <%  } else { %>
                                                      <div class="form-group">
                                                         <label>Zookeeper Port</label>
                                                         <input type="text" id="newPortZookeeper" name="newPortZookeeper" class="form-control" value="<%= data.integStack[services.detail].port.zookeeper %>" >
@@ -223,6 +236,24 @@ break;
                                         switch( services.detail ){
                                             case 'datapower':
 
+                                            break;
+                                            case 'mqtt':
+                                        %>
+                                                <div class="col-md-6">
+
+                                                     <div class="form-group"></div>  
+ 
+                                                </div>
+                                                <!--/span-->
+                                                <div class="col-md-6">
+
+ 
+  
+     
+                                                </div>
+                                                <!--/span-->
+
+                                        <%
                                             break;
                                             case 'acemq':
 
@@ -349,13 +380,18 @@ break;
                                 <div class="tab-pane" id="settings" role="tabpanel">
                                     <div class="card-body">
                                         <form class="form-horizontal form-material">
-                                      <div id="slimlogs"><%
-                                         _.each(services.logs,function(line){  %>
-                                            <%= line; %>
-                                            <br><br>
-                                        <% });  %>
-                                        </div>
+                                            <div id="slimlogs"><%
+                                                _.each(services.logs,function(line){  %>
+                                                    <%= line; %>
+                                                    <br><br>
+                                                <% });  %>
+                                            </div>
                                         </form>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="notes" role="tabpanel">
+                                    <div class="card-body">
+
                                     </div>
                                 </div>
                             </div>
@@ -384,6 +420,9 @@ break;
                                         <tbody>
 <%
     _.each(services.integ, function(item){
+
+        switch( item ){
+            case 'mqtt':
 %>
                                             <tr>
                                                  
@@ -392,9 +431,52 @@ break;
                                                 <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%  if( data.integStack[item].port.admin > 0 ) { %> <%= data.integStack[item].port.admin %> <% } %></span> </td>
                                                 <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.data %></span> </td>
                                             </tr>
-<%                          
-                    if( item == 'acemq') {
+                                            <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">HTTP/Websocket</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.socket %></span> </td>
+                                            </tr>       
+
+<%
+            break;
+            case 'datapower':
+%>
+                                            <tr>
+                                                 
+                                                <td><a href="/integrations/<%= item %>/manage.html"><%= item.toUpperCase() %></a></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.integStack[item].image %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%  if( data.integStack[item].port.admin > 0 ) { %> <%= data.integStack[item].port.admin %> <% } %> </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i></span> </td>
+                                            </tr> 
+                                             <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">REST MANAGEMENT API</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.rest %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  </span> </td>
+                                            </tr>
+                                             <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">XML MANAGEMENT API</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  <%= data.integStack[item].port.xml %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> </span> </td>
+                                            </tr>
+
+<%
+            break;
+            case 'acemq':
+                    
 %>  
+                                            <tr>
+                                                 
+                                                <td><a href="/integrations/<%= item %>/manage.html"><%= item.toUpperCase() %></a></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.integStack[item].image %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  </span> </td>
+                                            </tr>
                                              <tr>
                                                  
                                                 <td></td>
@@ -410,15 +492,23 @@ break;
                                                 <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.mq.data %></span> </td>
                                             </tr>       
 <%
-                    }
-                    if( item == 'kafka' ){
+                break;
+                case 'kafka':
+                     
 %>
+                                            <tr>
+                                                 
+                                               <td><a href="/integrations/<%= item %>/manage.html"><%= item.toUpperCase() %></a></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.integStack[item].image %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.data %></span> </td>
+                                            </tr>  
                                              <tr>
                                                  
                                                 <td></td>
                                                 <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">Zookeeper</span> </td>
-                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.zookeeper %> </span> </td>
-                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.zookeeper %></span> </td>
                                             </tr>
                                              <tr>
                                                  
@@ -442,6 +532,18 @@ break;
                                                 <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  </span> </td>
                                             </tr> 
 <%
+        break;
+        default:
+%>
+                                            <tr>
+                                                 
+                                                <td><a href="/integrations/<%= item %>/manage.html"><%= item.toUpperCase() %></a></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.integStack[item].image %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%  if( data.integStack[item].port.admin > 0 ) { %> <%= data.integStack[item].port.admin %> <% } %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.data %></span> </td>
+                                            </tr>
+<%
+        break;
                     }
     });
 %>

@@ -183,6 +183,10 @@ class Integ extends Base{
             case 'datapower':
                     this.portsList.integStack[choices.chosenDB].port.admin =  choices.newPortAdmin;
             break;
+            case 'mqtt':
+                    this.portsList.integStack[choices.chosenDB].port.socket =  choices.newPortSocket;
+                    this.portsList.integStack[choices.chosenDB].port.data =  choices.newPortData;
+            break;
             case 'iib':
                     this.portsList.integStack[choices.chosenDB].port.admin =  choices.newPortAdmin;
                     this.portsList.integStack[choices.chosenDB].port.data =  choices.newPortData;
@@ -285,6 +289,7 @@ class Integ extends Base{
                         "mqtt_log": path.join(machine.homedir,'.lbmesh.io','mqtt','log'),
                         "mqtt_config": path.join(data.homedir,'.lbmesh.io','mqtt','config','mosquitto.conf'),
                         "mqtt_port_admin": fullData.integStack.mqtt.port.admin,
+                        "mqtt_port_socket": fullData.integStack.mqtt.port.socket,
                         "mqtt_port_data": fullData.integStack.mqtt.port.data,
                     },{}, function(err,str){
                         if( err ) console.log(err);

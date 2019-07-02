@@ -30,6 +30,7 @@ const machine = require('lbmesh-os').profile();
 const Base      = require(path.join(machine.node.globalPath,'lbmesh-cli','classes','base') );
 const chalk     = require('chalk');
 const LOG       = console.log;
+const debug     = require('debug')('app:classes:db');
 const ejs       = require('ejs');
 const fs        = require('fs');
 
@@ -207,6 +208,7 @@ class Db extends Base{
             const tempAdminUser = updates.chosenDB + "_admin_user";
             const tempAdminPass = updates.chosenDB + "_admin_passwd";
 
+             
         if( machineData.dbStack[updates.chosenDB].env.passwd.length > 0 ){
 
             ejs.renderFile( path.join(machineData.templatefolder,'db','lbmesh-db-'+updates.chosenDB+'.ejs'), {
@@ -215,8 +217,8 @@ class Db extends Base{
                 [tempPasswd]: machineData.dbStack[updates.chosenDB].env.passwd,
                 [tempAdminImage]: machineData.dbStack[updates.chosenDB].admin.image,
                 [tempAdminPort]: machineData.dbStack[updates.chosenDB].admin.port,
-                [tempAdminUser]: machineData.dbStack[updates.chosenD].admin.user,
-                [tempAdminPass]: machineData.dbStack[updates.chosenD].admin.passwd, 
+                [tempAdminUser]: machineData.dbStack[updates.chosenDB].admin.user,
+                [tempAdminPass]: machineData.dbStack[updates.chosenDB].admin.passwd, 
                 "homedir_data": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'data'),
                 "homedir_config": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config')
             },{}, function(err,str){
@@ -230,8 +232,8 @@ class Db extends Base{
                 [tempPort]:     machineData.dbStack[updates.chosenDB].port,  
                 [tempAdminImage]: machineData.dbStack[updates.chosenDB].admin.image,
                 [tempAdminPort]: machineData.dbStack[updates.chosenDB].admin.port,
-                [tempAdminUser]: machineData.dbStack[updates.chosenD].admin.user,
-                [tempAdminPass]: machineData.dbStack[updates.chosenD].admin.passwd,
+                [tempAdminUser]: machineData.dbStack[updates.chosenDB].admin.user,
+                [tempAdminPass]: machineData.dbStack[updates.chosenDB].admin.passwd,
                 "homedir_data": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'data'),
                 "homedir_config": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config')
             },{}, function(err,str){

@@ -118,17 +118,19 @@
 <%
     _.each(services.integ, function(item){
         
-%>
+        switch( item ){
+        case 'acemq':              
+                    
+%>  
+
                                             <tr>
                                                  
                                                 <td><%= item.toUpperCase() %></td>
                                                 <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.integStack[item].image %></span> </td>
-                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%  if( data.integStack[item].port.admin > 0 ) { %> <%= data.integStack[item].port.admin %> <% } %></span> </td>
-                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.data %></span> </td>
-                                            </tr>
-<%                          
-                    if( item == 'acemq') {
-%>  
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i></span> </td>
+                                            </tr>  
+
                                              <tr>
                                                  
                                                 <td></td>
@@ -144,15 +146,69 @@
                                                 <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.mq.data %></span> </td>
                                             </tr>       
 <%
-                    }
-                    if( item == 'kafka' ){
+        break;
+        case 'mqtt':
+                    
 %>
+
+                                            <tr>
+                                                 
+                                                <td><%= item.toUpperCase() %></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.integStack[item].image %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%  if( data.integStack[item].port.admin > 0 ) { %> <%= data.integStack[item].port.admin %> <% } %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.data %>  </span> </td>
+                                            </tr>    
+                                             <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">WEBSOCKET/HTTP</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  <%= data.integStack[item].port.socket %></span> </td>
+                                            </tr>
+<%
+        break;
+        case 'datapower':
+%>
+                                            <tr>
+                                                 
+                                                <td><%= item.toUpperCase() %></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.integStack[item].image %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%  if( data.integStack[item].port.admin > 0 ) { %> <%= data.integStack[item].port.admin %> <% } %> </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i></span> </td>
+                                            </tr> 
+                                             <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">REST MANAGEMENT</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.rest %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  </span> </td>
+                                            </tr>
+                                             <tr>
+                                                 
+                                                <td></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">XML MANAGEMENT</span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  <%= data.integStack[item].port.xml %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> </span> </td>
+                                            </tr>
+
+<%
+        break;
+        case 'kafka':
+                     
+%>
+                                            <tr>
+                                                 
+                                                <td><%= item.toUpperCase() %></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.integStack[item].image %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i></span> </td>
+                                            </tr>  
                                              <tr>
                                                  
                                                 <td></td>
                                                 <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40">Zookeeper</span> </td>
-                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.zookeeper %> </span> </td>
-                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  </span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.zookeeper %></span> </td>
                                             </tr>
                                              <tr>
                                                  
@@ -176,7 +232,19 @@
                                                 <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i>  </span> </td>
                                             </tr> 
 <%
-                    }
+        break;
+        default:
+%>
+                                            <tr>
+                                                 
+                                                <td><%= item.toUpperCase() %></td>
+                                                <td><span class="peity-line" data-width="120" data-peity='{ "fill": ["#009efb"], "stroke":["#009efb"]}' data-height="40"><%= data.integStack[item].image %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%  if( data.integStack[item].port.admin > 0 ) { %> <%= data.integStack[item].port.admin %> <% } %></span> </td>
+                                                <td><span class="text-danger text-semibold"><i class="fa fa-level-down" aria-hidden="true"></i> <%= data.integStack[item].port.data %></span> </td>
+                                            </tr>
+<%            
+        break;
+        }
     });
 %>
 
