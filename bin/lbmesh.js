@@ -722,6 +722,7 @@ program
                   {"name":"MONGODB", "value":"mongodb"},
                   {"name":"MYSQL", "value":"mysql"},
                   {"name":"CLOUDANT", "value":"cloudant"},
+                  {"name":"COUCHDB", "value":"couchdb"},
                   {"name":"REDIS", "value":"redis"},
                   {"name":"POSTGRES", "value":"postgres"},
                   {"name":"MS SQL", "value":"mssql"},
@@ -774,6 +775,16 @@ program
                         shelljs.exec("sleep 3s");
                       }
                       shelljs.exec("open http://localhost:" + myDBPorts.sourceData.cloudant.port +"/dashboard.html");  
+                  break;
+                  case 'couchdb':
+                      LOG();
+                      LOG('   OPENING COUCHDB DASHBOARD http://localhost:' + myDBPorts.sourceData.couchdb.port + '/utils ');
+                      LOG('           COUCHDB User/Pass: ' + myDBPorts.sourceData.couchdb.env.user + ' / ' + myDBPorts.sourceData.couchdb.env.pass   );
+                      LOG();
+                      if( !isWindows ){
+                        shelljs.exec("sleep 3s");
+                      }
+                      shelljs.exec("open http://localhost:" + myDBPorts.sourceData.couchdb.port +"/utils");  
                   break;
                   case 'mongodb':
                       LOG();
@@ -902,6 +913,16 @@ program
                       }
                       shelljs.exec("open http://localhost:" + startTable.sourceData.cloudant.port +"/dashboard.html");                  
                     break;
+                    case 'couchdb':
+                      LOG();
+                      LOG('   OPENING COUCHDB DASHBOARD http://localhost:' + startTable.sourceData.couchdb.port + '/utils ');
+                      LOG('           COUCHDB User/Pass: ' + startTable.sourceData.couchdb.env.user + ' / ' + startTable.sourceData.couchdb.env.pass   );
+                      LOG();
+                      if( !isWindows ){
+                        shelljs.exec("sleep 3s");
+                      }
+                      shelljs.exec("open http://localhost:" + startTable.sourceData.couchdb.port +"/utils");  
+                  break;
                     case 'mongodb':
                         LOG();
                         LOG('   OPENING MONGODB WEB DASHBOARD http://localhost:' + startTable.sourceData.mongodb.admin.port + ' ');
