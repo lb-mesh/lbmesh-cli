@@ -778,13 +778,13 @@ program
                   break;
                   case 'couchdb':
                       LOG();
-                      LOG('   OPENING COUCHDB DASHBOARD http://localhost:' + myDBPorts.sourceData.couchdb.port + '/utils ');
-                      LOG('           COUCHDB User/Pass: ' + myDBPorts.sourceData.couchdb.env.user + ' / ' + myDBPorts.sourceData.couchdb.env.pass   );
+                      LOG('   OPENING COUCHDB DASHBOARD http://localhost:' + myDBPorts.sourceData.couchdb.port + '/_utils ');
+                      LOG('           COUCHDB User/Pass: ' + myDBPorts.sourceData.couchdb.env.user + ' / ' + myDBPorts.sourceData.couchdb.env.passwd   );
                       LOG();
                       if( !isWindows ){
                         shelljs.exec("sleep 3s");
                       }
-                      shelljs.exec("open http://localhost:" + myDBPorts.sourceData.couchdb.port +"/utils");  
+                      shelljs.exec("open http://localhost:" + myDBPorts.sourceData.couchdb.port +"/_utils");  
                   break;
                   case 'mongodb':
                       LOG();
@@ -915,13 +915,13 @@ program
                     break;
                     case 'couchdb':
                       LOG();
-                      LOG('   OPENING COUCHDB DASHBOARD http://localhost:' + startTable.sourceData.couchdb.port + '/utils ');
-                      LOG('           COUCHDB User/Pass: ' + startTable.sourceData.couchdb.env.user + ' / ' + startTable.sourceData.couchdb.env.pass   );
+                      LOG('   OPENING COUCHDB DASHBOARD http://localhost:' + startTable.sourceData.couchdb.port + '/_utils ');
+                      LOG('           COUCHDB User/Pass: ' + startTable.sourceData.couchdb.env.user + ' / ' + startTable.sourceData.couchdb.env.passwd   );
                       LOG();
                       if( !isWindows ){
                         shelljs.exec("sleep 3s");
                       }
-                      shelljs.exec("open http://localhost:" + startTable.sourceData.couchdb.port +"/utils");  
+                      shelljs.exec("open http://localhost:" + startTable.sourceData.couchdb.port +"/_utils");  
                   break;
                     case 'mongodb':
                         LOG();

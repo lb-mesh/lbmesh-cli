@@ -107,6 +107,7 @@ class Db extends Base{
 
         const tempImage = updates.chosenDB + "_image";
         const tempPort  = updates.chosenDB + "_port";
+        const tempUser = updates.chosenDB + "_env_user";
         const tempPasswd = updates.chosenDB + "_env_passwd";
         const tempAdminPort =   updates.chosenDB + "_admin_port";
         const tempAdminImage = updates.chosenDB + "_admin_image";
@@ -117,6 +118,7 @@ class Db extends Base{
             ejs.renderFile( path.join(machineData.templatefolder,'db','lbmesh-db-'+updates.chosenDB+'.ejs'), {
                 [tempImage]:    machineData.dbStack[updates.chosenDB].image,
                 [tempPort]:     machineData.dbStack[updates.chosenDB].port,  
+                [tempUser]:     machineData.dbStack[updates.chosenDB].env.user, 
                 [tempPasswd]:     machineData.dbStack[updates.chosenDB].env.passwd, 
                 [tempAdminImage]: machineData.dbStack[updates.chosenDB].admin.image,
                 [tempAdminPort]: machineData.dbStack[updates.chosenDB].admin.port,    
@@ -124,7 +126,8 @@ class Db extends Base{
                 [tempAdminPass]: machineData.dbStack[updates.chosenDB].admin.passwd,      
                 "homedir": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB),
                 "homedir_data": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'data'),
-                "homedir_config": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config')
+                "homedir_config": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config'),
+                "homedir_log": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'log')
             },{}, function(err,str){
                 if( err ) console.log(err);
                 fs.writeFileSync( path.join(machine.homedir,'.lbmesh.io',updates.chosenDB, 'lbmesh-db-' + updates.chosenDB + '.yaml'), str);
@@ -202,6 +205,7 @@ class Db extends Base{
          */
             const tempImage = updates.chosenDB + "_image";
             const tempPort  = updates.chosenDB + "_port";
+            const tempUser = updates.chosenDB + "_env_user";
             const tempPasswd = updates.chosenDB + "_env_passwd";
             const tempAdminPort =   updates.chosenDB + "_admin_port";
             const tempAdminImage = updates.chosenDB + "_admin_image";
@@ -215,12 +219,14 @@ class Db extends Base{
                 [tempImage]:    machineData.dbStack[updates.chosenDB].image,
                 [tempPort]:     machineData.dbStack[updates.chosenDB].port,  
                 [tempPasswd]: machineData.dbStack[updates.chosenDB].env.passwd,
+                [tempUser]: machineData.dbStack[updates.chosenDB].env.user,
                 [tempAdminImage]: machineData.dbStack[updates.chosenDB].admin.image,
                 [tempAdminPort]: machineData.dbStack[updates.chosenDB].admin.port,
                 [tempAdminUser]: machineData.dbStack[updates.chosenDB].admin.user,
                 [tempAdminPass]: machineData.dbStack[updates.chosenDB].admin.passwd, 
                 "homedir_data": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB, 'data'),
-                "homedir_config": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config')
+                "homedir_config": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'config'),
+                "homedir_log": path.join(machine.homedir,updates.chosenDB,'.lbmesh.io',updates.chosenDB,'log')
             },{}, function(err,str){
                 if( err ) console.log(err);
                 fs.writeFileSync( path.join(machine.homedir,'.lbmesh.io',updates.chosenDB, 'lbmesh-db-'+updates.chosenDB+'.yaml'), str);
