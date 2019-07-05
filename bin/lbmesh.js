@@ -689,8 +689,8 @@ program
       let myDisplay = (display == undefined )? 'empty' : display.toLowerCase();
       let myAction = (action == undefined)? 'empty' : action.toLowerCase();
       let myComponent = (service == undefined)? 'all' : service.toLowerCase();
-      let myServices = ['mongodb','postgres','redis','mysql','cloudant','mssql','cassandra','elasticsearch'];
-      let myServicesList = 'mongodb | redis | mysql | postgres | cloudant | mssql | cassandra | elasticsearch';
+      let myServices = ['mongodb','postgres','redis','mysql','cloudant','couchdb','mssql','cassandra','elasticsearch'];
+      let myServicesList = 'mongodb | redis | mysql | postgres | cloudant | couchdb | mssql | cassandra | elasticsearch';
       //console.log( machine );
 
       if( myDisplay !== 'hide' ){
