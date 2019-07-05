@@ -3,7 +3,7 @@ const machine = require('lbmesh-os').profile();
 const path    = require('path');
 const async   = require('async');
 
-const meshDatabases = ['mongodb','mysql','redis','mssql','cloudant','postgres','elasticsearch','cassandra'];
+const meshDatabases = ['mongodb','mysql','redis','mssql','cloudant','couchdb','postgres','elasticsearch','cassandra'];
 const meshIntegrations = ['datapower','mq','mqlight','acemq','rabbitmq','iib','splunk','kafka','ace','mqtt'];
 
 let meshData = require( path.join(machine.node.globalPath,'lbmesh-cli','gui','frontend','www','server','classes','globalfile.js') );

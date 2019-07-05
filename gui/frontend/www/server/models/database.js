@@ -1,7 +1,7 @@
 'use strict';
 const machine = require('lbmesh-os').profile();
 const path    = require('path');
-const approvedDB = ['mysql','mongodb','redis','mssql','cloudant','postgres','elasticsearch','cassandra'];
+const approvedDB = ['mysql','mongodb','redis','mssql','couchdb','cloudant','postgres','elasticsearch','cassandra'];
 const debug   = require('debug')('app:classes:database');
 const globalFile =  require( path.join(machine.node.globalPath,'lbmesh-cli','gui','frontend','www','server','classes','globalfile.js') );
 const system = require( path.join(machine.node.globalPath,'lbmesh-cli','gui','frontend','www','server','classes','files.js') );
