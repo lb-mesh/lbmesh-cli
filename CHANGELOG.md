@@ -1,9 +1,10 @@
 # Change Log
 All notable changes to the "lbmesh-cli" extension will be documented in this file.
 
-## [2.8.4] 2019-07-05
+## [2.8.4, 2.8.5] 2019-07-05
 - added couchdb to CLI
 - added couchdb to DASHBOARD
+- fixed bug for lbmesh db config
 
 ## [2.8.3] 2019-06-28
 - added mqtt to CLI
