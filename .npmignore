@@ -1,4 +1,5 @@
 node_modules
 NOTES*
 .vscode
+.DS_Store
 .gitignore

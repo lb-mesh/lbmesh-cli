@@ -1132,8 +1132,8 @@ program
     let myDisplay = (display == undefined)? 'empty': display.toLowerCase();
     let myAction = (action == undefined)? 'empty' : action.toLowerCase();
     let myComponent = (service == undefined)? 'all' : service.toLowerCase();
-    let myServices = ['datapower','mqlight','iib','mq','rabbitmq','acemq','ace','mqtt','splunk','kafka'];
-    let myServicesList = 'datapower | mqlight | iib | rabbitmq | acemq | mq | splunk | kafka | mqtt | ace';
+    let myServices = ['datapower','mqlight','iib','odm','mq','rabbitmq','acemq','ace','mqtt','splunk','kafka'];
+    let myServicesList = 'datapower | mqlight | iib | odm | rabbitmq | acemq | mq | splunk | kafka | mqtt | ace';
 
      
     if( myDisplay !== 'hide'){
@@ -1165,6 +1165,7 @@ program
                     {"name":"MQLIGHT", "value":"mqlight"},
                     {"name":"IIB", "value":"iib"},
                     {"name":"MQ", "value":"mq"},
+                    {"name":"ODM", "value":"odm"},
                     {"name":"KAFKA", "value":"kafka"},
                     {"name":"SPLUNK", "value":"splunk"},
                     {"name":"RABBITMQ", "value":"rabbitmq"},
@@ -1302,6 +1303,15 @@ program
                         shelljs.exec("sleep 5s");
                       }
                       shelljs.exec("open http://localhost:" +  myPorts.sourceData.iib.port.admin);   
+                    break;
+                    case 'odm':
+                      LOG();
+                      LOG('   OPENING ODM DASHBOARD http://localhost:' +  myPorts.sourceData.odm.port.admin);
+                      LOG();
+                      if( !isWindows ){
+                        shelljs.exec("sleep 5s");
+                      }
+                      shelljs.exec("open http://localhost:" +  myPorts.sourceData.odm.port.admin);   
                     break;
                     case 'ace':
                       LOG();
@@ -1487,6 +1497,15 @@ program
                   }
                   shelljs.exec("open http://localhost:" +  myAdminPorts.sourceData.iib.port.admin);   
                 break;
+                case 'odm':
+                    LOG();
+                    LOG('   OPENING ODM DASHBOARD http://localhost:' +  myAdminPorts.sourceData.odm.port.admin);
+                    LOG();
+                    if( !isWindows ){
+                      shelljs.exec("sleep 5s");
+                    }
+                    shelljs.exec("open http://localhost:" +  myAdminPorts.sourceData.odm.port.admin);   
+                  break;
                 case 'splunk':
                   LOG();
                   LOG('   OPENING SPLUNK DASHBOARD http://localhost:' +  myAdminPorts.sourceData.splunk.port.admin);

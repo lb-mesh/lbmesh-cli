@@ -191,6 +191,10 @@ class Integ extends Base{
                     this.portsList.integStack[choices.chosenDB].port.admin =  choices.newPortAdmin;
                     this.portsList.integStack[choices.chosenDB].port.data =  choices.newPortData;
             break;
+            case 'odm':
+                    this.portsList.integStack[choices.chosenDB].port.admin =  choices.newPortAdmin;
+                    this.portsList.integStack[choices.chosenDB].port.data =  choices.newPortData;
+            break;
             case 'ace':
                     this.portsList.integStack[choices.chosenDB].port.admin =  choices.newPortAdmin;
                     this.portsList.integStack[choices.chosenDB].port.data =  choices.newPortData;
@@ -333,6 +337,19 @@ class Integ extends Base{
                         fs.writeFileSync( path.join(machine.homedir,'.lbmesh.io','ace','lbmesh-integ-ace.yaml'), str);
                     }); 
             break;
+            case 'odm':
+                /**
+                 * ODM
+                 */
+                ejs.renderFile( path.join(data.templatefolder,'integ','lbmesh-integ-odm.ejs'), {
+                    "odm_data": path.join(data.homedir,'.lbmesh.io','odm','data'),
+                    "odm_port_admin": data.integStack.odm.port.admin,
+                    "odm_port_data": data.integStack.odm.port.data,
+                },{}, function(err,str){
+                    if( err ) console.log(err);
+                    fs.writeFileSync( path.join(data.homedir,'.lbmesh.io','odm','lbmesh-integ-odm.yaml'), str);
+                }); 
+            break;
             case 'iib':
                 ejs.renderFile( path.join(fullData.templatefolder,'integ','lbmesh-integ-iib.ejs'), {
                     "iib_data": path.join(machine.homedir,'.lbmesh.io','iib','data'),
@@ -400,7 +417,10 @@ class Integ extends Base{
                 this.portsList.integStack[chosen].port.admin = choices.admin;
                 this.portsList.integStack[chosen].port.data = choices.data;
             break;
-            
+            case 'odm':
+                this.portsList.integStack[chosen].port.admin = choices.admin;
+                this.portsList.integStack[chosen].port.data = choices.data;
+            break;            
         }
 
         // Write Global Config
@@ -500,6 +520,19 @@ class Integ extends Base{
                     fs.writeFileSync( path.join(fullData.homedir,'.lbmesh.io','iib','lbmesh-integ-iib.yaml'), str);
                 }); 
             break;
+            case 'odm':
+                /**
+                 * ODM
+                 */
+                ejs.renderFile( path.join(data.templatefolder,'integ','lbmesh-integ-odm.ejs'), {
+                    "odm_data": path.join(data.homedir,'.lbmesh.io','odm','data'),
+                    "odm_port_admin": data.integStack.odm.port.admin,
+                    "odm_port_data": data.integStack.odm.port.data,
+                },{}, function(err,str){
+                    if( err ) console.log(err);
+                    fs.writeFileSync( path.join(data.homedir,'.lbmesh.io','odm','lbmesh-integ-odm.yaml'), str);
+                }); 
+            break;
         }
 
         // Rewrite Container & Rebuild
@@ -527,7 +560,7 @@ class Integ extends Base{
         };
         let myDBStack = [];
             myDBStack.push(['Integ','Admin Port','Data Port','Image']);
-        let DBList = ['datapower','mq','mqlight','rabbitmq','mqtt','iib','ace','acemq','splunk','kafka'];
+        let DBList = ['datapower','mq','mqlight','rabbitmq','mqtt','iib','odm','ace','acemq','splunk','kafka'];
             // mq, acemqserver, iib
         this.portsList = this.readGlobalConfig();
         

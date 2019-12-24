@@ -16,6 +16,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "node lib/preinstall.js",
     "postinstall": "node lib/postinstall.js",
     "postuninstall": "node lib/postuninstall.js"
   },

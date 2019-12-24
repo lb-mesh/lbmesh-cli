@@ -1,7 +1,7 @@
 'use strict';
 const machine = require('lbmesh-os').profile();
 const debug   = require('debug')('app:classes:integ');
-const approvedInteg = ['mq','datapower','mqlight','rabbitmq','acemq','iib','splunk','kafka','ace','mqtt'];
+const approvedInteg = ['mq','datapower','mqlight','rabbitmq','acemq','odm','iib','splunk','kafka','ace','mqtt'];
 const path    = require('path');
 const globalFile =  require( path.join(machine.node.globalPath,'lbmesh-cli','gui','frontend','www','server','classes','globalfile.js') );
 const system = require( path.join(machine.node.globalPath,'lbmesh-cli','gui','frontend','www','server','classes','files.js') );
