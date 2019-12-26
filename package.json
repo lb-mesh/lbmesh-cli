@@ -1,6 +1,6 @@
 {
   "name": "lbmesh-cli",
-  "version": "2.9.0",
+  "version": "2.10.0",
   "description": "CLI Interface for LBMesh.io Framework",
   "bin": {
     "lbmesh": "./bin/lbmesh.js",
