@@ -27,7 +27,7 @@ OR
 	$ lbm
 ```
 
-##Usage
+## Usage
 
 Running the command above will give you all the options available
 
