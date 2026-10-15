@@ -1,3 +1,6 @@
+> **Note:** `lbmesh-cli` (v1/Node.js) is deprecated and archived. 
+> Development has moved to the high-performance Go CLI at [lb-mesh/lbmesh](https://github.com/lb-mesh/lbmesh).
+
 # LB Mesh Framework CLI
 
 LB Mesh is a Cloud Native Microservice Framework built around loopback.io.  This version is for LB3 exclusively.  
